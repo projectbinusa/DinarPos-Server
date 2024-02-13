@@ -12,13 +12,13 @@ public class User extends DateConfig {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "user", nullable = false, length = 20)
+    @Column(name = "user", nullable = false)
     private String user;
 
-    @Column(name = "password", nullable = false, length = 50)
+    @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "level", nullable = false, length = 10)
+    @Column(name = "level", nullable = false)
     private String level;
 
     public Long getId() {

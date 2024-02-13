@@ -38,25 +38,25 @@ public class Transaksi extends DateConfig {
     private String namaSalesman;
 
     @Column(name = "total_bayar_barang", nullable = false, length = 50)
-    private String totalBayarBarang;
+    private Double totalBayarBarang;
 
     @Column(name = "pembayaran", nullable = false, length = 50)
-    private String pembayaran;
+    private Double pembayaran;
 
     @Column(name = "diskon", nullable = false, length = 50)
-    private String diskon;
+    private Double diskon;
 
     @Column(name = "total_belanja", nullable = false, length = 50)
-    private String totalBelanja;
+    private Double totalBelanja;
 
     @Column(name = "sisa", nullable = false, length = 50)
-    private String sisa;
+    private Double sisa;
 
     @Column(name = "potongan", nullable = false, length = 50)
-    private String potongan;
+    private Double potongan;
 
     @Column(name = "ttl_bayar_hemat", nullable = false, length = 50)
-    private String ttlBayarHemat;
+    private Double ttlBayarHemat;
 
     @Column(name = "nota", nullable = false, length = 50)
     private String nota;
@@ -73,6 +73,7 @@ public class Transaksi extends DateConfig {
     @Column(name = "tanggal", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date tanggal;
+
 
     @Column(name = "tanggal_notif_30", nullable = false)
     @Temporal(TemporalType.DATE)
@@ -228,59 +229,59 @@ public class Transaksi extends DateConfig {
         this.namaSalesman = namaSalesman;
     }
 
-    public String getTotalBayarBarang() {
+    public Double getTotalBayarBarang() {
         return totalBayarBarang;
     }
 
-    public void setTotalBayarBarang(String totalBayarBarang) {
+    public void setTotalBayarBarang(Double totalBayarBarang) {
         this.totalBayarBarang = totalBayarBarang;
     }
 
-    public String getPembayaran() {
+    public Double getPembayaran() {
         return pembayaran;
     }
 
-    public void setPembayaran(String pembayaran) {
+    public void setPembayaran(Double pembayaran) {
         this.pembayaran = pembayaran;
     }
 
-    public String getDiskon() {
+    public Double getDiskon() {
         return diskon;
     }
 
-    public void setDiskon(String diskon) {
+    public void setDiskon(Double diskon) {
         this.diskon = diskon;
     }
 
-    public String getTotalBelanja() {
+    public Double getTotalBelanja() {
         return totalBelanja;
     }
 
-    public void setTotalBelanja(String totalBelanja) {
+    public void setTotalBelanja(Double totalBelanja) {
         this.totalBelanja = totalBelanja;
     }
 
-    public String getSisa() {
+    public Double getSisa() {
         return sisa;
     }
 
-    public void setSisa(String sisa) {
+    public void setSisa(Double sisa) {
         this.sisa = sisa;
     }
 
-    public String getPotongan() {
+    public Double getPotongan() {
         return potongan;
     }
 
-    public void setPotongan(String potongan) {
+    public void setPotongan(Double potongan) {
         this.potongan = potongan;
     }
 
-    public String getTtlBayarHemat() {
+    public Double getTtlBayarHemat() {
         return ttlBayarHemat;
     }
 
-    public void setTtlBayarHemat(String ttlBayarHemat) {
+    public void setTtlBayarHemat(Double ttlBayarHemat) {
         this.ttlBayarHemat = ttlBayarHemat;
     }
 
