@@ -27,96 +27,46 @@ public class TransaksiPenjualan {
     @Autowired
     private SalesmanRepository salesmanRepository;
 
-    public Transaksi addExcelcom(ExcelcomRequest request) {
-        // Cek apakah nomor faktur sudah ada
-        boolean fakturExists = transaksiRepository.existsByNoFaktur(request.getNoFaktur());
+    public Transaksi addExcelcom(Transaksi transaksi) {
+        // Cek apakah no_faktur sudah ada dalam database
+        boolean fakturExists = transaksiRepository.existsByNoFaktur(transaksi.getNoFaktur());
         if (fakturExists) {
-            throw new BadRequestException("No Faktur sudah digunakan");
+           throw new BadRequestException("Nomor faktur sudah ada");
         }
 
-        // Generate nomor faktur baru
-        String nomor = String.valueOf(generateNomorFaktur());
+        // Mendapatkan nomor nota transaksi penjualan excelcom
+        Long nota = getNoNotaTransaksiPenjualanExcelcom();
 
-        // Buat objek Transaksi baru
-        Transaksi transaksi = new Transaksi();
-        transaksi.setNoFaktur(nomor);
-        transaksi.setTotalBelanja(request.getTotalBayar());
-        transaksi.setPembayaran(request.getPembayaran());
-        transaksi.setPotongan(request.getPotongan());
-        transaksi.setDiskon(request.getDiskon());
-        transaksi.setTotalBayarBarang(request.getTotalBayarBarang());
-        transaksi.setCustomer(customerRepository.findById(request.getIdCustomer()).get());
-        transaksi.setSalesman(salesmanRepository.findById(request.getIdSalesman()).get());
-        transaksi.setKeterangan(request.getKeterangan());
-        transaksi.setCashKredit(request.getCashKredit());
-        transaksi.setSisa(request.getSisa());
-        transaksi.setTtlBayarHemat(request.getTtlBayarHemat());
-        Date currentDate = new Date();
+        // Format no_faktur
+        String nomor = String.format("%tm%tY", new Date(), new Date()); // Format bulan dan tahun
+        String noFaktur = String.format("%s-PST-PJN-000%d", nomor, nota);
 
-        // Atur tanggal transaksi
-        transaksi.setTanggal(currentDate);
+        // Set no_faktur dalam objek transaksi
+        transaksi.setNoFaktur(noFaktur);
 
-        // Atur tanggal notifikasi
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(currentDate);
+        // Mengatur tanggal dan waktu
+        transaksi.setTanggal(new Date());
+        transaksi.setTanggalNotif7(calculateDate(7));
+        transaksi.setTanggalNotif30(calculateDate(30));
+        transaksi.setTanggalNotif90(calculateDate(90));
+        transaksi.setTanggalNotif120(calculateDate(120));
+        transaksi.setTanggalNotif365(calculateDate(365));
 
-        // Tanggal notifikasi 7 hari mendatang
-        calendar.add(Calendar.DAY_OF_MONTH, 7);
-        transaksi.setTanggalNotif7(calendar.getTime());
-
-        // Tanggal notifikasi 30 hari mendatang
-        calendar.setTime(currentDate); // Kembalikan tanggal ke saat ini
-        calendar.add(Calendar.MONTH, 1);
-        transaksi.setTanggalNotif30(calendar.getTime());
-
-        // Tanggal notifikasi 90 hari mendatang
-        calendar.setTime(currentDate);
-        calendar.add(Calendar.MONTH, 3);
-        transaksi.setTanggalNotif90(calendar.getTime());
-
-        // Tanggal notifikasi 120 hari mendatang
-        calendar.setTime(currentDate);
-        calendar.add(Calendar.MONTH, 4);
-        transaksi.setTanggalNotif120(calendar.getTime());
-
-        // Tanggal notifikasi 365 hari mendatang
-        calendar.setTime(currentDate);
-        calendar.add(Calendar.YEAR, 1);
-        transaksi.setTanggalNotif365(calendar.getTime());
-        transaksi.setDelFlag(1);
-        transaksi.setStatus("excelcom");
-
-        // Simpan transaksi
+        // Menyimpan transaksi ke dalam repository
         Transaksi savedTransaksi = transaksiRepository.save(transaksi);
-
-        // Proses setiap barang transaksi
-        for (BarangTransaksi barangTransaksi : request.getProduk()) {
-            // Lakukan operasi lain yang diperlukan untuk setiap barang transaksi
-        }
-
         return savedTransaksi;
     }
 
-    private int generateNomorFaktur() {
-        Optional<String> kdMaxOptional = transaksiRepository.findMaxKode("%PJN%");
-        int tmp = kdMaxOptional.map(Integer::parseInt).orElse(0) + 1;
+    // Metode untuk mendapatkan nomor nota transaksi penjualan excelcom
+    private Long getNoNotaTransaksiPenjualanExcelcom() {
+        // Implementasikan logika untuk mendapatkan nomor nota
+        return null;
+    }
 
-        // Ambil bulan terakhir dari tanggal transaksi terakhir
-        Optional<Transaksi> lastTransactionOptional = transaksiRepository.findTopByNoFakturLikeOrderByTanggalDesc("%PJN%");
-        String lastMonth = lastTransactionOptional.map(transaksi -> {
-            Date tanggalDate = transaksi.getTanggal();
-            LocalDate tanggalLocalDate = tanggalDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM");
-            return tanggalLocalDate.format(formatter);
-        }).orElse("");
-
-        // Bandingkan dengan bulan saat ini untuk menentukan apakah nomor harus direset menjadi 1
-        String currentMonth = LocalDate.now().format(DateTimeFormatter.ofPattern("MM"));
-        if (!lastMonth.equals(currentMonth)) {
-            tmp = 1;
-        }
-
-        return tmp;
+    // Metode untuk menghitung tanggal di masa depan berdasarkan jumlah hari
+    private Date calculateDate(int days) {
+        long millisToAdd = days * 24 * 60 * 60 * 1000L; // konversi hari ke milidetik
+        return new Date(System.currentTimeMillis() + millisToAdd);
     }
 
 }

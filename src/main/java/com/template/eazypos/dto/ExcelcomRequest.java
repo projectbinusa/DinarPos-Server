@@ -5,65 +5,56 @@ import com.template.eazypos.model.BarangTransaksi;
 import java.util.List;
 
 public class ExcelcomRequest {
-    private String noFaktur;
-    private double totalBayar;
-    private double pembayaran;
-    private double potongan;
-    private double diskon;
-    private double totalBayarBarang;
+    private Double totalBelanja;
+    private Double pembayaran;
+    private Double potongan;
+    private Double diskon;
+    private Double totalBayarBarang;
     private Long idCustomer;
     private Long idSalesman;
+    private String noFaktur;
     private String keterangan;
     private String cashKredit;
-    private double sisa;
-    private double ttlBayarHemat;
-    private List<BarangTransaksi> produk;
+    private Double sisa;
+    private Double ttlBayarHemat;
 
-    public String getNoFaktur() {
-        return noFaktur;
+    public Double getTotalBelanja() {
+        return totalBelanja;
     }
 
-    public void setNoFaktur(String noFaktur) {
-        this.noFaktur = noFaktur;
+    public void setTotalBelanja(Double totalBelanja) {
+        this.totalBelanja = totalBelanja;
     }
 
-    public double getTotalBayar() {
-        return totalBayar;
-    }
-
-    public void setTotalBayar(double totalBayar) {
-        this.totalBayar = totalBayar;
-    }
-
-    public double getPembayaran() {
+    public Double getPembayaran() {
         return pembayaran;
     }
 
-    public void setPembayaran(double pembayaran) {
+    public void setPembayaran(Double pembayaran) {
         this.pembayaran = pembayaran;
     }
 
-    public double getPotongan() {
+    public Double getPotongan() {
         return potongan;
     }
 
-    public void setPotongan(double potongan) {
+    public void setPotongan(Double potongan) {
         this.potongan = potongan;
     }
 
-    public double getDiskon() {
+    public Double getDiskon() {
         return diskon;
     }
 
-    public void setDiskon(double diskon) {
+    public void setDiskon(Double diskon) {
         this.diskon = diskon;
     }
 
-    public double getTotalBayarBarang() {
+    public Double getTotalBayarBarang() {
         return totalBayarBarang;
     }
 
-    public void setTotalBayarBarang(double totalBayarBarang) {
+    public void setTotalBayarBarang(Double totalBayarBarang) {
         this.totalBayarBarang = totalBayarBarang;
     }
 
@@ -83,6 +74,14 @@ public class ExcelcomRequest {
         this.idSalesman = idSalesman;
     }
 
+    public String getNoFaktur() {
+        return noFaktur;
+    }
+
+    public void setNoFaktur(String noFaktur) {
+        this.noFaktur = noFaktur;
+    }
+
     public String getKeterangan() {
         return keterangan;
     }
@@ -99,27 +98,19 @@ public class ExcelcomRequest {
         this.cashKredit = cashKredit;
     }
 
-    public double getSisa() {
+    public Double getSisa() {
         return sisa;
     }
 
-    public void setSisa(double sisa) {
+    public void setSisa(Double sisa) {
         this.sisa = sisa;
     }
 
-    public double getTtlBayarHemat() {
+    public Double getTtlBayarHemat() {
         return ttlBayarHemat;
     }
 
-    public void setTtlBayarHemat(double ttlBayarHemat) {
+    public void setTtlBayarHemat(Double ttlBayarHemat) {
         this.ttlBayarHemat = ttlBayarHemat;
-    }
-
-    public List<BarangTransaksi> getProduk() {
-        return produk;
-    }
-
-    public void setProduk(List<BarangTransaksi> produk) {
-        this.produk = produk;
     }
 }
