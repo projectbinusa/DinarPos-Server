@@ -2,7 +2,7 @@ package com.template.eazypos.controller;
 
 import com.template.eazypos.dto.ExcelcomRequest;
 import com.template.eazypos.model.Transaksi;
-import com.template.eazypos.service.excelcom.TransaksiPenjualan;
+import com.template.eazypos.service.eazypos.excelcom.TransaksiPenjualan;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

@@ -1,4 +1,4 @@
-package com.template.eazypos.service.excelcom;
+package com.template.eazypos.service.eazypos.excelcom;
 
 import com.template.eazypos.dto.ExcelcomRequest;
 import com.template.eazypos.exception.BadRequestException;
