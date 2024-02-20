@@ -65,6 +65,23 @@ public class StokMasuk extends DateConfig {
 //        this.idBarang = idBarang;
 //    }
 
+
+    public Suplier getSuplier() {
+        return suplier;
+    }
+
+    public void setSuplier(Suplier suplier) {
+        this.suplier = suplier;
+    }
+
+    public Barang getBarang() {
+        return barang;
+    }
+
+    public void setBarang(Barang barang) {
+        this.barang = barang;
+    }
+
     public String getJumlahStok() {
         return jumlahStok;
     }
