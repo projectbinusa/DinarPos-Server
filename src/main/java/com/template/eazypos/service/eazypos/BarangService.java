@@ -17,6 +17,7 @@ public class BarangService {
     private BarangRepository barangRepository;
 
     public Barang add(Barang barang){
+        barang.setIdSuplier(0L);
         return barangRepository.save(barang);
     }
     public Barang get(Long id) {

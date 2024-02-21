@@ -14,12 +14,12 @@ public class Barang extends DateConfig {
     @Column(name = "id_barang")
     private Long idBarang;
 
-//    @Column(name = "id_suplier")
-//    private Long idSuplier;
+    @Column(name = "id_suplier")
+    private Long idSuplier;
 
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
-    @JoinColumn(name = "id_suplier", nullable = false, updatable = false)
-    private Suplier suplier;
+//    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+//    @JoinColumn(name = "id_suplier", nullable = false, updatable = false)
+//    private Suplier suplier;
 
     @Column(name = "barcode_barang", nullable = false, length = 100)
     private String barcodeBarang;
@@ -55,22 +55,22 @@ public class Barang extends DateConfig {
         this.idBarang = idBarang;
     }
 
-//    public Long getIdSuplier() {
-//        return idSuplier;
+    public Long getIdSuplier() {
+        return idSuplier;
+    }
+
+    public void setIdSuplier(Long idSuplier) {
+        this.idSuplier = idSuplier;
+    }
+
+
+//    public Suplier getSuplier() {
+//        return suplier;
 //    }
 //
-//    public void setIdSuplier(Long idSuplier) {
-//        this.idSuplier = idSuplier;
+//    public void setSuplier(Suplier suplier) {
+//        this.suplier = suplier;
 //    }
-
-
-    public Suplier getSuplier() {
-        return suplier;
-    }
-
-    public void setSuplier(Suplier suplier) {
-        this.suplier = suplier;
-    }
 
     public String getBarcodeBarang() {
         return barcodeBarang;
