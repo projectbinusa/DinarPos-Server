@@ -85,6 +85,7 @@ public class BarangTransaksi extends DateConfig {
 //    }
 
 
+
     public Transaksi getTransaksi() {
         return transaksi;
     }

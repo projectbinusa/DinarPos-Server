@@ -7,9 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.Optional;
 
 public interface TransaksiRepository extends JpaRepository<Transaksi, Long> {
-    Boolean existsByNoFaktur(String NoFaktur);
-    @Query(value = "SELECT RIGHT(no_faktur, 4) AS kd_max FROM Transaksi WHERE no_faktur LIKE %:pattern% ORDER BY tanggal DESC LIMIT 1", nativeQuery = true)
-    Optional<String> findMaxKode(String pattern);
-
-    Optional<Transaksi> findTopByNoFakturLikeOrderByTanggalDesc(String pattern);
+    @Query(value = "SELECT t.no_faktur FROM tabel_transaksi t WHERE MONTH(t.tanggal) = ?1 AND YEAR(t.tanggal) = ?2 ORDER BY t.id DESC LIMIT 1", nativeQuery = true)
+    String findLastNotaByMonthAndYear(int month, int year);
 }

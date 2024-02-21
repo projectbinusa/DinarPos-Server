@@ -1,24 +1,23 @@
 package com.template.eazypos.controller;
 
-import com.template.eazypos.dto.ExcelcomRequest;
+import com.template.eazypos.dto.TransaksiPenjualanDTO;
+import com.template.eazypos.exception.CommonResponse;
+import com.template.eazypos.exception.ResponseHelper;
 import com.template.eazypos.model.Transaksi;
-import com.template.eazypos.service.eazypos.excelcom.TransaksiPenjualan;
-import org.modelmapper.ModelMapper;
+import com.template.eazypos.model.User;
+import com.template.eazypos.service.eazypos.excelcom.TransaksiPenjualanService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("api/transakasi")
+@RequestMapping("api/transaksi")
 @CrossOrigin(origins = "http://localhost:3000")
 public class TransaksiController {
     @Autowired
-    private TransaksiPenjualan transaksiPenjualanExcelcom;
-
-    @Autowired
-    ModelMapper modelMapper;
+    private TransaksiPenjualanService transaksiPenjualanService;
 
     @PostMapping("/excelcom")
-    public Transaksi addExcelcom(@RequestBody ExcelcomRequest request) {
-        return transaksiPenjualanExcelcom.addExcelcom(modelMapper.map(request , Transaksi.class));
+    public CommonResponse<Transaksi> add(@RequestBody TransaksiPenjualanDTO transaksiPenjualanDTO){
+        return ResponseHelper.ok( transaksiPenjualanService.addTransaksi(transaksiPenjualanDTO));
     }
 }

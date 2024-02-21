@@ -23,7 +23,7 @@ public class CustomerService {
 
     public Customer add(CustomerDTO customerDTO){
        Customer add = new Customer();
-       add.setSalesman(salesmanRepository.findById(customerDTO.getId_salesman()).get());
+       add.setSalesman(salesmanRepository.findById(customerDTO.getId_salesman()).orElseThrow(() -> new NotFoundException("Id Salesman tidak dinemukan")));
        add.setAlamat(customerDTO.getAlamat());
        add.setEmail(customerDTO.getEmail());
        add.setNama_customer(customerDTO.getNama_customer());
@@ -38,7 +38,7 @@ public class CustomerService {
     }
     public Customer edit(CustomerDTO customerDTO , Long id){
         Customer update = customerRepository.findById(id).orElseThrow(() -> new NotFoundException("Id tidak dinemukan"));
-        update.setSalesman(salesmanRepository.findById(customerDTO.getId_salesman()).get());
+        update.setSalesman(salesmanRepository.findById(customerDTO.getId_salesman()).orElseThrow(() -> new NotFoundException("Id Salesman tidak dinemukan")));
         update.setAlamat(customerDTO.getAlamat());
         update.setEmail(customerDTO.getEmail());
         update.setNama_customer(customerDTO.getNama_customer());

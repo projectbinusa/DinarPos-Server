@@ -1,10 +1,9 @@
 package com.template.eazypos.dto;
 
-import com.template.eazypos.model.BarangTransaksi;
-
 import java.util.List;
 
-public class ExcelcomRequest {
+public class TransaksiPenjualanDTO {
+
     private Double totalBelanja;
     private Double pembayaran;
     private Double potongan;
@@ -17,6 +16,7 @@ public class ExcelcomRequest {
     private String cashKredit;
     private Double sisa;
     private Double ttlBayarHemat;
+    private List<BarangTransaksiDTO> produk;
 
     public Double getTotalBelanja() {
         return totalBelanja;
@@ -112,5 +112,13 @@ public class ExcelcomRequest {
 
     public void setTtlBayarHemat(Double ttlBayarHemat) {
         this.ttlBayarHemat = ttlBayarHemat;
+    }
+
+    public List<BarangTransaksiDTO> getProduk() {
+        return produk;
+    }
+
+    public void setProduk(List<BarangTransaksiDTO> produk) {
+        this.produk = produk;
     }
 }

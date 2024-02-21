@@ -16,6 +16,7 @@ public class SalesmanService {
     private SalesmanRepository salesmanRepository;
 
     public Salesman add(Salesman salesman){
+        salesman.setDelFlag(1);
         return salesmanRepository.save(salesman);
     }
     public Salesman get(Long id) {
