@@ -2,12 +2,11 @@ package com.template.eazypos.service.eazypos.excelcom;
 
 import com.template.eazypos.dto.BarangTransaksiDTO;
 import com.template.eazypos.dto.TransaksiPenjualanDTO;
+import com.template.eazypos.exception.BadRequestException;
+import com.template.eazypos.model.Barang;
 import com.template.eazypos.model.BarangTransaksi;
 import com.template.eazypos.model.Transaksi;
-import com.template.eazypos.repository.BarangTransaksiRepository;
-import com.template.eazypos.repository.CustomerRepository;
-import com.template.eazypos.repository.SalesmanRepository;
-import com.template.eazypos.repository.TransaksiRepository;
+import com.template.eazypos.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,12 +27,13 @@ public class TransaksiPenjualanExcelcomService {
     private CustomerRepository customerRepository;
 
     @Autowired
-    private SalesmanRepository salesmanRepository;
+    private MarkettingRepository markettingRepository;
+    @Autowired
+    private BarangRepository barangRepository;
 
     public Transaksi addTransaksi(TransaksiPenjualanDTO transaksiDTO) {
         Date now = new Date();
-        String nomor = new SimpleDateFormat("MMyy").format(now);
-        String not = nomor + "-PST-PJN-000" + generateNotaNumber(); // method generateNotaNumber() menghasilkan nomor nota baru
+        String not = generateNotaNumber(); // method generateNotaNumber() menghasilkan nomor nota baru
 
         Transaksi transaksi = new Transaksi();
         transaksi.setTotalBelanja(transaksiDTO.getTotalBelanja());
@@ -42,7 +42,14 @@ public class TransaksiPenjualanExcelcomService {
         transaksi.setDiskon(transaksiDTO.getDiskon());
         transaksi.setTotalBayarBarang(transaksiDTO.getTotalBayarBarang());
         transaksi.setCustomer(customerRepository.findById(transaksiDTO.getIdCustomer()).get());
-        transaksi.setSalesman(salesmanRepository.findById(transaksiDTO.getIdSalesman()).get());
+        transaksi.setMarketting(markettingRepository.findById(transaksiDTO.getIdMarketting()).get());
+        transaksi.setDelFlag(1);
+        transaksi.setHari7(1);
+        transaksi.setHari30(1);
+        transaksi.setHari90(1);
+        transaksi.setHari120(1);
+        transaksi.setHari365(1);
+
         transaksi.setNoFaktur(not);
         transaksi.setKeterangan(transaksiDTO.getKeterangan());
         transaksi.setCashKredit(transaksiDTO.getCashKredit());
@@ -91,10 +98,32 @@ public class TransaksiPenjualanExcelcomService {
             barangTransaksi.setTotalHarga(barangDTO.getTotalHarga());
             barangTransaksi.setTotalHargaBarang(barangDTO.getTotalHargaBarang());
             barangTransaksi.setTanggal(now);
+            barangTransaksi.setHari7(1);
+            barangTransaksi.setHari30(1);
+            barangTransaksi.setHari90(1);
+            barangTransaksi.setHari120(1);
+            barangTransaksi.setHari367(1);
+            barangTransaksi.setDelFlag(1);
             barangTransaksi.setStatus("excelcom");
             barangTransaksiRepository.save(barangTransaksi);
 
-            // Lakukan update stok barang di sini
+        }
+        for (BarangTransaksiDTO barangDTO : listProduk) {
+            // Ambil data barang dari database berdasarkan barcode
+            Barang barang = barangRepository.findByBarcode(barangDTO.getBarcodeBarang());
+
+            if (barang != null) {
+                int sisaStok = barang.getJumlahStok() - barangDTO.getQty();
+
+                if (sisaStok >= 0) {
+                    barang.setJumlahStok(sisaStok);
+                    barangRepository.save(barang);
+                } else {
+                    throw  new BadRequestException("Stok Barang Habis");
+                }
+            } else {
+                throw  new BadRequestException(" Barang Tidak Ada ");
+            }
         }
         return savedTransaksi;
     }
@@ -102,8 +131,8 @@ public class TransaksiPenjualanExcelcomService {
     private String generateNotaNumber() {
         // Dapatkan tanggal saat ini
         Calendar calendar = Calendar.getInstance();
-        int month = calendar.get(Calendar.MONTH) + 1; // Ingat bahwa January dimulai dari 0
-        int year = calendar.get(Calendar.YEAR) % 100; // Ambil dua digit terakhir tahun
+        int month = calendar.get(Calendar.MONTH) + 1;
+        int year = calendar.get(Calendar.YEAR) % 100;
 
         // Dapatkan nomor nota terakhir dari database untuk bulan dan tahun saat ini
         String lastNota = transaksiRepository.findLastNotaByMonthAndYear(month, year);

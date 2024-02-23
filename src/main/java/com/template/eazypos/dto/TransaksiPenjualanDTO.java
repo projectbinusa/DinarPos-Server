@@ -10,7 +10,7 @@ public class TransaksiPenjualanDTO {
     private Double diskon;
     private Double totalBayarBarang;
     private Long idCustomer;
-    private Long idSalesman;
+    private Long idMarketting;
     private String noFaktur;
     private String keterangan;
     private String cashKredit;
@@ -66,12 +66,12 @@ public class TransaksiPenjualanDTO {
         this.idCustomer = idCustomer;
     }
 
-    public Long getIdSalesman() {
-        return idSalesman;
+    public Long getIdMarketting() {
+        return idMarketting;
     }
 
-    public void setIdSalesman(Long idSalesman) {
-        this.idSalesman = idSalesman;
+    public void setIdMarketting(Long idMarketting) {
+        this.idMarketting = idMarketting;
     }
 
     public String getNoFaktur() {

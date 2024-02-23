@@ -14,152 +14,152 @@ public class Transaksi extends DateConfig {
     @Column(name = "id_transaksi")
     private Long idTransaksi;
 
-//    @Column(name = "id_customer", nullable = false, length = 100)
+//    @Column(name = "id_customer", length = 100)
 //    private String idCustomer;
 
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
-    @JoinColumn(name = "id_customer", nullable = false, updatable = false)
+    @ManyToOne( cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_customer", updatable = false)
     private Customer customer;
 
-//    @Column(name = "id_salesman", nullable = false)
-//    private Long idSalesman;
+//    @Column(name = "id_marketting")
+//    private Long idMarketting;
 
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
-    @JoinColumn(name = "id_salesman", nullable = false, updatable = false)
-    private Salesman salesman;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_marketting", updatable = false)
+    private Marketting marketting;
 
-    @Column(name = "status", nullable = false, length = 50, columnDefinition = "varchar(50) default 'excelcom'")
+    @Column(name = "status", length = 50, columnDefinition = "varchar(50) default 'excelcom'")
     private String status;
 
-    @Column(name = "nama_customer", nullable = false, length = 100)
+    @Column(name = "nama_customer", length = 100)
     private String namaCustomer;
 
-    @Column(name = "nama_salesman", nullable = false, length = 100)
+    @Column(name = "nama_salesman", length = 100)
     private String namaSalesman;
 
-    @Column(name = "total_bayar_barang", nullable = false, length = 50)
+    @Column(name = "total_bayar_barang", length = 50)
     private Double totalBayarBarang;
 
-    @Column(name = "pembayaran", nullable = false, length = 50)
+    @Column(name = "pembayaran", length = 50)
     private Double pembayaran;
 
-    @Column(name = "diskon", nullable = false, length = 50)
+    @Column(name = "diskon", length = 50)
     private Double diskon;
 
-    @Column(name = "total_belanja", nullable = false, length = 50)
+    @Column(name = "total_belanja", length = 50)
     private Double totalBelanja;
 
-    @Column(name = "sisa", nullable = false, length = 50)
+    @Column(name = "sisa", length = 50)
     private Double sisa;
 
-    @Column(name = "potongan", nullable = false, length = 50)
+    @Column(name = "potongan", length = 50)
     private Double potongan;
 
-    @Column(name = "ttl_bayar_hemat", nullable = false, length = 50)
+    @Column(name = "ttl_bayar_hemat", length = 50)
     private Double ttlBayarHemat;
 
-    @Column(name = "nota", nullable = false, length = 50)
+    @Column(name = "nota", length = 50)
     private String nota;
 
-    @Column(name = "no_faktur", nullable = false, length = 50)
+    @Column(name = "no_faktur", length = 50)
     private String noFaktur;
 
-    @Column(name = "keterangan", nullable = false, length = 100)
+    @Column(name = "keterangan", length = 100)
     private String keterangan;
 
-    @Column(name = "cash_kredit", nullable = false, length = 20)
+    @Column(name = "cash_kredit", length = 20)
     private String cashKredit;
 
-    @Column(name = "tanggal", nullable = false)
+    @Column(name = "tanggal")
     @Temporal(TemporalType.TIMESTAMP)
     private Date tanggal;
 
 
-    @Column(name = "tanggal_notif_30", nullable = false)
+    @Column(name = "tanggal_notif_30")
     @Temporal(TemporalType.DATE)
     private Date tanggalNotif30;
 
-    @Column(name = "tanggal_notif_7", nullable = false)
+    @Column(name = "tanggal_notif_7")
     @Temporal(TemporalType.DATE)
     private Date tanggalNotif7;
 
-    @Column(name = "tanggal_notif_90", nullable = false)
+    @Column(name = "tanggal_notif_90")
     @Temporal(TemporalType.DATE)
     private Date tanggalNotif90;
 
-    @Column(name = "tanggal_notif_120", nullable = false)
+    @Column(name = "tanggal_notif_120")
     @Temporal(TemporalType.DATE)
     private Date tanggalNotif120;
 
-    @Column(name = "tanggal_notif_365", nullable = false)
+    @Column(name = "tanggal_notif_365")
     @Temporal(TemporalType.DATE)
     private Date tanggalNotif365;
 
-    @Column(name = "del_flag", nullable = false)
+    @Column(name = "del_flag")
     private int delFlag;
 
-    @Column(name = "7_hari", nullable = false, columnDefinition = "int default 1")
+    @Column(name = "7_hari", columnDefinition = "int default 1")
     private int hari7;
 
-    @Column(name = "30_hari", nullable = false, columnDefinition = "int default 1")
+    @Column(name = "30_hari", columnDefinition = "int default 1")
     private int hari30;
 
-    @Column(name = "90_hari", nullable = false, columnDefinition = "int default 1")
+    @Column(name = "90_hari", columnDefinition = "int default 1")
     private int hari90;
 
-    @Column(name = "120_hari", nullable = false, columnDefinition = "int default 1")
+    @Column(name = "120_hari", columnDefinition = "int default 1")
     private int hari120;
 
-    @Column(name = "365_hari", nullable = false, columnDefinition = "int default 1")
+    @Column(name = "365_hari", columnDefinition = "int default 1")
     private int hari365;
 
-    @Column(name = "ket_7_hari", nullable = false, columnDefinition = "text")
+    @Column(name = "ket_7_hari", columnDefinition = "text")
     private String ket7Hari;
 
-    @Column(name = "ket_30_hari", nullable = false, columnDefinition = "text")
+    @Column(name = "ket_30_hari", columnDefinition = "text")
     private String ket30Hari;
 
-    @Column(name = "ket_90_hari", nullable = false, columnDefinition = "text")
+    @Column(name = "ket_90_hari", columnDefinition = "text")
     private String ket90Hari;
 
-    @Column(name = "ket_120_hari", nullable = false, columnDefinition = "text")
+    @Column(name = "ket_120_hari", columnDefinition = "text")
     private String ket120Hari;
 
-    @Column(name = "ket_365_hari", nullable = false, columnDefinition = "text")
+    @Column(name = "ket_365_hari", columnDefinition = "text")
     private String ket365Hari;
 
-    @Column(name = "salesman_7_hari", nullable = false, length = 100)
+    @Column(name = "salesman_7_hari", length = 100)
     private String salesman7Hari;
 
-    @Column(name = "salesman_30_hari", nullable = false, length = 100)
+    @Column(name = "salesman_30_hari", length = 100)
     private String salesman30Hari;
 
-    @Column(name = "salesman_90_hari", nullable = false, length = 100)
+    @Column(name = "salesman_90_hari", length = 100)
     private String salesman90Hari;
 
-    @Column(name = "salesman_120_hari", nullable = false, length = 100)
+    @Column(name = "salesman_120_hari", length = 100)
     private String salesman120Hari;
 
-    @Column(name = "salesman_365_hari", nullable = false, length = 100)
+    @Column(name = "salesman_365_hari", length = 100)
     private String salesman365Hari;
 
-    @Column(name = "tanggal_konfirmasi_7", nullable = false)
+    @Column(name = "tanggal_konfirmasi_7")
     @Temporal(TemporalType.TIMESTAMP)
     private Date tanggalKonfirmasi7;
 
-    @Column(name = "tanggal_konfirmasi_30", nullable = false)
+    @Column(name = "tanggal_konfirmasi_30")
     @Temporal(TemporalType.TIMESTAMP)
     private Date tanggalKonfirmasi30;
 
-    @Column(name = "tanggal_konfirmasi_90", nullable = false)
+    @Column(name = "tanggal_konfirmasi_90")
     @Temporal(TemporalType.TIMESTAMP)
     private Date tanggalKonfirmasi90;
 
-    @Column(name = "tanggal_konfirmasi_120", nullable = false)
+    @Column(name = "tanggal_konfirmasi_120")
     @Temporal(TemporalType.TIMESTAMP)
     private Date tanggalKonfirmasi120;
 
-    @Column(name = "tanggal_konfirmasi_365", nullable = false)
+    @Column(name = "tanggal_konfirmasi_365")
     @Temporal(TemporalType.TIMESTAMP)
     private Date tanggalKonfirmasi365;
 
@@ -197,12 +197,12 @@ public class Transaksi extends DateConfig {
         this.customer = customer;
     }
 
-    public Salesman getSalesman() {
-        return salesman;
+    public Marketting getMarketting() {
+        return marketting;
     }
 
-    public void setSalesman(Salesman salesman) {
-        this.salesman = salesman;
+    public void setMarketting(Marketting marketting) {
+        this.marketting = marketting;
     }
 
     public String getStatus() {

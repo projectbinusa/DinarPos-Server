@@ -1,7 +1,7 @@
 package com.template.eazypos.dto;
 
 public class BarangTransaksiDTO {
-    private Long idTransaksi;
+
     private String barcodeBarang;
     private int qty;
     private int diskon;
@@ -9,13 +9,6 @@ public class BarangTransaksiDTO {
     private int totalHarga;
     private int totalHargaBarang;
 
-    public Long getIdTransaksi() {
-        return idTransaksi;
-    }
-
-    public void setIdTransaksi(Long idTransaksi) {
-        this.idTransaksi = idTransaksi;
-    }
 
     public String getBarcodeBarang() {
         return barcodeBarang;

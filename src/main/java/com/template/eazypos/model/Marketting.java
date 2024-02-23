@@ -33,6 +33,10 @@ public class Marketting extends DateConfig {
     @Column(name = "target", nullable = false)
     private Long target;
 
+    @ManyToOne( cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_kategori_marketting", nullable = false, updatable = false)
+    private KatrgoriMarketting katrgoriMarketting;
+
     @Column(name = "status", nullable = false)
     private Integer status =1;
 
@@ -62,6 +66,14 @@ public class Marketting extends DateConfig {
 
     public String getAlamat() {
         return alamat;
+    }
+
+    public KatrgoriMarketting getKatrgoriMarketting() {
+        return katrgoriMarketting;
+    }
+
+    public void setKatrgoriMarketting(KatrgoriMarketting katrgoriMarketting) {
+        this.katrgoriMarketting = katrgoriMarketting;
     }
 
     public void setAlamat(String alamat) {

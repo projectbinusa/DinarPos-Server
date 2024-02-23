@@ -18,13 +18,13 @@ public class BarangTransaksi extends DateConfig {
 //    private Long idTransaksi;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
-    @JoinColumn(name = "id_transaksi", nullable = false, updatable = false)
+    @JoinColumn(name = "id_transaksi",  updatable = false)
     private Transaksi transaksi;
 
-    @Column(name = "status", nullable = false, length = 50, columnDefinition = "varchar(50) default 'excelcom'")
+    @Column(name = "status",  length = 50, columnDefinition = "varchar(50) default 'excelcom'")
     private String status;
 
-    @Column(name = "barcode_barang", nullable = false, length = 50)
+    @Column(name = "barcode_barang",  length = 50)
     private String barcodeBarang;
 
     @Column(name = "harga_brng", nullable = false)
@@ -42,29 +42,29 @@ public class BarangTransaksi extends DateConfig {
     @Column(name = "total_harga", nullable = false)
     private int totalHarga;
 
-    @Column(name = "hemat", nullable = false, length = 50)
+    @Column(name = "hemat",  length = 50)
     private String hemat;
 
     @Column(name = "tanggal", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date tanggal;
 
-    @Column(name = "del_flag", nullable = false, columnDefinition = "int default 1")
+    @Column(name = "del_flag",  columnDefinition = "int default 1")
     private int delFlag;
 
-    @Column(name = "7_hari", nullable = false, columnDefinition = "int default 1")
+    @Column(name = "7_hari",  columnDefinition = "int default 1")
     private int hari7;
 
-    @Column(name = "30_hari", nullable = false, columnDefinition = "int default 1")
+    @Column(name = "30_hari",  columnDefinition = "int default 1")
     private int hari30;
 
-    @Column(name = "90_hari", nullable = false, columnDefinition = "int default 1")
+    @Column(name = "90_hari",  columnDefinition = "int default 1")
     private int hari90;
 
-    @Column(name = "120_hari", nullable = false, columnDefinition = "int default 1")
+    @Column(name = "120_hari",  columnDefinition = "int default 1")
     private int hari120;
 
-    @Column(name = "367_hari", nullable = false, columnDefinition = "int default 1")
+    @Column(name = "367_hari",  columnDefinition = "int default 1")
     private int hari367;
 
 
@@ -125,6 +125,7 @@ public class BarangTransaksi extends DateConfig {
     public void setQty(int qty) {
         this.qty = qty;
     }
+
 
     public int getTotalHargaBarang() {
         return totalHargaBarang;
