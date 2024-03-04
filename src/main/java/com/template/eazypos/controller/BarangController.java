@@ -1,14 +1,19 @@
 package com.template.eazypos.controller;
 
-import com.template.eazypos.dto.CustomerDTO;
+
 import com.template.eazypos.exception.CommonResponse;
-import com.template.eazypos.exception.InternalErrorException;
 import com.template.eazypos.exception.ResponseHelper;
+import com.template.eazypos.exception.ResponseMessage;
 import com.template.eazypos.model.Barang;
-import com.template.eazypos.model.Customer;
 import com.template.eazypos.service.eazypos.BarangService;
 import com.template.eazypos.service.eazypos.excel.ExcelBarang;
+import com.template.eazypos.service.eazypos.excel.ExcelBarangService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,7 +29,7 @@ public class BarangController {
     private BarangService barangService;
 
     @Autowired
-    private ExcelBarang excelBarang;
+    private ExcelBarangService excelBarang;
 
     @PostMapping("/add")
     public CommonResponse<Barang> add(@RequestBody Barang barang){
@@ -46,38 +51,45 @@ public class BarangController {
     public CommonResponse<?> delete(@PathVariable("id")  Long id ) {
         return ResponseHelper.ok( barangService.delete(id));
     }
-    @PostMapping("/import")
-    public CommonResponse<String> importBarangsFromExcel(@RequestParam("file") MultipartFile file) {
-        try {
-            excelBarang.importBarangFromExcel(file);
-            return ResponseHelper.ok("Barangs imported successfully");
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new InternalErrorException("Error" + e.getMessage());
+    @PostMapping(path = "/import")
+    public ResponseEntity<ResponseMessage> uploadFile(@RequestPart("file") MultipartFile file) {
+        String message = "";
+        if (ExcelBarang.hasExcelFormat(file)) {
+            try {
+                excelBarang.saveBarang(file);
+                message = "Uploaded the file successfully: " + file.getOriginalFilename();
+                return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(message));
+
+            } catch (Exception e) {
+                System.out.println(e);
+                message = "Could not upload the file: " + file.getOriginalFilename() + "!";
+                return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ResponseMessage(message));
+            }
         }
+        message = "Please upload an excel file!";
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseMessage(message));
     }
+
     @GetMapping("/export")
-    public ResponseEntity<byte[]> exportBarangsToExcel() {
-        try {
-            byte[] excelData = excelBarang.exportToExcel();
-            return ResponseEntity.ok()
-                    .header("Content-Disposition", "attachment; filename=Data Barang.xlsx")
-                    .body(excelData);
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new InternalErrorException("Error " + e.getMessage());
-        }
+    public ResponseEntity<Resource> exportBarangsToExcel() throws IOException {
+        String filename = "Data Barang.xlsx";
+        InputStreamResource file = new InputStreamResource(excelBarang.loadBarang());
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename)
+                .contentType(MediaType.parseMediaType("application/vnd.ms-excel"))
+                .body(file);
+
     }
     @GetMapping("/template")
-    public ResponseEntity<byte[]> templateBarangsToExcel() {
-        try {
-            byte[] excelData = excelBarang.templateToExcel();
-            return ResponseEntity.ok()
-                    .header("Content-Disposition", "attachment; filename=Template Data Barang.xlsx")
-                    .body(excelData);
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new InternalErrorException("Error " + e.getMessage());
-        }
+    public ResponseEntity<Resource> templateBarangsToExcel() throws IOException {
+        String filename = "Template Data Barang.xlsx";
+        InputStreamResource file = new InputStreamResource(excelBarang.templateBarang());
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename)
+                .contentType(MediaType.parseMediaType("application/vnd.ms-excel"))
+                .body(file);
+
     }
 }

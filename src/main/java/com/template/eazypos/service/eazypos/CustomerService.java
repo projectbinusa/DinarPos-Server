@@ -28,6 +28,7 @@ public class CustomerService {
        add.setEmail(customerDTO.getEmail());
        add.setNama_customer(customerDTO.getNama_customer());
        add.setTelp(customerDTO.getNot_telp());
+       add.setDel_flag(1);
        return customerRepository.save(add);
     }
     public Customer get(Long id) {

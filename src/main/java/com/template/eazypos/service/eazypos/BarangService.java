@@ -25,7 +25,7 @@ public class BarangService {
         return barangRepository.findById(id).orElseThrow(() -> new NotFoundException("Id tidak dinemukan"));
     }
     public List<Barang> getAll(){
-        return barangRepository.findAll();
+        return barangRepository.findAllBarang();
     }
     public Barang edit(Barang barang , Long id){
         Barang update = barangRepository.findById(id).orElseThrow(() -> new NotFoundException("Id tidak dinemukan"));

@@ -1,16 +1,15 @@
 package com.template.eazypos.service.eazypos.excel;
 
 import com.template.eazypos.model.Suplier;
-import com.template.eazypos.repository.SuplierRepository;
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.transaction.Transactional;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,91 +19,121 @@ import java.util.List;
 
 @Service
 public class ExcelSuplier {
-    @Autowired
-    private SuplierRepository suplierRepository;
+    public static String TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+    static String[] HEADERsSuplier = {"NO", "KODE SUPLIER", "NAMA SUPLIER", " ALAMAT", "NO TELEPON", "KETERANGAN"};
+    static String[] HEADERsTemplate = {"NO", "KODE SUPLIER", "NAMA SUPLIER", " ALAMAT", "NO TELEPON", "KETERANGAN"};
 
+    static String SHEET = "Sheet1";
 
-
-    @Transactional
-    public void importSuplierFromExcel(MultipartFile file) throws IOException {
-        List<Suplier> suplierList = new ArrayList<>();
-
-        try (InputStream inputStream = file.getInputStream()) {
-            Workbook workbook = new XSSFWorkbook(inputStream);
-            Sheet sheet = workbook.getSheetAt(0);
-            Iterator<Row> rowIterator = sheet.iterator();
-
-            while (rowIterator.hasNext()) {
-                Row row = rowIterator.next();
-                if (row.getRowNum() == 0) continue; // Skip header row
-                Suplier suplier = new Suplier();
-
-                suplier.setKodeSuplier(row.getCell(1).getStringCellValue());
-                suplier.setNamaSuplier(row.getCell(2).getStringCellValue());
-                suplier.setAlamatSuplier(row.getCell(3).getStringCellValue());
-                suplier.setNoTelpSuplier(row.getCell(4).getStringCellValue());
-                suplier.setKeterangan(row.getCell(5).getStringCellValue());
-                suplier.setDelFlag(1); // Assuming default value
-
-                suplierList.add(suplier);
-            }
+    public static boolean hasExcelFormat(MultipartFile file) {
+        if (!TYPE.equals(file.getContentType())) {
+            return false;
         }
-
-        // Simpan semua suplier ke dalam database
-        suplierRepository.saveAll(suplierList);
+        return true;
     }
-    public byte[] exportSuplierToExcel() throws IOException {
-        List<Suplier> supliers = suplierRepository.findAll();
 
-        try (Workbook workbook = new XSSFWorkbook()) {
-            Sheet sheet = workbook.createSheet("Suplier");
 
-            // Create header row
+    public static ByteArrayInputStream suplierToExcel(List<Suplier> supliers) throws IOException {
+        try (Workbook workbook = new XSSFWorkbook(); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+            Sheet sheet = workbook.createSheet(SHEET);
+
             Row headerRow = sheet.createRow(0);
-            headerRow.createCell(0).setCellValue("NO");
-            headerRow.createCell(1).setCellValue("Kode Suplier");
-            headerRow.createCell(2).setCellValue("Nama Suplier");
-            headerRow.createCell(3).setCellValue("Alamat Suplier");
-            headerRow.createCell(4).setCellValue("No. Telepon");
-            headerRow.createCell(5).setCellValue("Keterangan");
 
-            int rowCount = 1;
-            int no =0;
+            for (int col = 0; col < HEADERsSuplier.length; col++) {
+                Cell cell = headerRow.createCell(col);
+                cell.setCellValue(HEADERsSuplier[col]);
+            }
+
+
+            int rowIdx = 1;
+            int no = 0;
             for (Suplier suplier : supliers) {
-                Row row = sheet.createRow(rowCount++);
-                row.createCell(0).setCellValue(no++);
+                Row row = sheet.createRow(rowIdx++);
+                row.createCell(0).setCellValue(no);
                 row.createCell(1).setCellValue(suplier.getKodeSuplier());
                 row.createCell(2).setCellValue(suplier.getNamaSuplier());
                 row.createCell(3).setCellValue(suplier.getAlamatSuplier());
                 row.createCell(4).setCellValue(suplier.getNoTelpSuplier());
                 row.createCell(5).setCellValue(suplier.getKeterangan());
-
             }
-
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            workbook.write(outputStream);
-            return outputStream.toByteArray();
+            workbook.write(out);
+            return new ByteArrayInputStream(out.toByteArray());
+        } catch(IOException e){
+            throw new RuntimeException("fail to import data to Excel file: " + e.getMessage());
         }
     }
-    public byte[] templateSuplierToExcel() throws IOException {
-
-        try (Workbook workbook = new XSSFWorkbook()) {
-            Sheet sheet = workbook.createSheet("Template Suplier");
-
-            // Create header row
+    public static ByteArrayInputStream templateToExcel(List<Suplier> supliers) throws IOException {
+        try (Workbook workbook = new XSSFWorkbook(); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+            Sheet sheet = workbook.createSheet(SHEET);
             Row headerRow = sheet.createRow(0);
-            headerRow.createCell(0).setCellValue("NO");
-            headerRow.createCell(1).setCellValue("Kode Suplier");
-            headerRow.createCell(2).setCellValue("Nama Suplier");
-            headerRow.createCell(3).setCellValue("Alamat Suplier");
-            headerRow.createCell(4).setCellValue("No. Telepon");
-            headerRow.createCell(5).setCellValue("Keterangan");
-
-
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            workbook.write(outputStream);
-            return outputStream.toByteArray();
+            for (int col = 0; col < HEADERsTemplate.length; col++) {
+                Cell cell = headerRow.createCell(col);
+                cell.setCellValue(HEADERsTemplate[col]);
+            }
+            workbook.write(out);
+            return new ByteArrayInputStream(out.toByteArray());
+        } catch(IOException e){
+            throw new RuntimeException("fail to import data to Excel file: " + e.getMessage());
         }
+    }
+    public static List<Suplier> excelToSuplier(InputStream is){
+
+        try {
+            Workbook workbook = new XSSFWorkbook(is);
+
+            Sheet sheet = workbook.getSheet(SHEET);
+            Iterator<Row> rows = sheet.iterator();
+
+            List<Suplier> suplierList = new ArrayList<Suplier>();
+            int rowNumber = 0;
+            while (rows.hasNext()) {
+                Row currentRow = rows.next();
+
+                if (rowNumber == 0) {
+                    rowNumber++;
+                    continue;
+                }
+
+                Iterator<Cell> cellsInRow = currentRow.iterator();
+
+                Suplier suplier = new Suplier();
+
+                int cellIdx = 1;
+                while (cellsInRow.hasNext()) {
+                    Cell currentCell = cellsInRow.next();
+
+                    switch (cellIdx) {
+                        case 1:
+                            suplier.setKodeSuplier(currentCell.getStringCellValue());
+                            break;
+                        case 2:
+                            suplier.setNamaSuplier(currentCell.getStringCellValue());
+                            break;
+                        case 3:
+                            suplier.setNoTelpSuplier(currentCell.getStringCellValue());
+                            break;
+                        case 4:
+                            suplier.setAlamatSuplier(currentCell.getStringCellValue());
+                            break;
+                        case 5:
+                            suplier.setKeterangan(currentCell.getStringCellValue());
+                            break;
+
+                        default:
+                            break;
+                    }
+                    suplier.setDelFlag(1);
+                    suplierList.add(suplier);
+                    cellIdx++;
+
+                }
+            }
+            workbook.close();
+            return suplierList;
+        } catch (IOException e) {
+            throw new RuntimeException("fail to parse Excel file: " + e.getMessage());
+        }
+
     }
 
 }

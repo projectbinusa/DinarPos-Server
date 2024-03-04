@@ -32,6 +32,7 @@ public class StokMasukService {
         StokMasuk add = new StokMasuk();
         add.setKeteranganStokMasuk(stokMasukDTO.getKeterangan());
         add.setJumlahStok(stokMasukDTO.getJumlah_stok());
+        add.setDelFlag(1);
         add.setBarang(barangRepository.findById(stokMasukDTO.getId_barang()).get());
         add.setSuplier(suplierRepository.findById(stokMasukDTO.getId_suplier()).get());
 

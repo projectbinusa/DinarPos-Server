@@ -16,13 +16,14 @@ public class SupplierService {
     private SuplierRepository suplierRepository;
 
     public Suplier add(Suplier supplier){
+        supplier.setDelFlag(1);
         return suplierRepository.save(supplier);
     }
     public Suplier get(Long id) {
         return suplierRepository.findById(id).orElseThrow(() -> new NotFoundException("Id tidak dinemukan"));
     }
     public List<Suplier> getAll(){
-        return suplierRepository.findAll();
+        return suplierRepository.findAllSuplier();
     }
     public Suplier edit(Suplier suplier , Long id){
         Suplier update = suplierRepository.findById(id).orElseThrow(() -> new NotFoundException("Id tidak dinemukan"));

@@ -28,6 +28,7 @@ public class StokKeluarService {
         StokKeluar add = new StokKeluar();
         add.setKeteranganStokKeluar(stokKeluarDTO.getKeterangan());
         add.setJumlahStok(stokKeluarDTO.getJumlah_stok());
+        add.setDelFlag(1);
         add.setBarang(barangRepository.findById(stokKeluarDTO.getId_barang()).get());
 
         Barang barang = new Barang();
