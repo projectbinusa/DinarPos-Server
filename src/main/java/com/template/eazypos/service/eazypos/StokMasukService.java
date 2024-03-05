@@ -12,6 +12,7 @@ import com.template.eazypos.repository.SuplierRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,16 +29,20 @@ public class StokMasukService {
     private BarangRepository barangRepository;
 
     public StokMasuk add(StokMasukDTO stokMasukDTO){
-        Barang jumlahBarang = barangRepository.findById(stokMasukDTO.getId_barang()).get();
+        Barang barang = barangRepository.findById(stokMasukDTO.getId_barang()).get();
+        int jmlsebelum = barang.getJumlahStok();
+        int jmlstok_masuk = stokMasukDTO.getJumlah_stok();
         StokMasuk add = new StokMasuk();
+        Date now = new Date();
+        add.setcDate(now);
         add.setKeteranganStokMasuk(stokMasukDTO.getKeterangan());
-        add.setJumlahStok(stokMasukDTO.getJumlah_stok());
+        add.setJumlahStok(String.valueOf(stokMasukDTO.getJumlah_stok()));
         add.setDelFlag(1);
-        add.setBarang(barangRepository.findById(stokMasukDTO.getId_barang()).get());
-        add.setSuplier(suplierRepository.findById(stokMasukDTO.getId_suplier()).get());
 
-        Barang barang = new Barang();
-        barang.setJumlahStok(Integer.parseInt(jumlahBarang.getJumlahStok() + stokMasukDTO.getJumlah_stok()));
+        add.setBarang(barangRepository.findById(stokMasukDTO.getId_barang()).orElseThrow(() -> new NotFoundException("Id Barang tidak dinemukan")));
+        add.setSuplier(suplierRepository.findById(stokMasukDTO.getId_suplier()).orElseThrow(() -> new NotFoundException("Id Suplier tidak dinemukan")));
+
+      barang.setJumlahStok(jmlsebelum + jmlstok_masuk);
         barangRepository.save(barang);
         return stokMasukRepository.save(add);
     }
@@ -49,14 +54,15 @@ public class StokMasukService {
     }
     public StokMasuk edit(StokMasukDTO stokMasukDTO , Long id){
         StokMasuk update = stokMasukRepository.findById(id).orElseThrow(() -> new NotFoundException("Id tidak dinemukan"));
-        Barang jumlahBarang = barangRepository.findById(stokMasukDTO.getId_barang()).get();
+        Barang barang = barangRepository.findById(stokMasukDTO.getId_barang()).get();
+        int jmlsebelum = barang.getJumlahStok();
+        int jmlstok_masuk = stokMasukDTO.getJumlah_stok();
         update.setKeteranganStokMasuk(stokMasukDTO.getKeterangan());
-        update.setJumlahStok(stokMasukDTO.getJumlah_stok());
+        update.setJumlahStok(String.valueOf(stokMasukDTO.getJumlah_stok()));
         update.setBarang(barangRepository.findById(stokMasukDTO.getId_barang()).get());
         update.setSuplier(suplierRepository.findById(stokMasukDTO.getId_suplier()).get());
 
-        Barang barang = new Barang();
-        barang.setJumlahStok(Integer.parseInt(jumlahBarang.getJumlahStok() + stokMasukDTO.getJumlah_stok()));
+        barang.setJumlahStok(jmlsebelum + jmlstok_masuk);
         barangRepository.save(barang);
         return stokMasukRepository.save(update);
     }

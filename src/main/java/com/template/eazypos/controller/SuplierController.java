@@ -56,7 +56,7 @@ public class SuplierController {
     @PostMapping(path = "/import")
     public ResponseEntity<ResponseMessage> uploadFile(@RequestPart("file") MultipartFile file) {
         String message = "";
-        if (ExcelBarang.hasExcelFormat(file)) {
+        if (ExcelSuplier.hasExcelFormat(file)) {
             try {
                 excelSuplier.saveSuplier(file);
                 message = "Uploaded the file successfully: " + file.getOriginalFilename();
@@ -72,26 +72,27 @@ public class SuplierController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseMessage(message));
     }
 
+
     @GetMapping("/export")
-    public ResponseEntity<Resource> exportBarangsToExcel() throws IOException {
-        String filename = "Data Suplier.xlsx";
+    public ResponseEntity<Resource> exportSupliersToExcel() throws IOException {
+        String filename = "Data_Suplier.xlsx";
         InputStreamResource file = new InputStreamResource(excelSuplier.loadSuplier());
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename)
                 .contentType(MediaType.parseMediaType("application/vnd.ms-excel"))
                 .body(file);
-
     }
+
     @GetMapping("/template")
-    public ResponseEntity<Resource> templateBarangsToExcel() throws IOException {
-        String filename = "Template Data Suplier.xlsx";
+    public ResponseEntity<Resource> templateSupliersToExcel() throws IOException {
+        String filename = "Template_Data_Suplier.xlsx";
         InputStreamResource file = new InputStreamResource(excelSuplier.templateSuplier());
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename)
                 .contentType(MediaType.parseMediaType("application/vnd.ms-excel"))
                 .body(file);
-
     }
+
 }

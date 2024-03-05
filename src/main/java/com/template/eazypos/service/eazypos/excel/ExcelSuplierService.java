@@ -16,21 +16,21 @@ public class ExcelSuplierService {
     private SuplierRepository suplierRepository;
 
     public ByteArrayInputStream loadSuplier() throws IOException {
-        List<Suplier> barangs = suplierRepository.findAllSuplier();
-        ByteArrayInputStream in = ExcelSuplier.suplierToExcel(barangs);
-        return in;
+        List<Suplier> supliers = suplierRepository.findAllSuplier();
+        return ExcelSuplier.suplierToExcel(supliers);
     }
+
     public ByteArrayInputStream templateSuplier() throws IOException {
-        List<Suplier> barangs = suplierRepository.findAllSuplier();
-        ByteArrayInputStream in = ExcelSuplier.templateToExcel(barangs);
-        return in;
+        return ExcelSuplier.templateToExcel();
     }
+
     public void saveSuplier(MultipartFile file) {
         try {
-            List<Suplier> suplierList = ExcelSuplier.excelToSuplier(file.getInputStream());
-            suplierRepository.saveAll(suplierList);
+            List<Suplier> supliersList = ExcelSuplier.excelToSuplier(file.getInputStream());
+            suplierRepository.saveAll(supliersList);
         } catch (IOException e) {
             throw new RuntimeException("fail to store excel data: " + e.getMessage());
         }
     }
+
 }

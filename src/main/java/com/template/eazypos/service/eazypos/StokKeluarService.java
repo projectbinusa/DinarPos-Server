@@ -24,15 +24,16 @@ public class StokKeluarService {
     private BarangRepository barangRepository;
 
     public StokKeluar add(StokKeluarDTO stokKeluarDTO) {
-        Barang jumlahBarang = barangRepository.findById(stokKeluarDTO.getId_barang()).get();
+        Barang barang = barangRepository.findById(stokKeluarDTO.getId_barang()).get();
+        int jmlsebelum = barang.getJumlahStok();
+        int jmlstok_keluar = stokKeluarDTO.getJumlah_stok();
         StokKeluar add = new StokKeluar();
         add.setKeteranganStokKeluar(stokKeluarDTO.getKeterangan());
-        add.setJumlahStok(stokKeluarDTO.getJumlah_stok());
+        add.setJumlahStok(String.valueOf(stokKeluarDTO.getJumlah_stok()));
         add.setDelFlag(1);
         add.setBarang(barangRepository.findById(stokKeluarDTO.getId_barang()).get());
 
-        Barang barang = new Barang();
-        barang.setJumlahStok(Integer.parseInt(jumlahBarang.getJumlahStok() + stokKeluarDTO.getJumlah_stok()));
+       barang.setJumlahStok(jmlsebelum - jmlstok_keluar);
         barangRepository.save(barang);
         return stokKeluarRepository.save(add);
     }
@@ -46,14 +47,15 @@ public class StokKeluarService {
     }
 
     public StokKeluar edit(StokKeluarDTO stokKeluarDTO, Long id) {
-        Barang jumlahBarang = barangRepository.findById(stokKeluarDTO.getId_barang()).get();
+        Barang barang = barangRepository.findById(stokKeluarDTO.getId_barang()).get();
+        int jmlsebelum = barang.getJumlahStok();
+        int jmlstok_keluar = stokKeluarDTO.getJumlah_stok();
         StokKeluar update = stokKeluarRepository.findById(id).orElseThrow(() -> new NotFoundException("Id tidak dinemukan"));
         update.setKeteranganStokKeluar(stokKeluarDTO.getKeterangan());
-        update.setJumlahStok(stokKeluarDTO.getJumlah_stok());
+        update.setJumlahStok(String.valueOf(stokKeluarDTO.getJumlah_stok()));
         update.setBarang(barangRepository.findById(stokKeluarDTO.getId_barang()).get());
 
-        Barang barang = new Barang();
-        barang.setJumlahStok(Integer.parseInt(jumlahBarang.getJumlahStok() + stokKeluarDTO.getJumlah_stok()));
+        barang.setJumlahStok(jmlsebelum - jmlstok_keluar);
         barangRepository.save(barang);
         return stokKeluarRepository.save(update);
     }

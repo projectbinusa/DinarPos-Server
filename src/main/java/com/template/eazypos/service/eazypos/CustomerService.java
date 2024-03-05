@@ -29,6 +29,7 @@ public class CustomerService {
        add.setNama_customer(customerDTO.getNama_customer());
        add.setTelp(customerDTO.getNot_telp());
        add.setDel_flag(1);
+       add.setJenis(customerDTO.getJenis());
        return customerRepository.save(add);
     }
     public Customer get(Long id) {
@@ -39,7 +40,6 @@ public class CustomerService {
     }
     public Customer edit(CustomerDTO customerDTO , Long id){
         Customer update = customerRepository.findById(id).orElseThrow(() -> new NotFoundException("Id tidak dinemukan"));
-        update.setSalesman(salesmanRepository.findById(customerDTO.getId_salesman()).orElseThrow(() -> new NotFoundException("Id Salesman tidak dinemukan")));
         update.setAlamat(customerDTO.getAlamat());
         update.setEmail(customerDTO.getEmail());
         update.setNama_customer(customerDTO.getNama_customer());

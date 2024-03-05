@@ -34,7 +34,7 @@ public class StokMasuk extends DateConfig {
     @Column(name = "keterangan_stok_masuk", nullable = false, length = 255)
     private String keteranganStokMasuk;
 
-    @Column(name = "c_date", nullable = false)
+    @Column(name = "c_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date cDate;
 

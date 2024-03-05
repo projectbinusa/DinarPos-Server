@@ -3,7 +3,7 @@ package com.template.eazypos.dto;
 public class StokMasukDTO {
     private Long id_suplier;
     private Long id_barang;
-    private String jumlah_stok;
+    private int jumlah_stok;
 
     private String keterangan;
 
@@ -23,11 +23,11 @@ public class StokMasukDTO {
         this.id_barang = id_barang;
     }
 
-    public String getJumlah_stok() {
+    public int getJumlah_stok() {
         return jumlah_stok;
     }
 
-    public void setJumlah_stok(String jumlah_stok) {
+    public void setJumlah_stok(int jumlah_stok) {
         this.jumlah_stok = jumlah_stok;
     }
 
