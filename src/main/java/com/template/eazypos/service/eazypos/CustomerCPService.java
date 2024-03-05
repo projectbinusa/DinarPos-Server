@@ -44,8 +44,6 @@ public class CustomerCPService {
     }
     public CustomerCP edit(CustomerCPDTO customerCPDTO , Long id){
         CustomerCP update = customerCPRepository.findById(id).orElseThrow(() -> new NotFoundException("Id tidak dinemukan"));
-        update.setSalesman(salesmanRepository.findById(customerCPDTO.getId_salesman()).orElseThrow(() -> new NotFoundException("Id Salesman tidak dinemukan")));
-        update.setCustomer(customerRepository.findById(customerCPDTO.getId_customer()).orElseThrow(() -> new NotFoundException("Id Customer tidak dinemukan")));
         update.setEmail(customerCPDTO.getEmail());
         update.setJabatan(customerCPDTO.getJabatan());
         update.setNama_cp(customerCPDTO.getNama_cp());
