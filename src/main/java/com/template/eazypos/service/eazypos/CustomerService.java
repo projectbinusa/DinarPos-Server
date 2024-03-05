@@ -44,6 +44,7 @@ public class CustomerService {
         update.setEmail(customerDTO.getEmail());
         update.setNama_customer(customerDTO.getNama_customer());
         update.setTelp(customerDTO.getNot_telp());
+        update.setJenis(customerDTO.getJenis());
         return customerRepository.save(update);
     }
     public Map<String, Boolean> delete(Long id ) {
