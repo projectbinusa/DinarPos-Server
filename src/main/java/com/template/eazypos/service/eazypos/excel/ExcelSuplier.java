@@ -84,36 +84,25 @@ public class ExcelSuplier {
                 for (int cellIdx = 0; cellIdx < 6; cellIdx++) {
                     Cell currentCell = row.getCell(cellIdx, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
                     switch (cellIdx) {
-                        case 0:
-                            // DelFlag
-                            suplier.setDelFlag(1);
-                            break;
                         case 1:
-                            // Kode Suplier
-                            if (currentCell.getCellType() == CellType.NUMERIC) {
-                                suplier.setKodeSuplier(String.valueOf((int) currentCell.getNumericCellValue()));
-                            } else {
                                 suplier.setKodeSuplier(currentCell.getStringCellValue());
-                            }
                             break;
                         case 2:
                             // Nama Suplier
                             suplier.setNamaSuplier(currentCell.getStringCellValue());
+                            suplier.setDelFlag(1);
                             break;
-                        case 3:
-                            // No. Telepon
+                        case 4:
                             if (currentCell.getCellType() == CellType.NUMERIC) {
-                                suplier.setNoTelpSuplier(String.valueOf((long) currentCell.getNumericCellValue()));
+                                suplier.setNoTelpSuplier(String.valueOf(currentCell.getNumericCellValue()));
                             } else {
                                 suplier.setNoTelpSuplier(currentCell.getStringCellValue());
                             }
                             break;
-                        case 4:
-                            // Alamat Suplier
+                        case 3:
                             suplier.setAlamatSuplier(currentCell.getStringCellValue());
                             break;
                         case 5:
-                            // Keterangan
                             suplier.setKeterangan(currentCell.getStringCellValue());
                             break;
                         default:

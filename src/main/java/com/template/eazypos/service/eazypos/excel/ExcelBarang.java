@@ -3,10 +3,7 @@ package com.template.eazypos.service.eazypos.excel;
 import com.template.eazypos.model.Barang;
 import com.template.eazypos.model.Suplier;
 import com.template.eazypos.repository.BarangRepository;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -63,10 +60,11 @@ public class ExcelBarang {
             }
             workbook.write(out);
             return new ByteArrayInputStream(out.toByteArray());
-        } catch(IOException e){
+        } catch (IOException e) {
             throw new RuntimeException("fail to import data to Excel file: " + e.getMessage());
         }
     }
+
     public static ByteArrayInputStream templateToExcel(List<Barang> barangs) throws IOException {
         try (Workbook workbook = new XSSFWorkbook(); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
             Sheet sheet = workbook.createSheet(SHEET);
@@ -77,11 +75,12 @@ public class ExcelBarang {
             }
             workbook.write(out);
             return new ByteArrayInputStream(out.toByteArray());
-        } catch(IOException e){
+        } catch (IOException e) {
             throw new RuntimeException("fail to import data to Excel file: " + e.getMessage());
         }
     }
-    public static List<Barang> excelToBarang(InputStream is){
+
+    public static List<Barang> excelToBarang(InputStream is) {
 
         try {
             Workbook workbook = new XSSFWorkbook(is);
@@ -103,13 +102,15 @@ public class ExcelBarang {
 
                 Barang barang = new Barang();
 
-                int cellIdx = 1;
+                int cellIdx = 0;
                 while (cellsInRow.hasNext()) {
                     Cell currentCell = cellsInRow.next();
 
                     switch (cellIdx) {
                         case 1:
                             barang.setBarcodeBarang(currentCell.getStringCellValue());
+                            barang.setIdSuplier(0L);
+                            barang.setDelFlag(1);
                             break;
                         case 2:
                             barang.setNamaBarang(currentCell.getStringCellValue());
@@ -118,27 +119,32 @@ public class ExcelBarang {
                             barang.setUnit(currentCell.getStringCellValue());
                             break;
                         case 4:
-                            barang.setHargaBeli(currentCell.getStringCellValue());
+                            if (currentCell.getCellType() == CellType.NUMERIC) {
+                                barang.setHargaBeli(String.valueOf(currentCell.getNumericCellValue()));
+                            } else {
+                                barang.setHargaBeli(currentCell.getStringCellValue());
+                            }
                             break;
                         case 5:
-                            barang.setHargaBarang(currentCell.getStringCellValue());
+                            if (currentCell.getCellType() == CellType.NUMERIC) {
+                                barang.setHargaBarang(String.valueOf(currentCell.getNumericCellValue()));
+                            } else {
+                                barang.setHargaBarang(currentCell.getStringCellValue());
+                            }
                             break;
 
                         default:
                             break;
                     }
-                    barang.setIdSuplier(0L);
-                    barang.setDelFlag(1);
-                    barangList.add(barang);
                     cellIdx++;
-
                 }
+                barangList.add(barang);
             }
             workbook.close();
+
             return barangList;
         } catch (IOException e) {
             throw new RuntimeException("fail to parse Excel file: " + e.getMessage());
         }
-
     }
 }
