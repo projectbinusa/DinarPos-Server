@@ -39,6 +39,10 @@ public class BarangController {
     public CommonResponse <Barang> get(@PathVariable("id") Long id){
         return ResponseHelper.ok( barangService.get(id));
     }
+    @GetMapping("/{barcode}")
+    public CommonResponse <Barang> getByBarcode(@PathVariable("barcode") String  barcode){
+        return ResponseHelper.ok( barangService.getByBarcode(barcode));
+    }
     @GetMapping
     public CommonResponse<List<Barang>> getAll(){
         return ResponseHelper.ok( barangService.getAll());

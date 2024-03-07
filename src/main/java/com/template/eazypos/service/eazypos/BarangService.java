@@ -22,6 +22,9 @@ public class BarangService {
         barang.setJumlahStok(0);
         return barangRepository.save(barang);
     }
+    public  Barang getByBarcode(String barcode) {
+        return barangRepository.findByBarcode(barcode);
+    }
     public Barang get(Long id) {
         return barangRepository.findById(id).orElseThrow(() -> new NotFoundException("Id tidak dinemukan"));
     }

@@ -24,7 +24,7 @@ public class TransaksiBeli extends DateConfig {
     @Column(name = "status", nullable = false, length = 50, columnDefinition = "varchar(50) default 'excelcom'")
     private String status;
 
-    @Column(name = "nama_suplier", nullable = false, length = 100)
+    @Column(name = "nama_suplier", length = 100)
     private String namaSuplier;
 
     @Column(name = "total_bayar_barang", nullable = false, length = 50)
