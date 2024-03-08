@@ -8,8 +8,10 @@ import com.template.eazypos.model.Transaksi;
 import com.template.eazypos.model.TransaksiBeli;
 import com.template.eazypos.service.eazypos.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -41,10 +43,18 @@ public class LaporanController {
     public CommonResponse<List<Transaksi>> getAllSalesmanExcelcom(int bulan) {
         return ResponseHelper.ok(laporanSalesmanService.getAllExelcom(bulan));
     }
+    @GetMapping("/salesman/tanggal/excelcom")
+    public CommonResponse<List<Transaksi>> getAllByTanggalExcelcom(@RequestParam(name = "tanggal_awal") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggalAwal, @RequestParam(name = "tanggal_akhir") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggalAkhir , @RequestParam("id_marketting") Long idMarketting) {
+        return ResponseHelper.ok(laporanSalesmanService.getByTanggalExcelcom(tanggalAwal,tanggalAkhir,idMarketting));
+    }
 
     @GetMapping("/salesman/dinarpos")
     public CommonResponse<List<Transaksi>> getAllSalesmanDinarpos(int bulan) {
         return ResponseHelper.ok(laporanSalesmanService.getAllDinarpos(bulan));
+    }
+    @GetMapping("/salesman/tanggal/dinarpos")
+    public CommonResponse<List<Transaksi>> getAllByTanggalDinarpos(@RequestParam(name = "tanggal_awal") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggalAwal, @RequestParam(name = "tanggal_akhir") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggalAkhir , @RequestParam("id_marketting") Long idMarketting) {
+        return ResponseHelper.ok(laporanSalesmanService.getByTanggalDinarpos(tanggalAwal,tanggalAkhir,idMarketting));
     }
 
     @PutMapping("/salesman/{id}")
@@ -66,10 +76,18 @@ public class LaporanController {
     public CommonResponse<List<BarangTransaksi>> getAllBarangExcelcom(int bulan) {
         return ResponseHelper.ok(laporanBarangService.getAllExcelcom(bulan));
     }
+    @GetMapping("/barang/tanggal/excelcom")
+    public CommonResponse<List<BarangTransaksi>> getAllBarangByTanggalExcelcom(@RequestParam(name = "tanggal_awal") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggalAwal, @RequestParam(name = "tanggal_akhir") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggalAkhir , @RequestParam("barcode_barang") String barcode) {
+        return ResponseHelper.ok(laporanBarangService.getByTanggalExcelcom(tanggalAwal,tanggalAkhir,barcode));
+    }
 
     @GetMapping("/barang/dinarpos")
     public CommonResponse<List<BarangTransaksi>> getAllBarangDinarpos(int bulan) {
         return ResponseHelper.ok(laporanBarangService.getAllDinarpos(bulan));
+    }
+    @GetMapping("/barang/tanggal/dinarpos")
+    public CommonResponse<List<BarangTransaksi>> getAllBarangByTanggalDinarpos(@RequestParam(name = "tanggal_awal") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggalAwal, @RequestParam(name = "tanggal_akhir") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggalAkhir , @RequestParam("barcode_barang") String barcode) {
+        return ResponseHelper.ok(laporanBarangService.getByTanggalDinarpos(tanggalAwal,tanggalAkhir,barcode));
     }
 
     @PutMapping("/barang/{id}")

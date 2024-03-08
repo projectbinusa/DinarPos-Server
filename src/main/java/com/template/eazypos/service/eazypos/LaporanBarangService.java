@@ -7,6 +7,7 @@ import com.template.eazypos.repository.BarangTransaksiRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,5 +42,13 @@ public class LaporanBarangService {
         } catch (Exception e) {
             return null;
         }
+    }
+    public List<BarangTransaksi> getByTanggalExcelcom(Date tanggalAwal , Date tanggalAkhir , String barcode){
+        String  status = "excelcom";
+        return barangTransaksiRepository.findByTanggal(tanggalAwal , tanggalAkhir , barcode , status);
+    }
+    public List<BarangTransaksi> getByTanggalDinarpos(Date tanggalAwal , Date tanggalAkhir , String barcode){
+        String  status = "dinarpos";
+        return barangTransaksiRepository.findByTanggal(tanggalAwal , tanggalAkhir , barcode , status);
     }
 }
