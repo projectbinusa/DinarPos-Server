@@ -3,8 +3,10 @@ package com.template.eazypos.service.eazypos.excelcom;
 import com.template.eazypos.dto.BarangTransaksiDTO;
 import com.template.eazypos.dto.TransaksiBeliDTO;
 import com.template.eazypos.model.Barang;
+import com.template.eazypos.model.BarangTransaksiBeli;
 import com.template.eazypos.model.TransaksiBeli;
 import com.template.eazypos.repository.BarangRepository;
+import com.template.eazypos.repository.BarangTransaksiBeliRepository;
 import com.template.eazypos.repository.SuplierRepository;
 import com.template.eazypos.repository.TransaksiBeliRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,9 @@ import java.util.List;
 public class TransaksiBeliExcelcomService {
     @Autowired
     private TransaksiBeliRepository transaksiBeliRepository;
+
+    @Autowired
+    private BarangTransaksiBeliRepository barangTransaksiBeliRepository;
 
     @Autowired
     private BarangRepository barangRepository;
@@ -47,10 +52,26 @@ public class TransaksiBeliExcelcomService {
 
         TransaksiBeli savedTransaksiBeli = transaksiBeliRepository.save(transaksiBeli);
 
+        // Simpan detail barang transaksi beli
         List<BarangTransaksiDTO> listProduk = transaksiBeliDTO.getProduk();
         for (BarangTransaksiDTO barangDTO : listProduk) {
             Barang barang = barangRepository.findByBarcode(barangDTO.getBarcodeBarang());
             if (barang != null) {
+                BarangTransaksiBeli barangTransaksiBeli = new BarangTransaksiBeli();
+                barangTransaksiBeli.setTransaksiBeli(savedTransaksiBeli);
+                barangTransaksiBeli.setBarcodeBarang(barangDTO.getBarcodeBarang());
+                barangTransaksiBeli.setNamaBarang(barang.getNamaBarang());
+                barangTransaksiBeli.setQty(barangDTO.getQty());
+                barangTransaksiBeli.setDiskon(barangDTO.getDiskon());
+                barangTransaksiBeli.setHargaBrng(barangDTO.getHargaBrng());
+                barangTransaksiBeli.setTotalHarga(barangDTO.getTotalHarga());
+                barangTransaksiBeli.setTotalHargaBarang(barangDTO.getTotalHargaBarang());
+                barangTransaksiBeli.setTanggal(now);
+                barangTransaksiBeli.setStatus("excelcom");
+
+                barangTransaksiBeliRepository.save(barangTransaksiBeli);
+
+                // Update stok barang
                 barang.setJumlahStok(barang.getJumlahStok() + barangDTO.getQty());
                 barangRepository.save(barang);
             } else {
@@ -60,6 +81,7 @@ public class TransaksiBeliExcelcomService {
         }
         return savedTransaksiBeli;
     }
+
     private String generateNotaNumber() {
         // Dapatkan tanggal saat ini
         Calendar calendar = Calendar.getInstance();
