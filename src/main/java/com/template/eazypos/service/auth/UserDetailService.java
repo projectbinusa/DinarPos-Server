@@ -22,7 +22,7 @@ public class UserDetailService implements UserDetailsService {
     @Transactional
     public UserDetails loadUserByUsername(String username) {
         Pengguna user;
-        if (penggunaRepository.existsByUsername(username)) {
+        if (penggunaRepository.findByUsername(username).isPresent()) {
             user = penggunaRepository.findByUsername(username).orElseThrow(() -> new NotFoundException("Username Not Found"));
         }else {
             throw new NotFoundException("User Not Found with username or email: " + username);

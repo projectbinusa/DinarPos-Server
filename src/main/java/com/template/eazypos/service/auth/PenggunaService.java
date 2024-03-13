@@ -54,8 +54,8 @@ public class PenggunaService {
     }
 
     public Pengguna addPengguna(Pengguna user) {
-        if (penggunaRepository.existsByUsername(user.getUsernamePengguna())){
-        throw new BadRequestException("Penggunaname sudah digunakan");
+        if (penggunaRepository.findByUsername(user.getUsernamePengguna()).isPresent()){
+        throw new BadRequestException("Username Pengguna sudah digunakan");
         }
         String encodedPassword = encoder.encode(user.getPasswordPengguna());
         user.setPasswordPengguna(encodedPassword);
