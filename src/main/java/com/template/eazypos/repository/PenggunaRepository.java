@@ -10,6 +10,6 @@ import java.util.Optional;
 public interface PenggunaRepository extends JpaRepository<Pengguna , Long> {
     @Query(value = "SELECT * FROM tabel_pengguna WHERE username_pengguna = :username ", nativeQuery = true)
     Optional<Pengguna> findByUsername(String username);
-    @Query(value = "SELECT * FROM tabel_pengguna WHERE username_pengguna = :username ", nativeQuery = true)
+    @Query(value = "SELECT CASE WHEN COUNT(*) > 0 THEN TRUE ELSE FALSE END FROM tabel_pengguna WHERE username_pengguna = :username ", nativeQuery = true)
     Boolean existsByUsername(String username);
 }
