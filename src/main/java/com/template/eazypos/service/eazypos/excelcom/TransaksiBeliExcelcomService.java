@@ -32,7 +32,7 @@ public class TransaksiBeliExcelcomService {
 
     public TransaksiBeli addTransaksiBeli(TransaksiBeliDTO transaksiBeliDTO) {
         Date now = new Date();
-        String not = generateNotaNumber(); // method generateNotaNumber() menghasilkan nomor nota baru
+        String not = generateNotaNumber();
 
         TransaksiBeli transaksiBeli = new TransaksiBeli();
         transaksiBeli.setTotalBelanja(transaksiBeliDTO.getTotalBelanja());

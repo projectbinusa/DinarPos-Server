@@ -1,6 +1,7 @@
 package com.template.eazypos.service.auth;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.template.eazypos.model.Pengguna;
 import com.template.eazypos.model.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,11 +23,11 @@ public class UserDetail implements UserDetails {
         this.password = password;
     }
 
-    public static UserDetail buildUser(User admin) {
+    public static UserDetail buildUser(Pengguna admin) {
         return new UserDetail(
-                admin.getId(),
-                admin.getUser(),
-                admin.getPassword());
+                admin.getIdPengguna(),
+                admin.getUsernamePengguna(),
+                admin.getPasswordPengguna());
     }
 
 

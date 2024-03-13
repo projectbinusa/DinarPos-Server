@@ -3,10 +3,9 @@ package com.template.eazypos.service.auth;
 import com.template.eazypos.dto.LoginRequest;
 import com.template.eazypos.exception.BadRequestException;
 import com.template.eazypos.exception.NotFoundException;
-import com.template.eazypos.model.User;
-import com.template.eazypos.repository.UserRepository;
+import com.template.eazypos.model.Pengguna;
+import com.template.eazypos.repository.PenggunaRepository;
 import com.template.eazypos.security.JwtUtils;
-import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -22,9 +21,9 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class UserService {
+public class PenggunaService {
     @Autowired
-    private UserRepository userRepository;
+    private PenggunaRepository penggunaRepository;
 
     @Autowired
     AuthenticationManager authenticationManager;
@@ -36,8 +35,8 @@ public class UserService {
     private JwtUtils jwtUtils;
 
     public Map<Object, Object> login(LoginRequest loginRequest) {
-        User user = userRepository.findByUser(loginRequest.getUsername()).orElseThrow(() -> new NotFoundException("Username not found"));
-        if (encoder.matches(loginRequest.getPassword(), user.getPassword())) {
+        Pengguna user = penggunaRepository.findByUsername(loginRequest.getUsername()).orElseThrow(() -> new NotFoundException("Penggunaname not found"));
+        if (encoder.matches(loginRequest.getPassword(), user.getPasswordPengguna())) {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
             SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -48,39 +47,41 @@ public class UserService {
             response.put("data", user);
             response.put("token", jwt);
             response.put("last_login", formattedLastLogin);
-            response.put("type_token", user.getLevel());
+            response.put("type_token", user.getLevelPengguna());
             return response;
         }
         throw new NotFoundException("Password not found");
     }
 
-    public User addUser(User user) {
-        if (userRepository.existsByUser(user.getUser())){
-        throw new BadRequestException("Username sudah digunakan");
+    public Pengguna addPengguna(Pengguna user) {
+        if (penggunaRepository.existsByUsername(user.getUsernamePengguna())){
+        throw new BadRequestException("Penggunaname sudah digunakan");
         }
-        String encodedPassword = encoder.encode(user.getPassword());
-        user.setPassword(encodedPassword);
-        return userRepository.save(user);
+        String encodedPassword = encoder.encode(user.getPasswordPengguna());
+        user.setPasswordPengguna(encodedPassword);
+        return penggunaRepository.save(user);
     }
 
-    public User get(Long id) {
-            return userRepository.findById(id).orElseThrow(() -> new NotFoundException("Id tidak dinemukan"));
+    public Pengguna get(Long id) {
+            return penggunaRepository.findById(id).orElseThrow(() -> new NotFoundException("Id tidak dinemukan"));
     }
 
-    public List<User> getAll() {
-            return userRepository.findAll();
+    public List<Pengguna> getAll() {
+            return penggunaRepository.findAll();
     }
 
-    public User edit(Long id , User user) {
-        User update = userRepository.findById(id).orElseThrow(() -> new NotFoundException("Id tidak ditemukan"));
-        update.setUser(user.getUser());
-        update.setLevel(user.getLevel());
-        update.setPassword(user.getPassword());
-        return userRepository.save(update);
+    public Pengguna edit(Long id , Pengguna user) {
+        Pengguna update = penggunaRepository.findById(id).orElseThrow(() -> new NotFoundException("Id tidak ditemukan"));
+        String encodedPassword = encoder.encode(user.getPasswordPengguna());
+        update.setUsernamePengguna(user.getUsernamePengguna());
+        update.setNamaPengguna(user.getNamaPengguna());
+        update.setLevelPengguna(user.getLevelPengguna());
+        update.setPasswordPengguna(encodedPassword);
+        return penggunaRepository.save(update);
     }
     public Map<String, Boolean> delete(Long id ) {
             try {
-                userRepository.deleteById(id);
+                penggunaRepository.deleteById(id);
                 Map<String, Boolean> res = new HashMap<>();
                 res.put("Deleted", Boolean.TRUE);
                 return res;

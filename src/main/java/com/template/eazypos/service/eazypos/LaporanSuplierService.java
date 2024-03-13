@@ -1,12 +1,16 @@
 package com.template.eazypos.service.eazypos;
 
 import com.template.eazypos.exception.NotFoundException;
+import com.template.eazypos.model.BarangTransaksi;
 import com.template.eazypos.model.BarangTransaksiBeli;
 import com.template.eazypos.model.Transaksi;
+import com.template.eazypos.model.TransaksiBeli;
 import com.template.eazypos.repository.BarangTransaksiBeliRepository;
+import com.template.eazypos.repository.TransaksiBeliRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +19,9 @@ import java.util.Map;
 public class LaporanSuplierService {
     @Autowired
     private BarangTransaksiBeliRepository barangTransaksiBeliRepository;
+
+    @Autowired
+    private TransaksiBeliRepository transaksiBeliRepository;
 
     public List<BarangTransaksiBeli> getAllExcelcom(int bulan) {
         return barangTransaksiBeliRepository.findBarangTransaksiExcelcomByPeriode(bulan);
@@ -36,5 +43,13 @@ public class LaporanSuplierService {
         } catch (Exception e) {
             return null;
         }
+    }
+    public List<TransaksiBeli> getByTanggalExcelcom(Date tanggalAwal , Date tanggalAkhir , Long suplierId){
+        String  status = "excelcom";
+        return transaksiBeliRepository.findByTanggal(tanggalAwal , tanggalAkhir , suplierId , status);
+    }
+    public List<TransaksiBeli> getByTanggalDinarpos(Date tanggalAwal , Date tanggalAkhir , Long suplierId){
+        String  status = "dinarpos";
+        return transaksiBeliRepository.findByTanggal(tanggalAwal , tanggalAkhir , suplierId , status);
     }
 }

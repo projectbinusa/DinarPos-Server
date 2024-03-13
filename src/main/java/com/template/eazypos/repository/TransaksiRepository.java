@@ -55,6 +55,7 @@ public interface TransaksiRepository extends JpaRepository<Transaksi, Long> {
 
     @Query(value = "SELECT t FROM Transaksi t WHERE t.tanggal BETWEEN :tanggalAwal AND :tanggalAkhir AND t.marketting.id = :markettingId AND t.status = :status")
     List<Transaksi> findByTanggal(Date tanggalAwal, Date tanggalAkhir, Long markettingId, String status);
-
+    @Query(value = "SELECT t FROM Transaksi t WHERE t.tanggal BETWEEN :tanggalAwal AND :tanggalAkhir AND t.customer.id = :customerId AND t.status = :status")
+    List<Transaksi> findCustomerByTanggal(Date tanggalAwal, Date tanggalAkhir, Long customerId, String status);
 
 }

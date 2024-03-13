@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -22,4 +23,8 @@ public interface TransaksiBeliRepository extends JpaRepository<TransaksiBeli , L
     List<TransaksiBeli> findTransaksiBeliExcelcomByPeriode(@Param("bulan") int bulan);
     @Query(value = "SELECT * FROM tabel_transaksi_beli WHERE status = 'dinarpos' AND MONTH(tanggal) = :bulan AND del_flag = 1  ", nativeQuery = true)
     List<TransaksiBeli> findTransaksiBeliDinarposByPeriode(@Param("bulan") int bulan);
+
+    @Query(value = "SELECT t FROM TransaksiBeli t WHERE t.tanggal BETWEEN :tanggalAwal AND :tanggalAkhir AND t.suplier.id = :suplierId AND t.status = :status")
+    List<TransaksiBeli> findByTanggal(Date tanggalAwal, Date tanggalAkhir, Long suplierId, String status);
+
 }

@@ -109,10 +109,18 @@ public class LaporanController {
     public CommonResponse<List<Transaksi>> getAllCustomerExcelcom(int bulan) {
         return ResponseHelper.ok(laporanCustomerService.getAllExelcom(bulan));
     }
+    @GetMapping("/customer/tanggal/excelcom")
+    public CommonResponse<List<Transaksi>> getAllCustomerByTanggalExcelcom(@RequestParam(name = "tanggal_awal") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggalAwal, @RequestParam(name = "tanggal_akhir") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggalAkhir , @RequestParam("id_customer") Long idCustomer) {
+        return ResponseHelper.ok(laporanCustomerService.getByTanggalExcelcom(tanggalAwal,tanggalAkhir,idCustomer));
+    }
 
     @GetMapping("/customer/dinarpos")
     public CommonResponse<List<Transaksi>> getAllCustomerDinarpos(int bulan) {
         return ResponseHelper.ok(laporanCustomerService.getAllDinarpos(bulan));
+    }
+    @GetMapping("/customer/tanggal/dinarpos")
+    public CommonResponse<List<Transaksi>> getAllCustomerByTanggalDinarpos(@RequestParam(name = "tanggal_awal") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggalAwal, @RequestParam(name = "tanggal_akhir") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggalAkhir , @RequestParam("id_customer") Long idCustomer) {
+        return ResponseHelper.ok(laporanCustomerService.getByTanggalDinarpos(tanggalAwal,tanggalAkhir,idCustomer));
     }
 
     @DeleteMapping("/customer/{id}")
@@ -128,10 +136,18 @@ public class LaporanController {
     public CommonResponse<List<BarangTransaksiBeli>> getAllSuplierxcelcom(int bulan) {
         return ResponseHelper.ok(laporanSuplierService.getAllExcelcom(bulan));
     }
+    @GetMapping("/suplier/tanggal/excelcom")
+    public CommonResponse<List<TransaksiBeli>> getAllSuplierByTanggalExcelcom(@RequestParam(name = "tanggal_awal") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggalAwal, @RequestParam(name = "tanggal_akhir") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggalAkhir , @RequestParam("id_suplier") Long idSuplier) {
+        return ResponseHelper.ok(laporanSuplierService.getByTanggalExcelcom(tanggalAwal,tanggalAkhir,idSuplier));
+    }
 
     @GetMapping("/suplier/dinarpos")
     public CommonResponse<List<BarangTransaksiBeli>> getAllSuplierDinarpos(int bulan) {
         return ResponseHelper.ok(laporanSuplierService.getAllDinarpos(bulan));
+    }
+    @GetMapping("/suplier/tanggal/dinarpos")
+    public CommonResponse<List<TransaksiBeli>> getAllSuplgetByTanggalDinarpos(@RequestParam(name = "tanggal_awal") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggalAwal, @RequestParam(name = "tanggal_akhir") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggalAkhir , @RequestParam("id_suplier") Long idSuplier) {
+        return ResponseHelper.ok(laporanSuplierService.getByTanggalDinarpos(tanggalAwal,tanggalAkhir,idSuplier));
     }
 
 
@@ -148,10 +164,18 @@ public class LaporanController {
     public CommonResponse<List<TransaksiBeli>> getAllTransaksiBeliExcelcom(int bulan) {
         return ResponseHelper.ok(laporanTransaksiBeliService.getAllExelcom(bulan));
     }
+    @GetMapping("/transaksi_beli/tanggal/excelcom")
+    public CommonResponse<List<TransaksiBeli>> getAllTransaksiBeliByTanggalExcelcom(@RequestParam(name = "tanggal_awal") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggalAwal, @RequestParam(name = "tanggal_akhir") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggalAkhir , @RequestParam("id_suplier") Long idSuplier) {
+        return ResponseHelper.ok(laporanTransaksiBeliService.getByTanggalExcelcom(tanggalAwal,tanggalAkhir,idSuplier));
+    }
 
     @GetMapping("/transaksi_beli/dinarpos")
     public CommonResponse<List<TransaksiBeli>> getAllTransaksiBeliDinarpos(int bulan) {
         return ResponseHelper.ok(laporanTransaksiBeliService.getAllDinarpos(bulan));
+    }
+    @GetMapping("/transaksi_beli/tanggal/dinarpos")
+    public CommonResponse<List<TransaksiBeli>> getAllTransaksiBeliByTanggalDinarpos(@RequestParam(name = "tanggal_awal") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggalAwal, @RequestParam(name = "tanggal_akhir") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggalAkhir , @RequestParam("id_suplier") Long idSuplier) {
+        return ResponseHelper.ok(laporanTransaksiBeliService.getByTanggalDinarpos(tanggalAwal,tanggalAkhir,idSuplier));
     }
 
     @PutMapping("/transaksi_beli/{id}")
