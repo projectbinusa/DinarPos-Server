@@ -27,7 +27,7 @@ public class TransaksiPenjualanDinarposService {
     private CustomerRepository customerRepository;
 
     @Autowired
-    private MarkettingRepository markettingRepository;
+    private SalesmanRepository salesmanRepository;
     @Autowired
     private BarangRepository barangRepository;
 
@@ -42,8 +42,9 @@ public class TransaksiPenjualanDinarposService {
         transaksi.setDiskon(transaksiDTO.getDiskon());
         transaksi.setTotalBayarBarang(transaksiDTO.getTotalBayarBarang());
         transaksi.setCustomer(customerRepository.findById(transaksiDTO.getIdCustomer()).get());
-        transaksi.setMarketting(markettingRepository.findById(transaksiDTO.getIdMarketting()).get());
+        transaksi.setSalesman(salesmanRepository.findById(transaksiDTO.getIdSalesman()).get());
         transaksi.setDelFlag(1);
+        transaksi.setStatus("dinarpos");
         transaksi.setHari7(1);
         transaksi.setHari30(1);
         transaksi.setHari90(1);

@@ -44,8 +44,8 @@ public class LaporanController {
         return ResponseHelper.ok(laporanSalesmanService.getAllExelcom(bulan));
     }
     @GetMapping("/salesman/tanggal/excelcom")
-    public CommonResponse<List<Transaksi>> getAllByTanggalExcelcom(@RequestParam(name = "tanggal_awal") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggalAwal, @RequestParam(name = "tanggal_akhir") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggalAkhir , @RequestParam("id_marketting") Long idMarketting) {
-        return ResponseHelper.ok(laporanSalesmanService.getByTanggalExcelcom(tanggalAwal,tanggalAkhir,idMarketting));
+    public CommonResponse<List<Transaksi>> getAllByTanggalExcelcom(@RequestParam(name = "tanggal_awal") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggalAwal, @RequestParam(name = "tanggal_akhir") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggalAkhir , @RequestParam("id_salesman") Long idSalesman) {
+        return ResponseHelper.ok(laporanSalesmanService.getByTanggalExcelcom(tanggalAwal,tanggalAkhir,idSalesman));
     }
 
     @GetMapping("/salesman/dinarpos")
@@ -53,8 +53,8 @@ public class LaporanController {
         return ResponseHelper.ok(laporanSalesmanService.getAllDinarpos(bulan));
     }
     @GetMapping("/salesman/tanggal/dinarpos")
-    public CommonResponse<List<Transaksi>> getAllByTanggalDinarpos(@RequestParam(name = "tanggal_awal") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggalAwal, @RequestParam(name = "tanggal_akhir") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggalAkhir , @RequestParam("id_marketting") Long idMarketting) {
-        return ResponseHelper.ok(laporanSalesmanService.getByTanggalDinarpos(tanggalAwal,tanggalAkhir,idMarketting));
+    public CommonResponse<List<Transaksi>> getAllByTanggalDinarpos(@RequestParam(name = "tanggal_awal") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggalAwal, @RequestParam(name = "tanggal_akhir") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggalAkhir , @RequestParam("id_salesman") Long idSalesman) {
+        return ResponseHelper.ok(laporanSalesmanService.getByTanggalDinarpos(tanggalAwal,tanggalAkhir,idSalesman));
     }
 
     @PutMapping("/salesman/{id}")

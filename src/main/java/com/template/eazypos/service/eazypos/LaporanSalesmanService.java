@@ -44,12 +44,12 @@ public class LaporanSalesmanService {
             return null;
         }
     }
-    public List<Transaksi> getByTanggalExcelcom(Date tanggalAwal , Date tanggalAkhir , Long idMarketting){
+    public List<Transaksi> getByTanggalExcelcom(Date tanggalAwal , Date tanggalAkhir , Long idSalesman){
         String  status = "excelcom";
-        return transaksiRepository.findByTanggal(tanggalAwal , tanggalAkhir , idMarketting , status);
+        return transaksiRepository.findByTanggal(tanggalAwal , tanggalAkhir , idSalesman , status);
     }
-    public List<Transaksi> getByTanggalDinarpos(Date tanggalAwal , Date tanggalAkhir , Long idMarketting){
+    public List<Transaksi> getByTanggalDinarpos(Date tanggalAwal , Date tanggalAkhir , Long idSalesman){
         String  status = "dinarpos";
-        return transaksiRepository.findByTanggal(tanggalAwal , tanggalAkhir , idMarketting , status);
+        return transaksiRepository.findByTanggal(tanggalAwal , tanggalAkhir , idSalesman , status);
     }
 }

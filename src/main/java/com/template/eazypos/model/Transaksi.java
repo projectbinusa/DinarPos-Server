@@ -25,8 +25,8 @@ public class Transaksi extends DateConfig {
 //    private Long idMarketting;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "id_marketting", updatable = false)
-    private Marketting marketting;
+    @JoinColumn(name = "id_salesman", updatable = false)
+    private Salesman salesman;
 
     @Column(name = "status", length = 50, columnDefinition = "varchar(50) default 'excelcom'")
     private String status;
@@ -197,12 +197,13 @@ public class Transaksi extends DateConfig {
         this.customer = customer;
     }
 
-    public Marketting getMarketting() {
-        return marketting;
+    public Salesman getSalesman() {
+
+        return salesman;
     }
 
-    public void setMarketting(Marketting marketting) {
-        this.marketting = marketting;
+    public void setSalesman(Salesman salesman) {
+        this.salesman = salesman;
     }
 
     public String getStatus() {
