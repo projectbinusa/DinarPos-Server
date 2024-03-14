@@ -18,4 +18,8 @@ public interface BarangTransaksiBeliRepository extends JpaRepository<BarangTrans
     List<BarangTransaksiBeli> findBarangTransaksiExcelcomByPeriode(@Param("bulan") int bulan);
     @Query(value = "SELECT * FROM tabel_barang_transaksi_beli WHERE status = 'dinarpos' AND MONTH(tanggal) = :bulan AND del_flag = 1  ", nativeQuery = true)
     List<BarangTransaksiBeli> findBarangTransaksiDinarposByPeriode(@Param("bulan") int bulan);
+    @Query(value = "SELECT * FROM tabel_barang_transaksi_beli WHERE status = :status AND id_transakasi_beli = :idTransaksi AND del_flag = 1  ", nativeQuery = true)
+    List<BarangTransaksiBeli> findBarangTransaksiDinarposByIdTransaksi(String status , Long idTransaksi);
+
+
 }

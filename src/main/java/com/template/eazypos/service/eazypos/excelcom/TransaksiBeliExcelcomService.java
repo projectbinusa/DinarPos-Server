@@ -2,6 +2,7 @@ package com.template.eazypos.service.eazypos.excelcom;
 
 import com.template.eazypos.dto.BarangTransaksiDTO;
 import com.template.eazypos.dto.TransaksiBeliDTO;
+import com.template.eazypos.exception.NotFoundException;
 import com.template.eazypos.model.Barang;
 import com.template.eazypos.model.BarangTransaksiBeli;
 import com.template.eazypos.model.TransaksiBeli;
@@ -108,5 +109,12 @@ public class TransaksiBeliExcelcomService {
                 return String.format("%02d%02d-PST-PJN-0001", month, year); // Mulai nomor nota baru
             }
         }
+    }
+    public TransaksiBeli getById (Long id){
+        return transaksiBeliRepository.findById(id).orElseThrow(() -> new NotFoundException("Id tidak dinemukan"));
+    }
+    public List<BarangTransaksiBeli> getByIdTransaksi (Long idTransaksi){
+        String status = "excelcom";
+        return barangTransaksiBeliRepository.findBarangTransaksiDinarposByIdTransaksi(status , idTransaksi);
     }
 }

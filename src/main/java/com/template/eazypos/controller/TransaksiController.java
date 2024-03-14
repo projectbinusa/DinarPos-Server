@@ -4,6 +4,8 @@ import com.template.eazypos.dto.TransaksiBeliDTO;
 import com.template.eazypos.dto.TransaksiPenjualanDTO;
 import com.template.eazypos.exception.CommonResponse;
 import com.template.eazypos.exception.ResponseHelper;
+import com.template.eazypos.model.Barang;
+import com.template.eazypos.model.BarangTransaksiBeli;
 import com.template.eazypos.model.Transaksi;
 import com.template.eazypos.model.TransaksiBeli;
 import com.template.eazypos.service.eazypos.dinarpos.TransaksiBeliDinarposService;
@@ -12,6 +14,8 @@ import com.template.eazypos.service.eazypos.excelcom.TransaksiBeliExcelcomServic
 import com.template.eazypos.service.eazypos.excelcom.TransaksiPenjualanExcelcomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("api/transaksi")
@@ -44,4 +48,17 @@ public class TransaksiController {
     public CommonResponse<TransaksiBeli> addDinarpos(@RequestBody TransaksiBeliDTO transaksiBeliDTO){
         return ResponseHelper.ok( transaksiBeliDinarposService.addTransaksiBeli(transaksiBeliDTO));
     }
+    @GetMapping("/pembelian/{id}")
+    public CommonResponse <TransaksiBeli> get(@PathVariable("id") Long id){
+        return ResponseHelper.ok( transaksiBeliDinarposService.getById(id));
+    }
+    @GetMapping("barang/pembelian/dinarpos")
+    public CommonResponse <List<BarangTransaksiBeli>> getByIdTransaksiDinarpos(@RequestParam("id_transaksi") Long  idTransaksi){
+        return ResponseHelper.ok( transaksiBeliDinarposService.getByIdTransaksi(idTransaksi));
+    }
+    @GetMapping("barang/pembelian/excelcom")
+    public CommonResponse <List<BarangTransaksiBeli>> getByIdTransaksiExcelcom(@RequestParam("id_transaksi") Long  idTransaksi){
+        return ResponseHelper.ok( transaksiBeliExcelcomService.getByIdTransaksi(idTransaksi));
+    }
+
 }
