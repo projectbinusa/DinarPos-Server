@@ -68,6 +68,7 @@ public class TransaksiBeliExcelcomService {
                 barangTransaksiBeli.setTotalHarga(barangDTO.getTotalHarga());
                 barangTransaksiBeli.setTotalHargaBarang(barangDTO.getTotalHargaBarang());
                 barangTransaksiBeli.setTanggal(now);
+                barangTransaksiBeli.setDelFlag(1);
                 barangTransaksiBeli.setStatus("excelcom");
 
                 barangTransaksiBeliRepository.save(barangTransaksiBeli);
