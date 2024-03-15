@@ -6,6 +6,7 @@ import com.template.eazypos.exception.BadRequestException;
 import com.template.eazypos.model.Barang;
 import com.template.eazypos.model.BarangTransaksi;
 import com.template.eazypos.model.Transaksi;
+import com.template.eazypos.model.TransaksiBeli;
 import com.template.eazypos.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -155,6 +156,9 @@ public class TransaksiPenjualanExcelcomService {
                 return String.format("%02d%02d-PST-PJN-0001", month, year); // Mulai nomor nota baru
             }
         }
+    }
+    public List<Transaksi> getExcelcomBYMonthAndYear(int bulan , int tahun){
+        return transaksiRepository.findTransaksiByMonthAndYear(bulan,tahun , "excelcom");
     }
 }
 

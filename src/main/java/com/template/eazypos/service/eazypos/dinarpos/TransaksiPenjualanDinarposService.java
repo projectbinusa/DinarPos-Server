@@ -6,6 +6,7 @@ import com.template.eazypos.exception.BadRequestException;
 import com.template.eazypos.model.Barang;
 import com.template.eazypos.model.BarangTransaksi;
 import com.template.eazypos.model.Transaksi;
+import com.template.eazypos.model.TransaksiBeli;
 import com.template.eazypos.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -155,5 +156,11 @@ public class TransaksiPenjualanDinarposService {
                 return String.format("%02d%02d-PST-PJN-0001", month, year); // Mulai nomor nota baru
             }
         }
+    }
+    public List<Transaksi> getAll(){
+        return transaksiRepository.findAll();
+    }
+    public List<Transaksi> getDinarposBYMonthAndYear(int bulan , int tahun){
+        return transaksiRepository.findTransaksiByMonthAndYear(bulan,tahun , "dinarpos");
     }
 }

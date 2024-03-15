@@ -15,10 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class PenggunaService {
@@ -35,14 +32,18 @@ public class PenggunaService {
     private JwtUtils jwtUtils;
 
     public Map<Object, Object> login(LoginRequest loginRequest) {
-        Pengguna user = penggunaRepository.findByUsername(loginRequest.getUsername()).orElseThrow(() -> new NotFoundException("Penggunaname not found"));
+        Optional<Pengguna> userOptional = penggunaRepository.findByUsername(loginRequest.getUsername());
+        Pengguna user = userOptional.orElseThrow(() -> new NotFoundException("Username not found"));
+
         if (encoder.matches(loginRequest.getPassword(), user.getPasswordPengguna())) {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
             SecurityContextHolder.getContext().setAuthentication(authentication);
             String jwt = jwtUtils.generateToken(authentication);
+            user.setLastLogin(new Date());
+            penggunaRepository.save(user);
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            String formattedLastLogin = sdf.format(new Date());
+            String formattedLastLogin = sdf.format(user.getLastLogin());
             Map<Object, Object> response = new HashMap<>();
             response.put("data", user);
             response.put("token", jwt);
@@ -53,12 +54,14 @@ public class PenggunaService {
         throw new NotFoundException("Password not found");
     }
 
+
     public Pengguna addPengguna(Pengguna user) {
         if (penggunaRepository.findByUsername(user.getUsernamePengguna()).isPresent()){
         throw new BadRequestException("Username Pengguna sudah digunakan");
         }
         String encodedPassword = encoder.encode(user.getPasswordPengguna());
         user.setPasswordPengguna(encodedPassword);
+        user.setLastLogin(new Date());
         return penggunaRepository.save(user);
     }
 

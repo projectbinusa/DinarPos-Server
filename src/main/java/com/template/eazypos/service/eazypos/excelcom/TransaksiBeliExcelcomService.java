@@ -118,4 +118,7 @@ public class TransaksiBeliExcelcomService {
         String status = "excelcom";
         return barangTransaksiBeliRepository.findBarangTransaksiDinarposByIdTransaksi(status , idTransaksi);
     }
+    public List<TransaksiBeli> getExcelcomBYMonthAndYear(int bulan , int tahun){
+        return transaksiBeliRepository.findTransaksiByMonthAndYear(bulan,tahun , "excelcom");
+    }
 }

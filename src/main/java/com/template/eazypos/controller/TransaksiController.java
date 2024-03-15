@@ -60,5 +60,31 @@ public class TransaksiController {
     public CommonResponse <List<BarangTransaksiBeli>> getByIdTransaksiExcelcom(@RequestParam("id_transaksi") Long  idTransaksi){
         return ResponseHelper.ok( transaksiBeliExcelcomService.getByIdTransaksi(idTransaksi));
     }
+    @GetMapping("/penjualan/all")
+    public CommonResponse <List<Transaksi>> getAllPenjualan(){
+        return ResponseHelper.ok( transaksiPenjualanDinarposService.getAll());
+    }
+    @GetMapping("/pembelian/all")
+    public CommonResponse <List<TransaksiBeli>> getAllPembelian(){
+        return ResponseHelper.ok( transaksiBeliDinarposService.getAll());
+    }
+    @GetMapping("/pembelian/excelcom/bulan")
+    public CommonResponse <List<TransaksiBeli>> getAllPembelianBYMonthAndYearExcelcom(int bulan , int tahun){
+        return ResponseHelper.ok( transaksiBeliExcelcomService.getExcelcomBYMonthAndYear(bulan, tahun));
+    }
+    @GetMapping("/pembelian/dinarpos/bulan")
+    public CommonResponse <List<TransaksiBeli>> getAllPembelianBYMonthAndYearDinapos(int bulan , int tahun){
+        return ResponseHelper.ok( transaksiBeliDinarposService.getDinarposBYMonthAndYear(bulan, tahun));
+    }
+    @GetMapping("/penjualan/dinarpos/bulan")
+    public CommonResponse <List<Transaksi>> getAllPenjualanBYMonthAndYearDinapos(int bulan , int tahun){
+        return ResponseHelper.ok( transaksiPenjualanDinarposService.getDinarposBYMonthAndYear(bulan, tahun));
+    }
+    @GetMapping("/penjualan/excelcom/bulan")
+    public CommonResponse <List<Transaksi>> getAllPenjualanBYMonthAndYearExcelcom(int bulan , int tahun){
+        return ResponseHelper.ok( transaksiPenjualanService.getExcelcomBYMonthAndYear(bulan, tahun));
+    }
+
+
 
 }

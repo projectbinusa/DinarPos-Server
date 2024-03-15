@@ -117,4 +117,12 @@ public class TransaksiBeliDinarposService {
         String status = "dinarpos";
         return barangTransaksiBeliRepository.findBarangTransaksiDinarposByIdTransaksi(status , idTransaksi);
     }
+    public  List<TransaksiBeli> getAll(){
+        return transaksiBeliRepository.findAll();
+    }
+
+    public List<TransaksiBeli> getDinarposBYMonthAndYear(int bulan , int tahun){
+        return transaksiBeliRepository.findTransaksiByMonthAndYear(bulan,tahun , "dinarpos");
+    }
+
 }

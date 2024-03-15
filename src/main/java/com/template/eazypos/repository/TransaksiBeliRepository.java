@@ -27,4 +27,8 @@ public interface TransaksiBeliRepository extends JpaRepository<TransaksiBeli , L
     @Query(value = "SELECT t FROM TransaksiBeli t WHERE t.tanggal BETWEEN :tanggalAwal AND :tanggalAkhir AND t.suplier.id = :suplierId AND t.status = :status")
     List<TransaksiBeli> findByTanggal(Date tanggalAwal, Date tanggalAkhir, Long suplierId, String status);
 
+    @Query(value = "SELECT * FROM tabel_transaksi_beli WHERE status = :status AND MONTH(tanggal) = :bulan AND YEAR(tanggal) = :tahun AND del_flag = 1  ", nativeQuery = true)
+    List<TransaksiBeli> findTransaksiByMonthAndYear(@Param("bulan") int bulan,@Param("tahun") int tahun , @Param("status") String status);
+
+
 }

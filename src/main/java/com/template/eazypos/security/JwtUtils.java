@@ -1,7 +1,9 @@
 package com.template.eazypos.security;
 
 
+import com.template.eazypos.model.Pengguna;
 import com.template.eazypos.model.User;
+import com.template.eazypos.repository.PenggunaRepository;
 import com.template.eazypos.repository.UserRepository;
 import com.template.eazypos.service.auth.UserDetail;
 import io.jsonwebtoken.*;
@@ -25,16 +27,17 @@ public class JwtUtils {
     private static final String SECRET_KEY = "eazypos";
 
     @Autowired
-    UserRepository userRepository;
+    PenggunaRepository userRepository;
 
     public String generateToken(Authentication authentication) {
         UserDetail adminPrincipal = (UserDetail) authentication.getPrincipal();
-        User user = userRepository.findByUser(adminPrincipal.getUsername()).get();
+        Pengguna user = userRepository.findByUsername(adminPrincipal.getUsername()).get();
         return Jwts.builder()
-                .claim("data", user)
+                .claim("name", user.getNamaPengguna())
+                .claim("last_login" , user.getLastLogin())
                 .setSubject(adminPrincipal.getUsername())
                 .claim("id" , adminPrincipal.getId())
-                .setAudience(user.getLevel())
+                .setAudience(user.getLevelPengguna())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
