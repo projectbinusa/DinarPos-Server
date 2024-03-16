@@ -1,10 +1,15 @@
 package com.template.eazypos.service.eazypos;
 
 import com.template.eazypos.exception.NotFoundException;
+import com.template.eazypos.model.Customer;
 import com.template.eazypos.model.Salesman;
 import com.template.eazypos.model.Transaksi;
 import com.template.eazypos.repository.SalesmanRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.xml.crypto.Data;
@@ -43,6 +48,21 @@ public class SalesmanService {
             return res;
         } catch (Exception e) {
             return null;
+        }
+    }
+    public Page<Salesman> getAllWithPagination(Long page, Long limit, String sort, String search) {
+
+        Sort.Direction direction = Sort.Direction.ASC;
+        if (sort.startsWith("-")) {
+            sort = sort.substring(1);
+            direction = Sort.Direction.DESC;
+        }
+
+        Pageable pageable = PageRequest.of(Math.toIntExact(page - 1), Math.toIntExact(limit), direction, sort);
+        if (search != null && !search.isEmpty()) {
+            return salesmanRepository.findAllByKeyword(search, pageable);
+        } else {
+            return salesmanRepository.findAll(pageable);
         }
     }
 }

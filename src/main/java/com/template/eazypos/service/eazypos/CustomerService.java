@@ -8,6 +8,10 @@ import com.template.eazypos.model.Salesman;
 import com.template.eazypos.repository.CustomerRepository;
 import com.template.eazypos.repository.SalesmanRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -60,5 +64,20 @@ public class CustomerService {
         } catch (Exception e) {
             return null;
         }
+    }
+    public Page<Customer> getAllWithPagination(Long page, Long limit, String sort, String search) {
+
+        Sort.Direction direction = Sort.Direction.ASC;
+        if (sort.startsWith("-")) {
+            sort = sort.substring(1);
+            direction = Sort.Direction.DESC;
+        }
+
+        Pageable pageable = PageRequest.of(Math.toIntExact(page - 1), Math.toIntExact(limit), direction, sort);
+            if (search != null && !search.isEmpty()) {
+                return customerRepository.findAllByKeyword(search, pageable);
+            } else {
+                return customerRepository.findAll(pageable);
+            }
     }
 }

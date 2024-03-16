@@ -22,5 +22,14 @@ public class ResponseHelper {
         response.setData((T) error);
         return new ResponseEntity<>(response, httpStatus);
     }
+    public static <T> PaginationResponse<T> okWithPagination(T data, Object pagination) {
+        PaginationResponse<T> response = new PaginationResponse<T>();
+        response.setStatus("200 OK");
+        response.setCode(200);
+        response.setData(data);
+        response.setMessage("success");
+        response.setPagination(pagination);
+        return response;
+    }
 
 }

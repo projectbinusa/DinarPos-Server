@@ -1,9 +1,8 @@
 package com.template.eazypos.controller;
 
-import com.template.eazypos.exception.CommonResponse;
-import com.template.eazypos.exception.InternalErrorException;
-import com.template.eazypos.exception.ResponseHelper;
-import com.template.eazypos.exception.ResponseMessage;
+import com.template.eazypos.auditing.Pagination;
+import com.template.eazypos.exception.*;
+import com.template.eazypos.model.Barang;
 import com.template.eazypos.model.Suplier;
 import com.template.eazypos.service.eazypos.SupplierService;
 import com.template.eazypos.service.eazypos.excel.ExcelBarang;
@@ -12,6 +11,7 @@ import com.template.eazypos.service.eazypos.excel.ExcelSuplierService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -20,11 +20,13 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("api/supplier")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*")
 public class SuplierController {
     @Autowired
     private SupplierService service;
@@ -43,6 +45,33 @@ public class SuplierController {
     @GetMapping
     public CommonResponse<List<Suplier>> getAll(){
         return ResponseHelper.ok( service.getAll());
+    }
+    @GetMapping(path = "/pagination")
+    public PaginationResponse<List<Suplier>> getAll(
+            @RequestParam(defaultValue = Pagination.page, required = false) Long page,
+            @RequestParam(defaultValue = Pagination.limit, required = false) Long limit,
+            @RequestParam(defaultValue = Pagination.sort, required = false) String sort,
+            @RequestParam(required = false) String search
+    ) {
+
+        Page<Suplier> suplierPage;
+
+        if (search != null && !search.isEmpty()) {
+            suplierPage = service.getAllWithPagination(page, limit, sort, search);
+        } else {
+            suplierPage = service.getAllWithPagination( page, limit, sort, null);
+        }
+
+        List<Suplier> supliers = suplierPage.getContent();
+        long totalItems = suplierPage.getTotalElements();
+        int totalPages = suplierPage.getTotalPages();
+
+        Map<String, Integer> pagination = new HashMap<>();
+        pagination.put("total", (int) totalItems);
+        pagination.put("page", Math.toIntExact(page));
+        pagination.put("total_page", totalPages);
+
+        return ResponseHelper.okWithPagination(supliers, pagination);
     }
     @PutMapping("/{id}")
     public CommonResponse<Suplier> put(@PathVariable("id") Long id , @RequestBody Suplier suplier){

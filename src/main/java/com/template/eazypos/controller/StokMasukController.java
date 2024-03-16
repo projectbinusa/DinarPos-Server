@@ -12,7 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/stok_masuk")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*")
 public class StokMasukController {
     @Autowired
     private StokMasukService stokMasukService;

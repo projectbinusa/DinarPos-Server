@@ -19,7 +19,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/transaksi")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*")
 public class TransaksiController {
     @Autowired
     private TransaksiPenjualanExcelcomService transaksiPenjualanService;

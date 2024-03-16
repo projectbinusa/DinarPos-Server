@@ -17,7 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/return/dinarpos")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*")
 public class ReturnDinarposController {
     @Autowired
     private ReturnPenjualanService returnPenjualanService;

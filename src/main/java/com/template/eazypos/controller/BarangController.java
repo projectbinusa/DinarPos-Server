@@ -1,7 +1,9 @@
 package com.template.eazypos.controller;
 
 
+import com.template.eazypos.auditing.Pagination;
 import com.template.eazypos.exception.CommonResponse;
+import com.template.eazypos.exception.PaginationResponse;
 import com.template.eazypos.exception.ResponseHelper;
 import com.template.eazypos.exception.ResponseMessage;
 import com.template.eazypos.model.Barang;
@@ -11,6 +13,7 @@ import com.template.eazypos.service.eazypos.excel.ExcelBarangService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -19,11 +22,13 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("api/barang")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*")
 public class BarangController {
     @Autowired
     private BarangService barangService;
@@ -47,6 +52,34 @@ public class BarangController {
     public CommonResponse<List<Barang>> getAll(){
         return ResponseHelper.ok( barangService.getAll());
     }
+    @GetMapping(path = "/pagination")
+    public PaginationResponse<List<Barang>> getAll(
+            @RequestParam(defaultValue = Pagination.page, required = false) Long page,
+            @RequestParam(defaultValue = Pagination.limit, required = false) Long limit,
+            @RequestParam(defaultValue = Pagination.sort, required = false) String sort,
+            @RequestParam(required = false) String search
+    ) {
+
+        Page<Barang> barangPage;
+
+        if (search != null && !search.isEmpty()) {
+            barangPage = barangService.getAllWithPagination(page, limit, sort, search);
+        } else {
+            barangPage = barangService.getAllWithPagination( page, limit, sort, null);
+        }
+
+        List<Barang> barangs = barangPage.getContent();
+        long totalItems = barangPage.getTotalElements();
+        int totalPages = barangPage.getTotalPages();
+
+        Map<String, Integer> pagination = new HashMap<>();
+        pagination.put("total", (int) totalItems);
+        pagination.put("page", Math.toIntExact(page));
+        pagination.put("total_page", totalPages);
+
+        return ResponseHelper.okWithPagination(barangs, pagination);
+    }
+
     @PutMapping("/{id}")
     public CommonResponse<Barang> put(@PathVariable("id") Long id , @RequestBody Barang barang){
         return ResponseHelper.ok( barangService.edit(barang , id));
