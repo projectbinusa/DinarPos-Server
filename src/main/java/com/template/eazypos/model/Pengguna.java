@@ -26,6 +26,10 @@ public class Pengguna extends DateConfig {
     @Column(name = "level_pengguna", nullable = false)
     private String levelPengguna;
 
+    @Column(name = "role_toko", nullable = false)
+    private String roleToko;
+
+
 
     @Column(name = "last_login", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
@@ -74,6 +78,13 @@ public class Pengguna extends DateConfig {
         this.levelPengguna = levelPengguna;
     }
 
+    public String getRoleToko() {
+        return roleToko;
+    }
+
+    public void setRoleToko(String roleToko) {
+        this.roleToko = roleToko;
+    }
 
     public Date getLastLogin() {
         return lastLogin;
