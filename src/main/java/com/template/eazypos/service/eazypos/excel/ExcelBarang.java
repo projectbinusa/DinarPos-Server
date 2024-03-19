@@ -109,14 +109,15 @@ public class ExcelBarang {
                     switch (cellIdx) {
                         case 1:
                             barang.setBarcodeBarang(currentCell.getStringCellValue());
-                            barang.setIdSuplier(0L);
-                            barang.setDelFlag(1);
+
                             break;
                         case 2:
                             barang.setNamaBarang(currentCell.getStringCellValue());
                             break;
                         case 3:
                             barang.setUnit(currentCell.getStringCellValue());
+                            barang.setIdSuplier(0L);
+                            barang.setDelFlag(1);
                             break;
                         case 4:
                             if (currentCell.getCellType() == CellType.NUMERIC) {

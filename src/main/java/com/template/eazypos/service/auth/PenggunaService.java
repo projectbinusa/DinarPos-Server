@@ -59,6 +59,9 @@ public class PenggunaService {
         if (penggunaRepository.findByUsername(user.getUsernamePengguna()).isPresent()){
         throw new BadRequestException("Username Pengguna sudah digunakan");
         }
+        String userPass = user.getPasswordPengguna().trim();
+        boolean PasswordIsNotValid = !userPass.matches("^(?=.*[0-9])(?=.*[a-z])(?=\\S+$).{8,20}");
+        if (PasswordIsNotValid) throw new BadRequestException("Password not valid!");
         String encodedPassword = encoder.encode(user.getPasswordPengguna());
         user.setPasswordPengguna(encodedPassword);
         user.setLastLogin(new Date());
