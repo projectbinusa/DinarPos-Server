@@ -1,5 +1,6 @@
 package com.template.eazypos.service.eazypos;
 
+import com.template.eazypos.exception.BadRequestException;
 import com.template.eazypos.exception.NotFoundException;
 import com.template.eazypos.model.Customer;
 import com.template.eazypos.model.Suplier;
@@ -21,6 +22,9 @@ public class SupplierService {
     private SuplierRepository suplierRepository;
 
     public Suplier add(Suplier supplier){
+        if (suplierRepository.findByCode(supplier.getKodeSuplier()).isPresent()){
+            throw new BadRequestException("Code telah digunakan");
+        }
         supplier.setDelFlag(1);
         return suplierRepository.save(supplier);
     }

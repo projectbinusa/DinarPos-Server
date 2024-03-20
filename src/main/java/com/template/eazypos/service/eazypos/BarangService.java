@@ -1,5 +1,6 @@
 package com.template.eazypos.service.eazypos;
 
+import com.template.eazypos.exception.BadRequestException;
 import com.template.eazypos.exception.NotFoundException;
 import com.template.eazypos.model.Barang;
 import com.template.eazypos.model.Customer;
@@ -22,6 +23,9 @@ public class BarangService {
     private BarangRepository barangRepository;
 
     public Barang add(Barang barang){
+        if(barangRepository.findByBarcodeBarang(barang.getBarcodeBarang()).isPresent()){
+            throw new BadRequestException("Barcode sudah digunakan");
+        }
         barang.setIdSuplier(0L);
         barang.setDelFlag(1);
         barang.setJumlahStok(0);

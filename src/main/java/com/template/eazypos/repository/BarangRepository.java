@@ -17,6 +17,8 @@ public interface BarangRepository extends JpaRepository<Barang,Long> {
     Barang findByBarcode(String barcode);
     @Query(value = "SELECT * FROM tabel_barang WHERE del_flag = 1  ", nativeQuery = true)
     List<Barang> findAllBarang();
+    @Query(value = "SELECT * FROM tabel_barang WHERE barcode_barang = :barcode ", nativeQuery = true)
+    Optional<Barang> findByBarcodeBarang(String barcode);
 
     @Query("SELECT b FROM Barang b WHERE LOWER(b.barcodeBarang) LIKE LOWER(concat('%', :keyword, '%'))")
     Page<Barang> findAllByKeyword(@Param("keyword") String keyword, Pageable pageable);

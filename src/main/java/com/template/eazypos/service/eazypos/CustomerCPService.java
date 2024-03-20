@@ -2,6 +2,7 @@ package com.template.eazypos.service.eazypos;
 
 import com.template.eazypos.dto.CustomerCPDTO;
 import com.template.eazypos.dto.CustomerDTO;
+import com.template.eazypos.exception.BadRequestException;
 import com.template.eazypos.exception.NotFoundException;
 import com.template.eazypos.model.Customer;
 import com.template.eazypos.model.CustomerCP;
@@ -27,6 +28,9 @@ public class CustomerCPService {
     private SalesmanRepository salesmanRepository;
 
     public CustomerCP add(CustomerCPDTO customerCPDTO){
+        if (customerCPRepository.findByEmailOrTelp(customerCPDTO.getEmail(), customerCPDTO.getNo_telp()).isPresent()){
+            throw new BadRequestException("Email atau no hp sudah digunakan");
+        }
         CustomerCP add = new CustomerCP();
         add.setSalesman(salesmanRepository.findById(customerCPDTO.getId_salesman()).orElseThrow(() -> new NotFoundException("Id Salesman tidak dinemukan")));
         add.setCustomer(customerRepository.findById(customerCPDTO.getId_customer()).orElseThrow(() -> new NotFoundException("Id Customer tidak dinemukan")));
