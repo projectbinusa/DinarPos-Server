@@ -15,6 +15,6 @@ public interface CustomerRepository extends JpaRepository<Customer , Long> {
     @Query(value = "SELECT * FROM customer WHERE email = :email OR telp = :telp ", nativeQuery = true)
     Optional<Customer> findByEmailOrTelp(String email , String telp);
 
-    @Query("SELECT s FROM Customer s WHERE LOWER(s.nama_customer) LIKE LOWER(concat('%', :keyword, '%'))")
+    @Query(value = "SELECT * FROM customer  WHERE LOWER(nama_customer) LIKE LOWER(concat('%', :keyword, '%'))" , nativeQuery = true)
     Page<Customer> findAllByKeyword(@Param("keyword") String keyword, Pageable pageable);
 }

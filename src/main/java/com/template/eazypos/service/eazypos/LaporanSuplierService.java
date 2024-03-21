@@ -23,11 +23,15 @@ public class LaporanSuplierService {
     @Autowired
     private TransaksiBeliRepository transaksiBeliRepository;
 
-    public List<BarangTransaksiBeli> getAllExcelcom(int bulan) {
-        return barangTransaksiBeliRepository.findBarangTransaksiExcelcomByPeriode(bulan);
+    public List<BarangTransaksiBeli> getAllExcelcom() {
+        int tahun = new Date().getYear();
+        int bulan = new Date().getMonth();
+        return barangTransaksiBeliRepository.findBarangTransaksiExcelcomByPeriode(bulan ,tahun);
     }
-    public List<BarangTransaksiBeli> getAllDinarpos(int bulan) {
-        return barangTransaksiBeliRepository.findBarangTransaksiDinarposByPeriode(bulan);
+    public List<BarangTransaksiBeli> getAllDinarpos() {
+        int tahun = new Date().getYear();
+        int bulan = new Date().getMonth();
+        return barangTransaksiBeliRepository.findBarangTransaksiDinarposByPeriode(bulan, tahun);
     }
 
     public BarangTransaksiBeli get(Long id) {

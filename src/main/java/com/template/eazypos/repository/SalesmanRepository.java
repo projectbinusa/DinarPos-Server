@@ -9,6 +9,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface SalesmanRepository extends JpaRepository<Salesman , Long> {
-    @Query("SELECT s FROM Salesman s WHERE LOWER(s.namaSalesman) LIKE LOWER(concat('%', :keyword, '%'))")
+    @Query(value = "SELECT * FROM tabel_salesman  WHERE LOWER(nama_salesman) LIKE LOWER(concat('%', :keyword, '%'))" , nativeQuery = true)
     Page<Salesman> findAllByKeyword(@Param("keyword") String keyword, Pageable pageable);
 }

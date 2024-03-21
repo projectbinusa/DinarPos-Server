@@ -40,8 +40,8 @@ public class LaporanController {
     }
 
     @GetMapping("/salesman/excelcom")
-    public CommonResponse<List<Transaksi>> getAllSalesmanExcelcom(int bulan) {
-        return ResponseHelper.ok(laporanSalesmanService.getAllExelcom(bulan));
+    public CommonResponse<List<Transaksi>> getAllSalesmanExcelcom() {
+        return ResponseHelper.ok(laporanSalesmanService.getAllExelcom());
     }
     @GetMapping("/salesman/tanggal/excelcom")
     public CommonResponse<List<Transaksi>> getAllByTanggalExcelcom(@RequestParam(name = "tanggal_awal") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggalAwal, @RequestParam(name = "tanggal_akhir") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggalAkhir , @RequestParam("id_salesman") Long idSalesman) {
@@ -49,8 +49,8 @@ public class LaporanController {
     }
 
     @GetMapping("/salesman/dinarpos")
-    public CommonResponse<List<Transaksi>> getAllSalesmanDinarpos(int bulan) {
-        return ResponseHelper.ok(laporanSalesmanService.getAllDinarpos(bulan));
+    public CommonResponse<List<Transaksi>> getAllSalesmanDinarpos( ) {
+        return ResponseHelper.ok(laporanSalesmanService.getAllDinarpos());
     }
     @GetMapping("/salesman/tanggal/dinarpos")
     public CommonResponse<List<Transaksi>> getAllByTanggalDinarpos(@RequestParam(name = "tanggal_awal") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggalAwal, @RequestParam(name = "tanggal_akhir") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggalAkhir , @RequestParam("id_salesman") Long idSalesman) {
@@ -73,8 +73,8 @@ public class LaporanController {
     }
 
     @GetMapping("/barang/excelcom")
-    public CommonResponse<List<BarangTransaksi>> getAllBarangExcelcom(int bulan) {
-        return ResponseHelper.ok(laporanBarangService.getAllExcelcom(bulan));
+    public CommonResponse<List<BarangTransaksi>> getAllBarangExcelcom() {
+        return ResponseHelper.ok(laporanBarangService.getAllExcelcom());
     }
     @GetMapping("/barang/tanggal/excelcom")
     public CommonResponse<List<BarangTransaksi>> getAllBarangByTanggalExcelcom(@RequestParam(name = "tanggal_awal") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggalAwal, @RequestParam(name = "tanggal_akhir") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggalAkhir , @RequestParam("barcode_barang") String barcode) {
@@ -82,8 +82,8 @@ public class LaporanController {
     }
 
     @GetMapping("/barang/dinarpos")
-    public CommonResponse<List<BarangTransaksi>> getAllBarangDinarpos(int bulan) {
-        return ResponseHelper.ok(laporanBarangService.getAllDinarpos(bulan));
+    public CommonResponse<List<BarangTransaksi>> getAllBarangDinarpos() {
+        return ResponseHelper.ok(laporanBarangService.getAllDinarpos());
     }
     @GetMapping("/barang/tanggal/dinarpos")
     public CommonResponse<List<BarangTransaksi>> getAllBarangByTanggalDinarpos(@RequestParam(name = "tanggal_awal") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggalAwal, @RequestParam(name = "tanggal_akhir") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggalAkhir , @RequestParam("barcode_barang") String barcode) {
@@ -106,8 +106,8 @@ public class LaporanController {
     }
 
     @GetMapping("/customer/excelcom")
-    public CommonResponse<List<Transaksi>> getAllCustomerExcelcom(int bulan) {
-        return ResponseHelper.ok(laporanCustomerService.getAllExelcom(bulan));
+    public CommonResponse<List<Transaksi>> getAllCustomerExcelcom() {
+        return ResponseHelper.ok(laporanCustomerService.getAllExelcom());
     }
     @GetMapping("/customer/tanggal/excelcom")
     public CommonResponse<List<Transaksi>> getAllCustomerByTanggalExcelcom(@RequestParam(name = "tanggal_awal") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggalAwal, @RequestParam(name = "tanggal_akhir") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggalAkhir , @RequestParam("id_customer") Long idCustomer) {
@@ -115,8 +115,8 @@ public class LaporanController {
     }
 
     @GetMapping("/customer/dinarpos")
-    public CommonResponse<List<Transaksi>> getAllCustomerDinarpos(int bulan) {
-        return ResponseHelper.ok(laporanCustomerService.getAllDinarpos(bulan));
+    public CommonResponse<List<Transaksi>> getAllCustomerDinarpos() {
+        return ResponseHelper.ok(laporanCustomerService.getAllDinarpos());
     }
     @GetMapping("/customer/tanggal/dinarpos")
     public CommonResponse<List<Transaksi>> getAllCustomerByTanggalDinarpos(@RequestParam(name = "tanggal_awal") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggalAwal, @RequestParam(name = "tanggal_akhir") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggalAkhir , @RequestParam("id_customer") Long idCustomer) {
@@ -133,8 +133,8 @@ public class LaporanController {
     }
 
     @GetMapping("/suplier/excelcom")
-    public CommonResponse<List<BarangTransaksiBeli>> getAllSuplierxcelcom(int bulan) {
-        return ResponseHelper.ok(laporanSuplierService.getAllExcelcom(bulan));
+    public CommonResponse<List<BarangTransaksiBeli>> getAllSuplierxcelcom() {
+        return ResponseHelper.ok(laporanSuplierService.getAllExcelcom());
     }
     @GetMapping("/suplier/tanggal/excelcom")
     public CommonResponse<List<TransaksiBeli>> getAllSuplierByTanggalExcelcom(@RequestParam(name = "tanggal_awal") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggalAwal, @RequestParam(name = "tanggal_akhir") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggalAkhir , @RequestParam("id_suplier") Long idSuplier) {
@@ -142,8 +142,8 @@ public class LaporanController {
     }
 
     @GetMapping("/suplier/dinarpos")
-    public CommonResponse<List<BarangTransaksiBeli>> getAllSuplierDinarpos(int bulan) {
-        return ResponseHelper.ok(laporanSuplierService.getAllDinarpos(bulan));
+    public CommonResponse<List<BarangTransaksiBeli>> getAllSuplierDinarpos() {
+        return ResponseHelper.ok(laporanSuplierService.getAllDinarpos());
     }
     @GetMapping("/suplier/tanggal/dinarpos")
     public CommonResponse<List<TransaksiBeli>> getAllSuplgetByTanggalDinarpos(@RequestParam(name = "tanggal_awal") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggalAwal, @RequestParam(name = "tanggal_akhir") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggalAkhir , @RequestParam("id_suplier") Long idSuplier) {
@@ -161,8 +161,8 @@ public class LaporanController {
     }
 
     @GetMapping("/transaksi_beli/excelcom")
-    public CommonResponse<List<TransaksiBeli>> getAllTransaksiBeliExcelcom(int bulan) {
-        return ResponseHelper.ok(laporanTransaksiBeliService.getAllExelcom(bulan));
+    public CommonResponse<List<TransaksiBeli>> getAllTransaksiBeliExcelcom() {
+        return ResponseHelper.ok(laporanTransaksiBeliService.getAllExelcom());
     }
     @GetMapping("/transaksi_beli/tanggal/excelcom")
     public CommonResponse<List<TransaksiBeli>> getAllTransaksiBeliByTanggalExcelcom(@RequestParam(name = "tanggal_awal") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggalAwal, @RequestParam(name = "tanggal_akhir") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggalAkhir , @RequestParam("id_suplier") Long idSuplier) {
@@ -170,8 +170,8 @@ public class LaporanController {
     }
 
     @GetMapping("/transaksi_beli/dinarpos")
-    public CommonResponse<List<TransaksiBeli>> getAllTransaksiBeliDinarpos(int bulan) {
-        return ResponseHelper.ok(laporanTransaksiBeliService.getAllDinarpos(bulan));
+    public CommonResponse<List<TransaksiBeli>> getAllTransaksiBeliDinarpos( ) {
+        return ResponseHelper.ok(laporanTransaksiBeliService.getAllDinarpos());
     }
     @GetMapping("/transaksi_beli/tanggal/dinarpos")
     public CommonResponse<List<TransaksiBeli>> getAllTransaksiBeliByTanggalDinarpos(@RequestParam(name = "tanggal_awal") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggalAwal, @RequestParam(name = "tanggal_akhir") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggalAkhir , @RequestParam("id_suplier") Long idSuplier) {

@@ -14,14 +14,14 @@ public interface TransaksiRepository extends JpaRepository<Transaksi, Long> {
     @Query(value = "SELECT t.no_faktur FROM tabel_transaksi t WHERE MONTH(t.tanggal) = ?1 AND YEAR(t.tanggal) = ?2 ORDER BY t.id_transaksi DESC LIMIT 1", nativeQuery = true)
     String findLastNotaByMonthAndYear(int month, int year);
 
-    @Query(value = "SELECT * FROM tabel_transaksi WHERE status = 'excelcom' AND MONTH(tanggal) = :bulan AND del_flag = 1  ", nativeQuery = true)
-    List<Transaksi> findTransaksiExcelcomByPeriode(@Param("bulan") int bulan);
+    @Query(value = "SELECT * FROM tabel_transaksi WHERE status = 'excelcom' AND MONTH(bulan) = :bulan AND YEAR(tahun) =:tahun AND del_flag = 1  ", nativeQuery = true)
+    List<Transaksi> findTransaksiExcelcomByPeriode(@Param("bulan") int bulan , @Param("tahun") int tahun);
     @Query(value = "SELECT * FROM tabel_transaksi WHERE status = 'excelcom'  AND del_flag = 0  ", nativeQuery = true)
     List<Transaksi> findTransaksiExcelcom();
     @Query(value = "SELECT * FROM tabel_transaksi WHERE status = 'dinarpos'  AND del_flag = 0  ", nativeQuery = true)
     List<Transaksi> findTransaksiDinarpos();
-    @Query(value = "SELECT * FROM tabel_transaksi WHERE status = 'dinarpos' AND MONTH(tanggal) = :bulan AND del_flag = 1  ", nativeQuery = true)
-    List<Transaksi> findTransaksiDinarposByPeriode(@Param("bulan") int bulan);
+    @Query(value = "SELECT * FROM tabel_transaksi WHERE status = 'dinarpos' AND MONTH(bulan) = :bulan AND YEAR(tahun) =:tahun  AND del_flag = 1  ", nativeQuery = true)
+    List<Transaksi> findTransaksiDinarposByPeriode(@Param("bulan") int bulan ,  @Param("tahun") int tahun);
 
     @Query(value = "SELECT t FROM Transaksi t WHERE t.tanggalNotif7 <= :tgl AND t.status = 'excelcom' AND t.hari7 = 1")
     List<Transaksi> findAllTransaksi7Excelcom(Date tgl);

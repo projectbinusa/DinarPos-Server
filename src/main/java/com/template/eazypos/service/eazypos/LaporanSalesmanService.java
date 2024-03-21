@@ -18,11 +18,15 @@ public class LaporanSalesmanService {
     @Autowired
     private TransaksiRepository transaksiRepository;
 
-    public List<Transaksi> getAllExelcom(int bulan) {
-        return transaksiRepository.findTransaksiExcelcomByPeriode(bulan);
+    public List<Transaksi> getAllExelcom() {
+        int tahun = new Date().getYear();
+        int bulan = new Date().getMonth();
+        return transaksiRepository.findTransaksiExcelcomByPeriode(bulan ,tahun);
     }
-    public List<Transaksi> getAllDinarpos(int bulan) {
-        return transaksiRepository.findTransaksiDinarposByPeriode(bulan);
+    public List<Transaksi> getAllDinarpos() {
+        int tahun = new Date().getYear();
+        int bulan = new Date().getMonth();
+        return transaksiRepository.findTransaksiDinarposByPeriode(bulan , tahun);
     }
 
     public Transaksi get(Long id) {

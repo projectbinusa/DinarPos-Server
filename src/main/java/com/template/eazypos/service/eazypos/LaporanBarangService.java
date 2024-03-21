@@ -17,11 +17,15 @@ public class LaporanBarangService {
     @Autowired
     private BarangTransaksiRepository barangTransaksiRepository;
 
-    public List<BarangTransaksi> getAllExcelcom(int bulan) {
-        return barangTransaksiRepository.findBarangTransaksiExcelcomByPeriode(bulan);
+    public List<BarangTransaksi> getAllExcelcom() {
+        int tahun = new Date().getYear();
+        int bulan = new Date().getMonth();
+        return barangTransaksiRepository.findBarangTransaksiExcelcomByPeriode(bulan , tahun);
     }
-    public List<BarangTransaksi> getAllDinarpos(int bulan) {
-        return barangTransaksiRepository.findBarangTransaksiExcelcomByPeriode(bulan);
+    public List<BarangTransaksi> getAllDinarpos() {
+        int tahun = new Date().getYear();
+        int bulan = new Date().getMonth();
+        return barangTransaksiRepository.findBarangTransaksiDinarposByPeriode(bulan , tahun);
     }
 
     public BarangTransaksi get(Long id) {
