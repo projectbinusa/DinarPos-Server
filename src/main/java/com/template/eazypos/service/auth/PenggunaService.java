@@ -1,6 +1,7 @@
 package com.template.eazypos.service.auth;
 
 import com.template.eazypos.dto.LoginRequest;
+import com.template.eazypos.dto.PenggunaDTO;
 import com.template.eazypos.exception.BadRequestException;
 import com.template.eazypos.exception.NotFoundException;
 import com.template.eazypos.model.Pengguna;
@@ -55,7 +56,8 @@ public class PenggunaService {
     }
 
 
-    public Pengguna addPengguna(Pengguna user) {
+    public Pengguna addPengguna(PenggunaDTO user) {
+        Pengguna pengguna = new Pengguna();
         if (penggunaRepository.findByUsername(user.getUsernamePengguna()).isPresent()){
         throw new BadRequestException("Username Pengguna sudah digunakan");
         }
@@ -63,9 +65,10 @@ public class PenggunaService {
         boolean PasswordIsNotValid = !userPass.matches("^(?=.*[0-9])(?=.*[a-z])(?=\\S+$).{8,20}");
         if (PasswordIsNotValid) throw new BadRequestException("Password not valid!");
         String encodedPassword = encoder.encode(user.getPasswordPengguna());
-        user.setPasswordPengguna(encodedPassword);
-        user.setLastLogin(new Date());
-        return penggunaRepository.save(user);
+        pengguna.setPasswordPengguna(encodedPassword);
+        pengguna.setDelFlag(1);
+        pengguna.setLastLogin(null);
+        return penggunaRepository.save(pengguna);
     }
 
     public Pengguna get(Long id) {

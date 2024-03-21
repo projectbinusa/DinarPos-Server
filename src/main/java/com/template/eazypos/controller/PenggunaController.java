@@ -1,6 +1,7 @@
 package com.template.eazypos.controller;
 
 import com.template.eazypos.dto.LoginRequest;
+import com.template.eazypos.dto.PenggunaDTO;
 import com.template.eazypos.exception.CommonResponse;
 import com.template.eazypos.exception.ResponseHelper;
 import com.template.eazypos.model.Pengguna;
@@ -23,7 +24,7 @@ public class PenggunaController {
         return ResponseHelper.ok( penggunaService.login(loginRequest));
     }
     @PostMapping("/add")
-    public CommonResponse<Pengguna> addPengguna(@RequestBody Pengguna user){
+    public CommonResponse<Pengguna> addPengguna(@RequestBody PenggunaDTO user){
         return ResponseHelper.ok( penggunaService.addPengguna(user));
     }
     @GetMapping("/{id}")
