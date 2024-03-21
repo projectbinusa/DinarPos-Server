@@ -14,9 +14,9 @@ public interface BarangTransaksiBeliRepository extends JpaRepository<BarangTrans
     @Query(value = "SELECT * FROM tabel_barang_transaksi_beli WHERE status = 'dinarpos'  AND del_flag = 0  ", nativeQuery = true)
     List<BarangTransaksiBeli> findBarangTransaksiBeliDinarpos();
 
-    @Query(value = "SELECT * FROM tabel_barang_transaksi_beli WHERE status = 'excelcom' AND MONTH(bulan) = :bulan AND YEAR(tahun) =:tahun AND del_flag = 1  ", nativeQuery = true)
+    @Query(value = "SELECT * FROM tabel_barang_transaksi_beli WHERE status = 'excelcom' AND MONTH(tanggal) = :bulan AND YEAR(tanggal) =:tahun AND del_flag = 1  ", nativeQuery = true)
     List<BarangTransaksiBeli> findBarangTransaksiExcelcomByPeriode(@Param("bulan") int bulan ,  @Param("tahun") int tahun);
-    @Query(value = "SELECT * FROM tabel_barang_transaksi_beli WHERE status = 'dinarpos' AND MONTH(bulan) = :bulan AND YEAR(tahun) =:tahun AND del_flag = 1  ", nativeQuery = true)
+    @Query(value = "SELECT * FROM tabel_barang_transaksi_beli WHERE status = 'dinarpos' AND MONTH(tanggal) = :bulan AND YEAR(tanggal) =:tahun AND del_flag = 1  ", nativeQuery = true)
     List<BarangTransaksiBeli> findBarangTransaksiDinarposByPeriode(@Param("bulan") int bulan ,  @Param("tahun") int tahun);
     @Query(value = "SELECT * FROM tabel_barang_transaksi_beli WHERE status = :status AND id_transakasi_beli = :idTransaksi AND del_flag = 1  ", nativeQuery = true)
     List<BarangTransaksiBeli> findBarangTransaksiDinarposByIdTransaksi(String status , Long idTransaksi);

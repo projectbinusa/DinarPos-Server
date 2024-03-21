@@ -18,9 +18,9 @@ public interface BarangTransaksiRepository extends JpaRepository<BarangTransaksi
     @Query(value = "SELECT * FROM tabel_barang_transaksi WHERE id_transaksi =:transaksi AND status =:status", nativeQuery = true)
     List<BarangTransaksi> findBarangTransaksiByIdTransaksi(Long transaksi , String status);
 
-    @Query(value = "SELECT * FROM tabel_barang_transaksi WHERE status = 'excelcom' AND MONTH(tanggal) = :bulan AND YEAR(tahun) =:tahun AND del_flag = 1  ", nativeQuery = true)
+    @Query(value = "SELECT * FROM tabel_barang_transaksi WHERE status = 'excelcom' AND MONTH(tanggal) = :bulan AND YEAR(tanggal) =:tahun AND del_flag = 1  ", nativeQuery = true)
     List<BarangTransaksi> findBarangTransaksiExcelcomByPeriode(@Param("bulan") int bulan , @Param("tahun") int tahun);
-    @Query(value = "SELECT * FROM tabel_barang_transaksi WHERE status = 'dinarpos' AND MONTH(bulan) = :bulan AND YEAR(tahun) =:tahun  AND del_flag = 1  ", nativeQuery = true)
+    @Query(value = "SELECT * FROM tabel_barang_transaksi WHERE status = 'dinarpos' AND MONTH(tanggal) = :bulan AND YEAR(tanggal) =:tahun  AND del_flag = 1  ", nativeQuery = true)
     List<BarangTransaksi> findBarangTransaksiDinarposByPeriode(@Param("bulan") int bulan,  @Param("tahun") int tahun);
 
     @Query(value = "SELECT t FROM BarangTransaksi t WHERE t.tanggal BETWEEN :tanggalAwal AND :tanggalAkhir AND t.barcodeBarang = :barcode AND t.status = :status")

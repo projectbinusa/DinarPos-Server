@@ -19,9 +19,9 @@ public interface TransaksiBeliRepository extends JpaRepository<TransaksiBeli , L
     @Query(value = "SELECT * FROM tabel_transaksi_beli WHERE status = 'dinarpos'  AND del_flag = 0  ", nativeQuery = true)
     List<TransaksiBeli> findTransaksiBeliDinarpos();
 
-    @Query(value = "SELECT * FROM tabel_transaksi_beli WHERE status = 'excelcom' AND MONTH(bulan) = :bulan AND YEAR(tahun) =:tahun AND del_flag = 1  ", nativeQuery = true)
+    @Query(value = "SELECT * FROM tabel_transaksi_beli WHERE status = 'excelcom' AND MONTH(tanggal) = :bulan AND YEAR(tanggal) =:tahun AND del_flag = 1  ", nativeQuery = true)
     List<TransaksiBeli> findTransaksiBeliExcelcomByPeriode(@Param("bulan") int bulan ,  @Param("tahun") int tahun);
-    @Query(value = "SELECT * FROM tabel_transaksi_beli WHERE status = 'dinarpos' AND MONTH(bulan) = :bulan AND YEAR(tahun) =:tahun AND del_flag = 1  ", nativeQuery = true)
+    @Query(value = "SELECT * FROM tabel_transaksi_beli WHERE status = 'dinarpos' AND MONTH(tanggal) = :bulan AND YEAR(tanggal) =:tahun AND del_flag = 1  ", nativeQuery = true)
     List<TransaksiBeli> findTransaksiBeliDinarposByPeriode(@Param("bulan") int bulan ,  @Param("tahun") int tahun);
 
     @Query(value = "SELECT t FROM TransaksiBeli t WHERE t.tanggal BETWEEN :tanggalAwal AND :tanggalAkhir AND t.suplier.id = :suplierId AND t.status = :status")

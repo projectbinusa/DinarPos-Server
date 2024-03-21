@@ -54,14 +54,19 @@ public class SupplierService {
         }
     }
     public Page<Suplier> getAllWithPagination(Long page, Long limit, String sort, String search) {
-
         Sort.Direction direction = Sort.Direction.ASC;
         if (sort.startsWith("-")) {
             sort = sort.substring(1);
             direction = Sort.Direction.DESC;
         }
 
-        Pageable pageable = PageRequest.of(Math.toIntExact(page - 1), Math.toIntExact(limit), direction, sort);
+        Pageable pageable;
+        if (direction == Sort.Direction.ASC) {
+            pageable = PageRequest.of(Math.toIntExact(page - 1), Math.toIntExact(limit), Sort.by(sort).ascending());
+        } else {
+            pageable = PageRequest.of(Math.toIntExact(page - 1), Math.toIntExact(limit), Sort.by(sort).descending());
+        }
+
         if (search != null && !search.isEmpty()) {
             return suplierRepository.findAllByKeyword(search, pageable);
         } else {
