@@ -4,10 +4,7 @@ import com.template.eazypos.dto.TransaksiBeliDTO;
 import com.template.eazypos.dto.TransaksiPenjualanDTO;
 import com.template.eazypos.exception.CommonResponse;
 import com.template.eazypos.exception.ResponseHelper;
-import com.template.eazypos.model.Barang;
-import com.template.eazypos.model.BarangTransaksiBeli;
-import com.template.eazypos.model.Transaksi;
-import com.template.eazypos.model.TransaksiBeli;
+import com.template.eazypos.model.*;
 import com.template.eazypos.service.eazypos.dinarpos.TransaksiBeliDinarposService;
 import com.template.eazypos.service.eazypos.dinarpos.TransaksiPenjualanDinarposService;
 import com.template.eazypos.service.eazypos.excelcom.TransaksiBeliExcelcomService;
@@ -52,9 +49,21 @@ public class TransaksiController {
     public CommonResponse <TransaksiBeli> get(@PathVariable("id") Long id){
         return ResponseHelper.ok( transaksiBeliDinarposService.getById(id));
     }
+    @GetMapping("/penjualan/{id}")
+    public CommonResponse <Transaksi> getPenjualan(@PathVariable("id") Long id){
+        return ResponseHelper.ok( transaksiPenjualanService.getById(id));
+    }
     @GetMapping("barang/pembelian/dinarpos")
     public CommonResponse <List<BarangTransaksiBeli>> getByIdTransaksiDinarpos(@RequestParam("id_transaksi") Long  idTransaksi){
         return ResponseHelper.ok( transaksiBeliDinarposService.getByIdTransaksi(idTransaksi));
+    }
+    @GetMapping("barang/penjualan/excelcom")
+    public CommonResponse <List<BarangTransaksi>> getBarangByIdTransaksiExcelcom(@RequestParam("id_transaksi") Long  idTransaksi){
+        return ResponseHelper.ok( transaksiPenjualanService.getExcelcomByIdTransaksi(idTransaksi));
+    }
+    @GetMapping("barang/penjualan/dinarpos")
+    public CommonResponse <List<BarangTransaksi>> getBarangByIdTransaksiDinarpos(@RequestParam("id_transaksi") Long  idTransaksi){
+        return ResponseHelper.ok( transaksiPenjualanDinarposService.getDinarposByIdTransaksi(idTransaksi));
     }
     @GetMapping("barang/pembelian/excelcom")
     public CommonResponse <List<BarangTransaksiBeli>> getByIdTransaksiExcelcom(@RequestParam("id_transaksi") Long  idTransaksi){
