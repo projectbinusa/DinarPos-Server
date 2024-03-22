@@ -5,6 +5,7 @@ import com.template.eazypos.dto.TransaksiBeliDTO;
 import com.template.eazypos.exception.NotFoundException;
 import com.template.eazypos.model.Barang;
 import com.template.eazypos.model.BarangTransaksiBeli;
+import com.template.eazypos.model.Suplier;
 import com.template.eazypos.model.TransaksiBeli;
 import com.template.eazypos.repository.BarangRepository;
 import com.template.eazypos.repository.BarangTransaksiBeliRepository;
@@ -35,6 +36,7 @@ public class TransaksiBeliExcelcomService {
         Date now = new Date();
         String not = generateNotaNumber();
 
+        Suplier suplier = suplierRepository.findById(transaksiBeliDTO.getIdSuplier()).orElseThrow(() -> new NotFoundException("Id tidak dinemukan"));
         TransaksiBeli transaksiBeli = new TransaksiBeli();
         transaksiBeli.setTotalBelanja(transaksiBeliDTO.getTotalBelanja());
         transaksiBeli.setPembayaran(transaksiBeliDTO.getPembayaran());
@@ -49,6 +51,7 @@ public class TransaksiBeliExcelcomService {
         transaksiBeli.setTtlBayarHemat(transaksiBeliDTO.getTtlBayarHemat());
         transaksiBeli.setTanggal(now);
         transaksiBeli.setDelFlag(1);
+        transaksiBeli.setNamaSuplier(suplier.getNamaSuplier());
         transaksiBeli.setStatus("excelcom");
 
         TransaksiBeli savedTransaksiBeli = transaksiBeliRepository.save(transaksiBeli);
@@ -66,6 +69,7 @@ public class TransaksiBeliExcelcomService {
                 barangTransaksiBeli.setDiskon(barangDTO.getDiskon());
                 barangTransaksiBeli.setHargaBrng(barangDTO.getHargaBrng());
                 barangTransaksiBeli.setTotalHarga(barangDTO.getTotalHarga());
+                barangTransaksiBeli.setHemat(String.valueOf(barangDTO.getHemat()));
                 barangTransaksiBeli.setTotalHargaBarang(barangDTO.getTotalHargaBarang());
                 barangTransaksiBeli.setTanggal(now);
                 barangTransaksiBeli.setDelFlag(1);

@@ -3,10 +3,8 @@ package com.template.eazypos.service.eazypos.dinarpos;
 import com.template.eazypos.dto.BarangTransaksiDTO;
 import com.template.eazypos.dto.TransaksiPenjualanDTO;
 import com.template.eazypos.exception.BadRequestException;
-import com.template.eazypos.model.Barang;
-import com.template.eazypos.model.BarangTransaksi;
-import com.template.eazypos.model.Transaksi;
-import com.template.eazypos.model.TransaksiBeli;
+import com.template.eazypos.exception.NotFoundException;
+import com.template.eazypos.model.*;
 import com.template.eazypos.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,6 +33,8 @@ public class TransaksiPenjualanDinarposService {
     public Transaksi addTransaksi(TransaksiPenjualanDTO transaksiDTO) {
         Date now = new Date();
         String not = generateNotaNumber(); // method generateNotaNumber() menghasilkan nomor nota baru
+        Customer customer = customerRepository.findById(transaksiDTO.getIdCustomer()).orElseThrow(() -> new NotFoundException("Id tidak dinemukan"));
+        Salesman salesman = salesmanRepository.findById(transaksiDTO.getIdSalesman()).orElseThrow(() -> new NotFoundException("Id tidak dinemukan"));
 
         Transaksi transaksi = new Transaksi();
         transaksi.setTotalBelanja(transaksiDTO.getTotalBelanja());
@@ -45,6 +45,8 @@ public class TransaksiPenjualanDinarposService {
         transaksi.setCustomer(customerRepository.findById(transaksiDTO.getIdCustomer()).get());
         transaksi.setSalesman(salesmanRepository.findById(transaksiDTO.getIdSalesman()).get());
         transaksi.setDelFlag(1);
+        transaksi.setNamaSalesman(salesman.getNamaSalesman());
+        transaksi.setNamaCustomer(customer.getNama_customer());
         transaksi.setStatus("dinarpos");
         transaksi.setHari7(1);
         transaksi.setHari30(1);
@@ -85,7 +87,6 @@ public class TransaksiPenjualanDinarposService {
         calendar.add(Calendar.YEAR, 1);
         transaksi.setTanggalNotif365(calendar.getTime());
         transaksi.setDelFlag(1);
-        transaksi.setStatus("excelcom");
 
         Transaksi savedTransaksi = transaksiRepository.save(transaksi);
 
@@ -106,6 +107,7 @@ public class TransaksiPenjualanDinarposService {
             barangTransaksi.setHari120(1);
             barangTransaksi.setHari367(1);
             barangTransaksi.setDelFlag(1);
+            barangTransaksi.setHemat(String.valueOf(barangDTO.getHemat()));
             barangTransaksi.setStatus("dinarpos");
             barangTransaksiRepository.save(barangTransaksi);
 

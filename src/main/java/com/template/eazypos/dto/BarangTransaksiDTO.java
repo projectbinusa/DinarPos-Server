@@ -8,6 +8,7 @@ public class BarangTransaksiDTO {
     private int hargaBrng;
     private int totalHarga;
     private int totalHargaBarang;
+    private int hemat;
 
 
     public String getBarcodeBarang() {
@@ -56,5 +57,13 @@ public class BarangTransaksiDTO {
 
     public void setTotalHargaBarang(int totalHargaBarang) {
         this.totalHargaBarang = totalHargaBarang;
+    }
+
+    public int getHemat() {
+        return hemat;
+    }
+
+    public void setHemat(int hemat) {
+        this.hemat = hemat;
     }
 }

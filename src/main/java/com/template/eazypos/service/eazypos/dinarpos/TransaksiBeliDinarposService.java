@@ -5,6 +5,7 @@ import com.template.eazypos.dto.TransaksiBeliDTO;
 import com.template.eazypos.exception.NotFoundException;
 import com.template.eazypos.model.Barang;
 import com.template.eazypos.model.BarangTransaksiBeli;
+import com.template.eazypos.model.Suplier;
 import com.template.eazypos.model.TransaksiBeli;
 import com.template.eazypos.repository.BarangRepository;
 import com.template.eazypos.repository.BarangTransaksiBeliRepository;
@@ -34,6 +35,7 @@ public class TransaksiBeliDinarposService {
     public TransaksiBeli addTransaksiBeli(TransaksiBeliDTO transaksiBeliDTO) {
         Date now = new Date();
         String not = generateNotaNumber();
+        Suplier suplier = suplierRepository.findById(transaksiBeliDTO.getIdSuplier()).orElseThrow(() -> new NotFoundException("Id tidak dinemukan"));
 
         TransaksiBeli transaksiBeli = new TransaksiBeli();
         transaksiBeli.setTotalBelanja(transaksiBeliDTO.getTotalBelanja());
@@ -49,6 +51,7 @@ public class TransaksiBeliDinarposService {
         transaksiBeli.setTtlBayarHemat(transaksiBeliDTO.getTtlBayarHemat());
         transaksiBeli.setTanggal(now);
         transaksiBeli.setDelFlag(1);
+        transaksiBeli.setNamaSuplier(suplier.getNamaSuplier());
         transaksiBeli.setStatus("dinarpos");
 
         TransaksiBeli savedTransaksiBeli = transaksiBeliRepository.save(transaksiBeli);
@@ -69,6 +72,7 @@ public class TransaksiBeliDinarposService {
                 barangTransaksiBeli.setTotalHargaBarang(barangDTO.getTotalHargaBarang());
                 barangTransaksiBeli.setTanggal(now);
                 barangTransaksiBeli.setDelFlag(1);
+                barangTransaksiBeli.setHemat(String.valueOf(barangDTO.getHemat()));
                 barangTransaksiBeli.setStatus("dinarpos");
 
                 barangTransaksiBeliRepository.save(barangTransaksiBeli);
