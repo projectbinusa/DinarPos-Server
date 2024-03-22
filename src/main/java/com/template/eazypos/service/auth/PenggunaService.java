@@ -66,8 +66,12 @@ public class PenggunaService {
         if (PasswordIsNotValid) throw new BadRequestException("Password not valid!");
         String encodedPassword = encoder.encode(user.getPasswordPengguna());
         pengguna.setPasswordPengguna(encodedPassword);
+        pengguna.setNamaPengguna(user.getNamaPengguna());
+        pengguna.setUsernamePengguna(user.getUsernamePengguna());
+        pengguna.setLevelPengguna(user.getLevelPengguna());
+        pengguna.setRoleToko(user.getRoleToko());
         pengguna.setDelFlag(1);
-        pengguna.setLastLogin(null);
+        pengguna.setLastLogin(new Date());
         return penggunaRepository.save(pengguna);
     }
 
