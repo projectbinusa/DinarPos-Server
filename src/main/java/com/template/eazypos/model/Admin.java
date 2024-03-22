@@ -24,7 +24,7 @@ public class Admin extends DateConfig {
     private String namaAdmin;
 
 
-    @Column(name = "last_login", nullable = false)
+    @Column(name = "last_login")
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastLogin;
 

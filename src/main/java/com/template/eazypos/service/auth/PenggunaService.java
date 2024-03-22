@@ -62,7 +62,7 @@ public class PenggunaService {
         throw new BadRequestException("Username Pengguna sudah digunakan");
         }
         String userPass = user.getPasswordPengguna().trim();
-        boolean PasswordIsNotValid = !userPass.matches("^(?=.*[0-9])(?=.*[a-z])(?=\\S+$).{8,20}");
+        boolean PasswordIsNotValid = !userPass.matches("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{8,20}");
         if (PasswordIsNotValid) throw new BadRequestException("Password not valid!");
         String encodedPassword = encoder.encode(user.getPasswordPengguna());
         pengguna.setPasswordPengguna(encodedPassword);

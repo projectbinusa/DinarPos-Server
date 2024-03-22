@@ -44,7 +44,7 @@ public class BarangTransaksiBeli extends DateConfig {
     @Column(name = "total_harga", nullable = false)
     private int totalHarga;
 
-    @Column(name = "hemat", nullable = false, length = 50)
+    @Column(name = "hemat", length = 50)
     private String hemat;
 
     @Column(name = "tanggal", nullable = false)
