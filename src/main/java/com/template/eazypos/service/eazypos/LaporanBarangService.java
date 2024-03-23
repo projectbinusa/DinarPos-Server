@@ -18,13 +18,13 @@ public class LaporanBarangService {
     private BarangTransaksiRepository barangTransaksiRepository;
 
     public List<BarangTransaksi> getAllExcelcom() {
-        int tahun = new Date().getYear();
-        int bulan = new Date().getMonth();
+        int tahun = new Date().getYear() + 1900; // Tambahkan 1900 untuk mendapatkan tahun yang benar
+        int bulan = new Date().getMonth() + 1; // Tambahkan 1 untuk mendapatkan bulan yang benar
         return barangTransaksiRepository.findBarangTransaksiExcelcomByPeriode(bulan , tahun);
     }
     public List<BarangTransaksi> getAllDinarpos() {
-        int tahun = new Date().getYear();
-        int bulan = new Date().getMonth();
+        int tahun = new Date().getYear() + 1900; // Tambahkan 1900 untuk mendapatkan tahun yang benar
+        int bulan = new Date().getMonth() + 1; // Tambahkan 1 untuk mendapatkan bulan yang benar
         return barangTransaksiRepository.findBarangTransaksiDinarposByPeriode(bulan , tahun);
     }
 
