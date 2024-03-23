@@ -57,9 +57,14 @@ public class ExcelSuplier {
             Sheet sheet = workbook.createSheet(SHEET);
 
             Row headerRow = sheet.createRow(0);
+            CellStyle stringCellStyle = workbook.createCellStyle();
+            DataFormat dataFormat = workbook.createDataFormat();
+            stringCellStyle.setDataFormat(dataFormat.getFormat("@")); // Set format to text
+
             for (int col = 0; col < HEADERsTemplate.length; col++) {
                 Cell cell = headerRow.createCell(col);
                 cell.setCellValue(HEADERsTemplate[col]);
+                cell.setCellStyle(stringCellStyle); // Set the cell style to string type
             }
 
             workbook.write(out);
@@ -93,11 +98,8 @@ public class ExcelSuplier {
                             suplier.setDelFlag(1);
                             break;
                         case 4:
-                            if (currentCell.getCellType() == CellType.NUMERIC) {
-                                suplier.setNoTelpSuplier(String.valueOf(currentCell.getNumericCellValue()));
-                            } else {
                                 suplier.setNoTelpSuplier(currentCell.getStringCellValue());
-                            }
+
                             break;
                         case 3:
                             suplier.setAlamatSuplier(currentCell.getStringCellValue());
