@@ -11,8 +11,14 @@ import java.util.List;
 import java.util.Optional;
 
 public interface TransaksiRepository extends JpaRepository<Transaksi, Long> {
-    @Query(value = "SELECT t.no_faktur FROM tabel_transaksi t WHERE MONTH(t.tanggal) = ?1 AND YEAR(t.tanggal) = ?2 ORDER BY t.id_transaksi DESC LIMIT 1", nativeQuery = true)
-    String findLastNotaByMonthAndYear(int month, int year);
+    @Query(value = "SELECT no_faktur FROM tabel_transaksi  WHERE MONTH(tanggal) = :bulan AND YEAR(tanggal) = :tahun ORDER BY id_transaksi DESC LIMIT 1", nativeQuery = true)
+    String findLastNotaByMonthAndYear(@Param("bulan") int bulan, @Param("tahun") int tahun);
+
+    @Query(value = "SELECT MAX(RIGHT(no_faktur, 4)) AS kd_max FROM tabel_transaksi WHERE no_faktur LIKE '%PJN%'", nativeQuery = true)
+    Integer findMaxKd();
+
+    @Query(value = "SELECT tanggal FROM tabel_transaksi WHERE no_faktur LIKE '%PJN%' ORDER BY tanggal DESC LIMIT 1", nativeQuery = true)
+    String findLastDate();
 
     @Query(value = "SELECT * FROM tabel_transaksi WHERE status = 'excelcom' AND MONTH(tanggal) = :bulan AND YEAR(tanggal) =:tahun AND del_flag = 1  ", nativeQuery = true)
     List<Transaksi> findTransaksiExcelcomByPeriode(@Param("bulan") int bulan , @Param("tahun") int tahun);

@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -32,7 +34,7 @@ public class TransaksiPenjualanExcelcomService {
 
     public Transaksi addTransaksi(TransaksiPenjualanDTO transaksiDTO) {
         Date now = new Date();
-        String not = generateNotaNumber(); // method generateNotaNumber() menghasilkan nomor nota baru
+        String not = getNoNotaTransaksiPenjualanExcelcom(); // method generateNotaNumber() menghasilkan nomor nota baru
         Customer customer = customerRepository.findById(transaksiDTO.getIdCustomer()).orElseThrow(() -> new NotFoundException("Id tidak dinemukan"));
         Salesman salesman = salesmanRepository.findById(transaksiDTO.getIdSalesman()).orElseThrow(() -> new NotFoundException("Id tidak dinemukan"));
 
@@ -141,10 +143,6 @@ public class TransaksiPenjualanExcelcomService {
         // Dapatkan nomor nota terakhir dari database untuk bulan dan tahun saat ini
         String lastNota = transaksiRepository.findLastNotaByMonthAndYear(month, year);
 
-        // Jika nomor nota terakhir tidak ditemukan
-        if (lastNota == null) {
-            return String.format("%02d%02d-PST-PJN-0001", month, year);
-        } else {
             // Periksa apakah nomor nota terakhir berasal dari bulan dan tahun yang sama
             String[] parts = lastNota.split("-");
             int lastMonth = Integer.parseInt(parts[0]);
@@ -153,11 +151,36 @@ public class TransaksiPenjualanExcelcomService {
 
             if (lastMonth == month && lastYear == year) {
                 lastNumber++; // Tambahkan satu pada angka terakhir
+                // Format ulang nomor nota baru
                 return String.format("%02d%02d-PST-PJN-%04d", month, year, lastNumber);
             } else {
                 return String.format("%02d%02d-PST-PJN-0001", month, year); // Mulai nomor nota baru
             }
+
+    }
+    public String getNoNotaTransaksiPenjualanExcelcom() {
+        String kd = "";
+        LocalDateTime now = LocalDateTime.now();
+        int dateNow = Integer.parseInt(now.format(DateTimeFormatter.ofPattern("MM")));
+
+        Integer kdMax = transaksiRepository.findMaxKd();
+        int tmp = (kdMax != null) ? kdMax + 1 : 1;
+
+        String fullLastDate = transaksiRepository.findLastDate();
+        int lastDate = Integer.parseInt(fullLastDate.substring(5, 7)); // Extract month from the full date
+
+        // Check if it's a new month
+        if (lastDate != dateNow) {
+            tmp = 1;
         }
+
+        kd = String.format("%04d", tmp);
+
+        // Format nota
+        String nomor = now.format(DateTimeFormatter.ofPattern("MMyy")); // Format bulan dan tahun
+        String nota = nomor + "-PST-PJN-0" + kd;
+
+        return nota;
     }
     public List<Transaksi> getExcelcomBYMonthAndYear(int bulan , int tahun){
         return transaksiRepository.findTransaksiByMonthAndYear(bulan,tahun , "excelcom");
@@ -168,6 +191,9 @@ public class TransaksiPenjualanExcelcomService {
     }
     public Transaksi getById(Long id){
         return transaksiRepository.findById(id).orElseThrow(() -> new NotFoundException("Id tidak dinemukan"));
+    }
+    public String getLastNotaByMonthAndYear(int bulan, int tahun) {
+        return transaksiRepository.findLastNotaByMonthAndYear(bulan, tahun);
     }
 }
 

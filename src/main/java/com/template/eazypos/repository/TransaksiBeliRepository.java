@@ -14,6 +14,12 @@ public interface TransaksiBeliRepository extends JpaRepository<TransaksiBeli , L
     @Query(value = "SELECT t.no_faktur FROM tabel_transaksi_beli t WHERE MONTH(t.tanggal) = ?1 AND YEAR(t.tanggal) = ?2 ORDER BY t.id_transaksi_beli DESC LIMIT 1", nativeQuery = true)
     String findLastNotaByMonthAndYear(int month, int year);
 
+    @Query(value = "SELECT MAX(RIGHT(no_faktur, 4)) AS kd_max FROM tabel_transaksi_beli WHERE no_faktur LIKE '%PJN%'", nativeQuery = true)
+    Integer findMaxKd();
+
+    @Query(value = "SELECT tanggal FROM tabel_transaksi_beli WHERE no_faktur LIKE '%PJN%' ORDER BY tanggal DESC LIMIT 1", nativeQuery = true)
+    String findLastDate();
+
     @Query(value = "SELECT * FROM tabel_transaksi_beli WHERE status = 'excelcom'  AND del_flag = 0  ", nativeQuery = true)
     List<TransaksiBeli> findTransaksiBeliExcelcom();
     @Query(value = "SELECT * FROM tabel_transaksi_beli WHERE status = 'dinarpos'  AND del_flag = 0  ", nativeQuery = true)

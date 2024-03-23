@@ -14,6 +14,8 @@ import com.template.eazypos.repository.TransaksiBeliRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -34,7 +36,7 @@ public class TransaksiBeliDinarposService {
 
     public TransaksiBeli addTransaksiBeli(TransaksiBeliDTO transaksiBeliDTO) {
         Date now = new Date();
-        String not = generateNotaNumber();
+        String not = getNoNotaTransaksiPenjualanExcelcom();
         Suplier suplier = suplierRepository.findById(transaksiBeliDTO.getIdSuplier()).orElseThrow(() -> new NotFoundException("Id tidak dinemukan"));
 
         TransaksiBeli transaksiBeli = new TransaksiBeli();
@@ -87,32 +89,29 @@ public class TransaksiBeliDinarposService {
         }
         return savedTransaksiBeli;
     }
-    private String generateNotaNumber() {
-        // Dapatkan tanggal saat ini
-        Calendar calendar = Calendar.getInstance();
-        int month = calendar.get(Calendar.MONTH) + 1;
-        int year = calendar.get(Calendar.YEAR) % 100;
+    public String getNoNotaTransaksiPenjualanExcelcom() {
+        String kd = "";
+        LocalDateTime now = LocalDateTime.now();
+        int dateNow = Integer.parseInt(now.format(DateTimeFormatter.ofPattern("MM")));
 
-        // Dapatkan nomor nota terakhir dari database untuk bulan dan tahun saat ini
-        String lastNota = transaksiBeliRepository.findLastNotaByMonthAndYear(month, year);
+        Integer kdMax = transaksiBeliRepository.findMaxKd();
+        int tmp = (kdMax != null) ? kdMax + 1 : 1;
 
-        // Jika nomor nota terakhir tidak ditemukan
-        if (lastNota == null) {
-            return String.format("%02d%02d-PST-PJN-0001", month, year);
-        } else {
-            // Periksa apakah nomor nota terakhir berasal dari bulan dan tahun yang sama
-            String[] parts = lastNota.split("-");
-            int lastMonth = Integer.parseInt(parts[0]);
-            int lastYear = Integer.parseInt(parts[1]);
-            int lastNumber = Integer.parseInt(parts[3]);
+        String fullLastDate = transaksiBeliRepository.findLastDate();
+        int lastDate = Integer.parseInt(fullLastDate.substring(5, 7)); // Extract month from the full date
 
-            if (lastMonth == month && lastYear == year) {
-                lastNumber++; // Tambahkan satu pada angka terakhir
-                return String.format("%02d%02d-PST-PJN-%04d", month, year, lastNumber);
-            } else {
-                return String.format("%02d%02d-PST-PJN-0001", month, year); // Mulai nomor nota baru
-            }
+        // Check if it's a new month
+        if (lastDate != dateNow) {
+            tmp = 1;
         }
+
+        kd = String.format("%04d", tmp);
+
+        // Format nota
+        String nomor = now.format(DateTimeFormatter.ofPattern("MMyy")); // Format bulan dan tahun
+        String nota = nomor + "-PST-PJN-0" + kd;
+
+        return nota;
     }
     public TransaksiBeli getById(Long id){
         return transaksiBeliRepository.findById(id).orElseThrow(() -> new NotFoundException("Id tidak dinemukan"));

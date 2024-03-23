@@ -93,6 +93,12 @@ public class TransaksiController {
     public CommonResponse <List<Transaksi>> getAllPenjualanBYMonthAndYearExcelcom(int bulan , int tahun){
         return ResponseHelper.ok( transaksiPenjualanService.getExcelcomBYMonthAndYear(bulan, tahun));
     }
+    @GetMapping("/last-nota")
+    public String getLastNotaByMonthAndYear(
+            @RequestParam int bulan,
+            @RequestParam int tahun) {
+        return transaksiPenjualanService.getLastNotaByMonthAndYear(bulan, tahun);
+    }
 
 
 
