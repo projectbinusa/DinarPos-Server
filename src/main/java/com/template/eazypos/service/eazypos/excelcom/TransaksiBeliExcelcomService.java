@@ -110,7 +110,7 @@ public class TransaksiBeliExcelcomService {
 
         // Format nota
         String nomor = now.format(DateTimeFormatter.ofPattern("MMyy")); // Format bulan dan tahun
-        String nota = nomor + "-PST-PJN-0" + kd;
+        String nota = nomor + "-PST-PJN-" + kd;
 
         return nota;
     }

@@ -7,7 +7,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "service")
-public class Service extends DateConfig {
+public class ServiceBarang extends DateConfig {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
