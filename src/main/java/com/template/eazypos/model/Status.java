@@ -19,7 +19,7 @@ public class Status extends DateConfig {
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     @JoinColumn(name = "id_tt", nullable = false, updatable = false)
-    private Service service;
+    private ServiceBarang service;
 
 //    @Column(name = "id_teknisi", nullable = false)
 //    private Long idTeknisi;
@@ -56,11 +56,11 @@ public class Status extends DateConfig {
     }
 
 
-    public Service getService() {
+    public ServiceBarang getService() {
         return service;
     }
 
-    public void setService(Service service) {
+    public void setService(ServiceBarang service) {
         this.service = service;
     }
 

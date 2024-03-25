@@ -19,14 +19,14 @@ public class Retur extends DateConfig {
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     @JoinColumn(name = "id_tt_lama", updatable = false)
-    private Service TTLama;
+    private ServiceBarang TTLama;
 
 //    @Column(name = "id_tt_baru", nullable = false)
 //    private Long idTTBaru;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     @JoinColumn(name = "id_tt_baru", updatable = false)
-    private Service TTBaru;
+    private ServiceBarang TTBaru;
 
     @Column(name = "tgl_retur", nullable = false)
     @Temporal(TemporalType.DATE)
@@ -57,19 +57,19 @@ public class Retur extends DateConfig {
 //    }
 
 
-    public Service getTTLama() {
+    public ServiceBarang getTTLama() {
         return TTLama;
     }
 
-    public void setTTLama(Service TTLama) {
+    public void setTTLama(ServiceBarang TTLama) {
         this.TTLama = TTLama;
     }
 
-    public Service getTTBaru() {
+    public ServiceBarang getTTBaru() {
         return TTBaru;
     }
 
-    public void setTTBaru(Service TTBaru) {
+    public void setTTBaru(ServiceBarang TTBaru) {
         this.TTBaru = TTBaru;
     }
 
