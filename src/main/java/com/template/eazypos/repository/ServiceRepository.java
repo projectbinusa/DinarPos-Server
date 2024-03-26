@@ -9,6 +9,6 @@ import java.util.Date;
 import java.util.List;
 
 public interface ServiceRepository extends JpaRepository<ServiceBarang, Long> {
-    @Query(value = "SELECT * FROM service  WHERE tgl_masuk BETWEEN :tanggalAwal AND :tanggalAkhir  AND status_end = :status" , nativeQuery = true0.+3621)
+    @Query(value = "SELECT * FROM service  WHERE tgl_masuk BETWEEN :tanggalAwal AND :tanggalAkhir  AND status_end = :status" , nativeQuery = true)
     List<ServiceBarang> findByTanggalAndStatus(Date tanggalAwal, Date tanggalAkhir, String status);
 }
