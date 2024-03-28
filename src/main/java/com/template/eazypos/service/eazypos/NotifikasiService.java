@@ -67,6 +67,55 @@ public class NotifikasiService {
         return transaksiRepository.findAllTransaksi365Dinarpos(tanggal);
     }
 
+    public List<Transaksi> getNotifikasi7HariExcelcom() {
+        String status = "excelcom";
+        return transaksiRepository.findAllKonfrimasi7Hari(status);
+    }
+
+    public List<Transaksi> getNotifikasi30HariExcelcom() {
+        String status = "excelcom";
+        return transaksiRepository.findAllKonfrimasi30Hari(status);
+    }
+
+    public List<Transaksi> getNotifikasi90HariExcelcom() {
+        String status = "excelcom";
+        return transaksiRepository.findAllKonfrimasi90Hari(status);
+    }
+
+    public List<Transaksi> getNotifikasi120HariExcelcom() {
+        String status = "excelcom";
+        return transaksiRepository.findAllKonfrimasi120Hari(status);
+    }
+
+    public List<Transaksi> getNotifikasi365HariExcelcom() {
+        String status = "dinarpos";
+        return transaksiRepository.findAllKonfrimasi365Hari(status);
+    }
+    public List<Transaksi> getNotifikasi7HariDinarpos() {
+        String status = "dinarpos";
+        return transaksiRepository.findAllKonfrimasi7Hari(status);
+    }
+
+    public List<Transaksi> getNotifikasi30HariDinarpos() {
+        String status = "dinarpos";
+        return transaksiRepository.findAllKonfrimasi30Hari(status);
+    }
+
+    public List<Transaksi> getNotifikasi90HariDinarpos() {
+        String status = "dinarpos";
+        return transaksiRepository.findAllKonfrimasi90Hari(status);
+    }
+
+    public List<Transaksi> getNotifikasi120HariDinarpos() {
+        String status = "dinarpos";
+        return transaksiRepository.findAllKonfrimasi120Hari(status);
+    }
+
+    public List<Transaksi> getNotifikasi365HariDinarpos() {
+        String status = "dinarpos";
+        return transaksiRepository.findAllKonfrimasi365Hari(status);
+    }
+
     public Transaksi konfirmasi7Hari(KonfirmasiDTO konfirmasiDTO, Long id) {
         Transaksi update = transaksiRepository.findById(id).orElseThrow(() -> new NotFoundException("Id tidak dinemukan"));
         update.setKet7Hari(konfirmasiDTO.getKet());

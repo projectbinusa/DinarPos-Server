@@ -66,6 +66,37 @@ public class NotifikasiController {
     public CommonResponse<List<Transaksi>> getAll365HariDinarpos() {
         return ResponseHelper.ok(notifikasiService.getAll365HariDinarpos());
     }
+    @GetMapping("/konfirmasi/7_hari/dinarpos")
+    public CommonResponse<List<Transaksi>> getAllKonfirmasi7HariDinarpos() {
+        return ResponseHelper.ok(notifikasiService.getNotifikasi7HariDinarpos());
+    } @GetMapping("/konfirmasi/30_hari/dinarpos")
+    public CommonResponse<List<Transaksi>> getAllKonfirmasi30HariDinarpos() {
+        return ResponseHelper.ok(notifikasiService.getNotifikasi30HariDinarpos());
+    } @GetMapping("/konfirmasi/90_hari/dinarpos")
+    public CommonResponse<List<Transaksi>> getAllKonfirmasi90HariDinarpos() {
+        return ResponseHelper.ok(notifikasiService.getNotifikasi90HariDinarpos());
+    } @GetMapping("/konfirmasi/120_hari/dinarpos")
+    public CommonResponse<List<Transaksi>> getAllKonfirmasi120HariDinarpos() {
+        return ResponseHelper.ok(notifikasiService.getNotifikasi120HariDinarpos());
+    } @GetMapping("/konfirmasi/365_hari/dinarpos")
+    public CommonResponse<List<Transaksi>> getAllKonfirmasi365HariDinarpos() {
+        return ResponseHelper.ok(notifikasiService.getNotifikasi365HariDinarpos());
+    } @GetMapping("/konfirmasi/7_hari/excelcom")
+    public CommonResponse<List<Transaksi>> getAllKonfirmasi7HariExcelcom() {
+        return ResponseHelper.ok(notifikasiService.getNotifikasi7HariExcelcom());
+    }@GetMapping("/konfirmasi/30_hari/excelcom")
+    public CommonResponse<List<Transaksi>> getAllKonfirmasi30HariExcelcom() {
+        return ResponseHelper.ok(notifikasiService.getNotifikasi30HariExcelcom());
+    }@GetMapping("/konfirmasi/90_hari/excelcom")
+    public CommonResponse<List<Transaksi>> getAllKonfirmasi90HariExcelcom() {
+        return ResponseHelper.ok(notifikasiService.getNotifikasi90HariExcelcom());
+    }@GetMapping("/konfirmasi/120_hari/excelcom")
+    public CommonResponse<List<Transaksi>> getAllKonfirmasi120HariExcelcom() {
+        return ResponseHelper.ok(notifikasiService.getNotifikasi120HariExcelcom());
+    }@GetMapping("/konfirmasi/365_hari/excelcom")
+    public CommonResponse<List<Transaksi>> getAllKonfirmasi365HariExcelcom() {
+        return ResponseHelper.ok(notifikasiService.getNotifikasi365HariExcelcom());
+    }
 
     @PutMapping("/konfirmasi/7_hari/{id}")
     public CommonResponse<Transaksi> konfirmasi7HariExcelcom(@RequestBody KonfirmasiDTO konfirmasiDTO, @PathVariable("id") Long id) {

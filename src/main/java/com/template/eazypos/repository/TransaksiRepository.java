@@ -67,4 +67,20 @@ public interface TransaksiRepository extends JpaRepository<Transaksi, Long> {
     @Query(value = "SELECT * FROM tabel_transaksi WHERE status = :status AND MONTH(tanggal) = :bulan AND YEAR(tanggal) = :tahun AND del_flag = 1  ", nativeQuery = true)
     List<Transaksi> findTransaksiByMonthAndYear(@Param("bulan") int bulan,@Param("tahun") int tahun , @Param("status") String status);
 
+    @Query(value = "SELECT * FROM tabel_transaksi WHERE 7_hari = 0 AND status = :status", nativeQuery = true)
+    List<Transaksi> findAllKonfrimasi7Hari(@Param("status") String status);
+
+    @Query(value = "SELECT * FROM tabel_transaksi WHERE 30_hari = 0 AND status = :status", nativeQuery = true)
+    List<Transaksi> findAllKonfrimasi30Hari(@Param("status") String status);
+
+    @Query(value = "SELECT * FROM tabel_transaksi WHERE 90_hari = 0 AND status = :status", nativeQuery = true)
+    List<Transaksi> findAllKonfrimasi90Hari(@Param("status") String status);
+
+    @Query(value = "SELECT * FROM tabel_transaksi WHERE 120_hari = 0 AND status = :status", nativeQuery = true)
+    List<Transaksi> findAllKonfrimasi120Hari(@Param("status") String status);
+
+    @Query(value = "SELECT * FROM tabel_transaksi WHERE 365_hari = 0 AND status = :status", nativeQuery = true)
+    List<Transaksi> findAllKonfrimasi365Hari(@Param("status") String status);
+
+
 }
