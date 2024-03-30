@@ -20,6 +20,8 @@ public interface BarangTransaksiBeliRepository extends JpaRepository<BarangTrans
     List<BarangTransaksiBeli> findBarangTransaksiDinarposByPeriode(@Param("bulan") int bulan ,  @Param("tahun") int tahun);
     @Query(value = "SELECT * FROM tabel_barang_transaksi_beli WHERE status = :status AND id_transakasi_beli = :idTransaksi AND del_flag = 1  ", nativeQuery = true)
     List<BarangTransaksiBeli> findBarangTransaksiDinarposByIdTransaksi(String status , Long idTransaksi);
+    @Query(value = "SELECT * FROM tabel_barang_transaksi_beli WHERE  id_transakasi_beli = :idTransaksi AND del_flag = 1  ", nativeQuery = true)
+    List<BarangTransaksiBeli> findBarangTransaksiByIdTransaksi( Long idTransaksi);
 
 
 }

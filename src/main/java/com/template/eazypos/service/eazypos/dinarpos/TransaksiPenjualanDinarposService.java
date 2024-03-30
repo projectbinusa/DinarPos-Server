@@ -9,7 +9,6 @@ import com.template.eazypos.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
@@ -163,7 +162,7 @@ public class TransaksiPenjualanDinarposService {
     }
     public List<BarangTransaksi> getDinarposByIdTransaksi(Long idTransaksi){
         String status = "dinarpos";
-        return barangTransaksiRepository.findBarangTransaksiByIdTransaksi(idTransaksi , status);
+        return barangTransaksiRepository.findBarangTransaksiByIdTransaksi(idTransaksi);
     }
     public List<Transaksi> getAll(){
         return transaksiRepository.findAll();

@@ -56,6 +56,26 @@ public class ReturnDinarposController {
         return ResponseHelper.ok(returnPenjualanService.getAllDinarpos());
     }
 
+    @PutMapping("/retur_penjualan/{id}")
+    public CommonResponse<Transaksi> returTransaksi(@PathVariable("id") Long id) {
+        return ResponseHelper.ok(returnPenjualanService.put(id));
+    }
+
+    @PutMapping("/retur_pembelian/{id}")
+    public CommonResponse<TransaksiBeli> returTransaksiBeli(@PathVariable("id") Long id) {
+        return ResponseHelper.ok(returnPembelianService.put(id));
+    }
+
+    @PutMapping("/retur_barang_pembelian/{id}")
+    public CommonResponse<BarangTransaksiBeli> returBarangTransaksiBeli(@PathVariable("id") Long id) {
+        return ResponseHelper.ok(returnPembelianBarangService.retur(id));
+    }
+
+    @PutMapping("/retur_barang_penjualan/{id}")
+    public CommonResponse<BarangTransaksi> returBarangTransaksi(@PathVariable("id") Long id) {
+        return ResponseHelper.ok(returnPenjualanBarangService.retur(id));
+    }
+
     @GetMapping("/pembelian")
     public CommonResponse<List<TransaksiBeli>> getAllPembelianDinarpos() {
         return ResponseHelper.ok(returnPembelianService.getAllDinarpos());
@@ -75,10 +95,12 @@ public class ReturnDinarposController {
     public CommonResponse<?> deletePenjualan(@PathVariable("id") Long id) {
         return ResponseHelper.ok(returnPenjualanService.delete(id));
     }
+
     @DeleteMapping("/pembelian/{id}")
     public CommonResponse<?> deletePembelian(@PathVariable("id") Long id) {
         return ResponseHelper.ok(returnPembelianService.delete(id));
     }
+
     @DeleteMapping("/barang_pembelian/{id}")
     public CommonResponse<?> deleteBarangPembelian(@PathVariable("id") Long id) {
         return ResponseHelper.ok(returnPembelianBarangService.delete(id));

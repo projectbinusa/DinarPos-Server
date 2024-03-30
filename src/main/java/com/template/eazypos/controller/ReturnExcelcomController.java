@@ -2,10 +2,7 @@ package com.template.eazypos.controller;
 
 import com.template.eazypos.exception.CommonResponse;
 import com.template.eazypos.exception.ResponseHelper;
-import com.template.eazypos.model.BarangTransaksi;
-import com.template.eazypos.model.BarangTransaksiBeli;
-import com.template.eazypos.model.Transaksi;
-import com.template.eazypos.model.TransaksiBeli;
+import com.template.eazypos.model.*;
 import com.template.eazypos.service.eazypos.ReturnPembelianBarangService;
 import com.template.eazypos.service.eazypos.ReturnPembelianService;
 import com.template.eazypos.service.eazypos.ReturnPenjualanBarangService;
@@ -66,6 +63,26 @@ public class ReturnExcelcomController {
         return ResponseHelper.ok(returnPenjualanBarangService.getAllExcelcom());
     }
 
+    @PutMapping("/retur_penjualan/{id}")
+    public CommonResponse<Transaksi> returTransaksi(@PathVariable("id") Long id) {
+        return ResponseHelper.ok(returnPenjualanService.put(id));
+    }
+
+    @PutMapping("/retur_pembelian/{id}")
+    public CommonResponse<TransaksiBeli> returTransaksiBeli(@PathVariable("id") Long id) {
+        return ResponseHelper.ok(returnPembelianService.put(id));
+    }
+
+    @PutMapping("/retur_barang_pembelian/{id}")
+    public CommonResponse<BarangTransaksiBeli> returBarangTransaksiBeli(@PathVariable("id") Long id) {
+        return ResponseHelper.ok(returnPembelianBarangService.retur(id));
+    }
+
+    @PutMapping("/retur_barang_penjualan/{id}")
+    public CommonResponse<BarangTransaksi> returBarangTransaksi(@PathVariable("id") Long id) {
+        return ResponseHelper.ok(returnPenjualanBarangService.retur(id));
+    }
+
     @GetMapping("/barang_pembelian")
     public CommonResponse<List<BarangTransaksiBeli>> getAllBarangPembelianExcelcom() {
         return ResponseHelper.ok(returnPembelianBarangService.getAllExcelcom());
@@ -75,10 +92,12 @@ public class ReturnExcelcomController {
     public CommonResponse<?> deletePenjualan(@PathVariable("id") Long id) {
         return ResponseHelper.ok(returnPenjualanService.delete(id));
     }
+
     @DeleteMapping("/pembelian/{id}")
     public CommonResponse<?> deletePembelian(@PathVariable("id") Long id) {
         return ResponseHelper.ok(returnPembelianService.delete(id));
     }
+
     @DeleteMapping("/barang_pembelian/{id}")
     public CommonResponse<?> deleteBarangPembelian(@PathVariable("id") Long id) {
         return ResponseHelper.ok(returnPembelianBarangService.delete(id));
