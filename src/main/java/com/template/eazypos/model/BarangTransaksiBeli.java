@@ -26,6 +26,9 @@ public class BarangTransaksiBeli extends DateConfig {
     @Column(name = "barcode_barang", nullable = false, length = 50)
     private String barcodeBarang;
 
+    @Column(name = "unit")
+    private String  unit;
+
     @Column(name = "nama_barang", nullable = false, length = 200)
     private String namaBarang;
 
@@ -70,6 +73,14 @@ public class BarangTransaksiBeli extends DateConfig {
 //        this.idTransaksiBeli = idTransaksiBeli;
 //    }
 
+
+    public String getUnit() {
+        return unit;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
+    }
 
     public TransaksiBeli getTransaksiBeli() {
         return transaksiBeli;

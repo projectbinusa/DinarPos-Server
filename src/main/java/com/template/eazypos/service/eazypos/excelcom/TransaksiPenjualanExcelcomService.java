@@ -55,6 +55,7 @@ public class TransaksiPenjualanExcelcomService {
         transaksi.setHari90(1);
         transaksi.setHari120(1);
         transaksi.setHari365(1);
+        transaksi.setKekurangan(transaksiDTO.getKekurangan());
 
         transaksi.setNoFaktur(not);
         transaksi.setKeterangan(transaksiDTO.getKeterangan());
@@ -101,7 +102,9 @@ public class TransaksiPenjualanExcelcomService {
             barangTransaksi.setDiskon(barangDTO.getDiskon());
             barangTransaksi.setHargaBrng(barangDTO.getHargaBrng());
             barangTransaksi.setTotalHarga(barangDTO.getTotalHarga());
+            barangTransaksi.setUnit(barangRepository.findByBarcode(barangDTO.getBarcodeBarang()).getUnit());
             barangTransaksi.setTotalHargaBarang(barangDTO.getTotalHargaBarang());
+            barangTransaksi.setNamaBarang(barangRepository.findByBarcode(barangDTO.getBarcodeBarang()).getNamaBarang());
             barangTransaksi.setTanggal(now);
             barangTransaksi.setHari7(1);
             barangTransaksi.setHari30(1);

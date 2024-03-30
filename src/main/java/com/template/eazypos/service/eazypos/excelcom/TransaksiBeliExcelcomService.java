@@ -53,6 +53,7 @@ public class TransaksiBeliExcelcomService {
         transaksiBeli.setTtlBayarHemat(transaksiBeliDTO.getTtlBayarHemat());
         transaksiBeli.setTanggal(now);
         transaksiBeli.setDelFlag(1);
+        transaksiBeli.setKekurangan(transaksiBeliDTO.getKekurangan());
         transaksiBeli.setNamaSuplier(suplier.getNamaSuplier());
         transaksiBeli.setStatus("excelcom");
 
@@ -67,6 +68,7 @@ public class TransaksiBeliExcelcomService {
                 barangTransaksiBeli.setTransaksiBeli(savedTransaksiBeli);
                 barangTransaksiBeli.setBarcodeBarang(barangDTO.getBarcodeBarang());
                 barangTransaksiBeli.setNamaBarang(barang.getNamaBarang());
+                barangTransaksiBeli.setUnit(barang.getUnit());
                 barangTransaksiBeli.setQty(barangDTO.getQty());
                 barangTransaksiBeli.setDiskon(barangDTO.getDiskon());
                 barangTransaksiBeli.setHargaBrng(barangDTO.getHargaBrng());

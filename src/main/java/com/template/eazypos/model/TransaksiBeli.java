@@ -33,6 +33,9 @@ public class TransaksiBeli extends DateConfig {
     @Column(name = "pembayaran", nullable = false)
     private int pembayaran;
 
+    @Column(name = "kekurangan")
+    private String kekurangan;
+
     @Column(name = "diskon", nullable = false)
     private int diskon;
 
@@ -83,6 +86,14 @@ public class TransaksiBeli extends DateConfig {
 
     public Suplier getSuplier() {
         return suplier;
+    }
+
+    public String getKekurangan() {
+        return kekurangan;
+    }
+
+    public void setKekurangan(String kekurangan) {
+        this.kekurangan = kekurangan;
     }
 
     public void setSuplier(Suplier suplier) {

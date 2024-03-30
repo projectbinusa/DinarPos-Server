@@ -34,6 +34,9 @@ public class Transaksi extends DateConfig {
     @Column(name = "nama_customer", length = 100)
     private String namaCustomer;
 
+    @Column(name = "kekurangan")
+    private String kekurangan;
+
     @Column(name = "nama_salesman", length = 100)
     private String namaSalesman;
 
@@ -163,6 +166,13 @@ public class Transaksi extends DateConfig {
     @Temporal(TemporalType.TIMESTAMP)
     private Date tanggalKonfirmasi365;
 
+    public String getKekurangan() {
+        return kekurangan;
+    }
+
+    public void setKekurangan(String kekurangan) {
+        this.kekurangan = kekurangan;
+    }
 
     public Long getIdTransaksi() {
         return idTransaksi;

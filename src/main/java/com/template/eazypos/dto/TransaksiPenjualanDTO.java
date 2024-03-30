@@ -15,11 +15,21 @@ public class TransaksiPenjualanDTO {
     private String keterangan;
     private String cashKredit;
     private Double sisa;
+
+    private String kekurangan;
     private Double ttlBayarHemat;
     private List<BarangTransaksiDTO> produk;
 
     public Double getTotalBelanja() {
         return totalBelanja;
+    }
+
+    public String getKekurangan() {
+        return kekurangan;
+    }
+
+    public void setKekurangan(String kekurangan) {
+        this.kekurangan = kekurangan;
     }
 
     public void setTotalBelanja(Double totalBelanja) {

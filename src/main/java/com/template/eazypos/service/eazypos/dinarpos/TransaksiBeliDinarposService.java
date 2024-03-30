@@ -50,6 +50,7 @@ public class TransaksiBeliDinarposService {
         transaksiBeli.setKeterangan(transaksiBeliDTO.getKeterangan());
         transaksiBeli.setCashCredit(transaksiBeliDTO.getCashCredit());
         transaksiBeli.setSisa(transaksiBeliDTO.getSisa());
+        transaksiBeli.setKekurangan(transaksiBeliDTO.getKekurangan());
         transaksiBeli.setTtlBayarHemat(transaksiBeliDTO.getTtlBayarHemat());
         transaksiBeli.setTanggal(now);
         transaksiBeli.setDelFlag(1);
@@ -66,6 +67,7 @@ public class TransaksiBeliDinarposService {
                 BarangTransaksiBeli barangTransaksiBeli = new BarangTransaksiBeli();
                 barangTransaksiBeli.setTransaksiBeli(savedTransaksiBeli);
                 barangTransaksiBeli.setBarcodeBarang(barangDTO.getBarcodeBarang());
+                barangTransaksiBeli.setUnit(barang.getUnit());
                 barangTransaksiBeli.setNamaBarang(barang.getNamaBarang());
                 barangTransaksiBeli.setQty(barangDTO.getQty());
                 barangTransaksiBeli.setDiskon(barangDTO.getDiskon());

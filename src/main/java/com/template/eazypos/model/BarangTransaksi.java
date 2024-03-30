@@ -45,6 +45,12 @@ public class BarangTransaksi extends DateConfig {
     @Column(name = "hemat",  length = 50)
     private String hemat;
 
+    @Column(name = "unit")
+    private String  unit;
+
+    @Column(name = "nama_barang")
+    private String  namaBarang;
+
     @Column(name = "tanggal", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date tanggal;
@@ -85,6 +91,21 @@ public class BarangTransaksi extends DateConfig {
 //    }
 
 
+    public String getUnit() {
+        return unit;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
+    }
+
+    public String getNamaBarang() {
+        return namaBarang;
+    }
+
+    public void setNamaBarang(String namaBarang) {
+        this.namaBarang = namaBarang;
+    }
 
     public Transaksi getTransaksi() {
         return transaksi;

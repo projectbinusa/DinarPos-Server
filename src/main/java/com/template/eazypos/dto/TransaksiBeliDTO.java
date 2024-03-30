@@ -13,6 +13,7 @@ public class TransaksiBeliDTO {
     private String cashCredit;
     private String sisa;
     private String ttlBayarHemat;
+    private String kekurangan;
     private List<BarangTransaksiDTO> produk;
 
     public String getTotalBelanja() {
@@ -25,6 +26,14 @@ public class TransaksiBeliDTO {
 
     public int getPembayaran() {
         return pembayaran;
+    }
+
+    public String getKekurangan() {
+        return kekurangan;
+    }
+
+    public void setKekurangan(String kekurangan) {
+        this.kekurangan = kekurangan;
     }
 
     public void setPembayaran(int pembayaran) {
