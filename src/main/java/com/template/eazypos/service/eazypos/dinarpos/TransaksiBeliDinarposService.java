@@ -116,8 +116,11 @@ public class TransaksiBeliDinarposService {
 
             return nota;
         } catch (Exception e) {
+            LocalDateTime now = LocalDateTime.now();
+            String nomor = now.format(DateTimeFormatter.ofPattern("MMyy")); // Format bulan dan tahun
+            String nota = nomor + "-PST-PJN-0001" ;
             e.printStackTrace(); // Cetak stack trace untuk mengetahui sumber NullPointerException
-            return null; // Mengembalikan null jika terjadi kesalahan
+            return nota;
         }
     }
 
