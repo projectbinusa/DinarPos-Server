@@ -28,9 +28,13 @@ public class ReturnPembelianBarangService {
     public List<BarangTransaksiBeli> getAllExcelcom() {
         return barangTransaksiBeliRepository.findBarangTransaksiBeliExcelcom();
     }
+    public List<BarangTransaksiBeli> getAllBarangReturn(Long idTransaksi) {
+        return barangTransaksiBeliRepository.findBarangTransaksiReturnByIdTransaksi(idTransaksi);
+    }
     public List<BarangTransaksiBeli> getAllDinarpos() {
         return barangTransaksiBeliRepository.findBarangTransaksiBeliDinarpos();
     }
+
 
     public BarangTransaksiBeli get(Long id) {
         return barangTransaksiBeliRepository.findById(id).orElseThrow(() -> new NotFoundException("Id tidak dinemukan"));

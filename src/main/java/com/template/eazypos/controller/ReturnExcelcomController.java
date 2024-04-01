@@ -37,6 +37,16 @@ public class ReturnExcelcomController {
     public CommonResponse<TransaksiBeli> getPembelian(@PathVariable("id") Long id) {
         return ResponseHelper.ok(returnPembelianService.get(id));
     }
+    @GetMapping("/penjualan/barang")
+    public CommonResponse<List<BarangTransaksi>> getReturnBarangPenjualan(@RequestParam("id_transaksi") Long  id_transaksi) {
+        return ResponseHelper.ok(returnPenjualanBarangService.getAllBarangReturn(id_transaksi));
+    }
+    @GetMapping("/pembelian/barang")
+    public CommonResponse<List<BarangTransaksiBeli>> getReturnBarangPembelian(@RequestParam("id_transaksi_beli") Long  id_transaksi) {
+        return ResponseHelper.ok(returnPembelianBarangService.getAllBarangReturn(id_transaksi));
+    }
+
+
 
     @GetMapping("/barang_pembelian/{id}")
     public CommonResponse<BarangTransaksiBeli> getBarangPembelian(@PathVariable("id") Long id) {

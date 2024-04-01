@@ -73,6 +73,9 @@ public class ReturnPenjualanBarangService {
             throw new NotFoundException("Barang transaksi tidak ditemukan");
         }
     }
+    public List<BarangTransaksi> getAllBarangReturn(Long idTransaksi) {
+        return barangTransaksiRepository.findBarangTransaksiReturnByIdTransaksi(idTransaksi);
+    }
     public Map<String, Boolean> delete(Long id ) {
         try {
             barangTransaksiRepository.deleteById(id);

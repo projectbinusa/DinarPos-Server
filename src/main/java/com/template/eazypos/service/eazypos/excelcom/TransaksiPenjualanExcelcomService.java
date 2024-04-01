@@ -33,7 +33,7 @@ public class TransaksiPenjualanExcelcomService {
 
     public Transaksi addTransaksi(TransaksiPenjualanDTO transaksiDTO) {
         Date now = new Date();
-        String not = getNoNotaTransaksiPenjualanExcelcom(); // method generateNotaNumber() menghasilkan nomor nota baru
+        String not = getNoNotaTransaksi() ; // method generateNotaNumber() menghasilkan nomor nota baru
         Customer customer = customerRepository.findById(transaksiDTO.getIdCustomer()).orElseThrow(() -> new NotFoundException("Id tidak dinemukan"));
         Salesman salesman = salesmanRepository.findById(transaksiDTO.getIdSalesman()).orElseThrow(() -> new NotFoundException("Id tidak dinemukan"));
 
@@ -161,29 +161,37 @@ public class TransaksiPenjualanExcelcomService {
             }
 
     }
-    public String getNoNotaTransaksiPenjualanExcelcom() {
-        String kd = "";
-        LocalDateTime now = LocalDateTime.now();
-        int dateNow = Integer.parseInt(now.format(DateTimeFormatter.ofPattern("MM")));
+    public String getNoNotaTransaksi() {
+        try {
+            String kd = "";
+            LocalDateTime now = LocalDateTime.now();
+            int dateNow = Integer.parseInt(now.format(DateTimeFormatter.ofPattern("MM")));
 
-        Integer kdMax = transaksiRepository.findMaxKd();
-        int tmp = (kdMax != null) ? kdMax + 1 : 1;
+            Integer kdMax = transaksiRepository.findMaxKd();
+            int tmp = (kdMax != null) ? kdMax + 1 : 1;
 
-        String fullLastDate = transaksiRepository.findLastDate();
-        int lastDate = Integer.parseInt(fullLastDate.substring(5, 7)); // Extract month from the full date
+            String fullLastDate = transaksiRepository.findLastDate();
+            int lastDate = Integer.parseInt(fullLastDate.substring(5, 7)); // Extract month from the full date
 
-        // Check if it's a new month
-        if (lastDate != dateNow) {
-            tmp = 1;
+            // Check if it's a new month
+            if (lastDate != dateNow) {
+                tmp = 1;
+            }
+
+            kd = String.format("%04d", tmp);
+
+            // Format nota
+            String nomor = now.format(DateTimeFormatter.ofPattern("MMyy")); // Format bulan dan tahun
+            String nota = nomor + "-PST-PJN-" + kd;
+
+            return nota;
+        } catch (Exception e) {
+            LocalDateTime now = LocalDateTime.now();
+            String nomor = now.format(DateTimeFormatter.ofPattern("MMyy")); // Format bulan dan tahun
+            String nota = nomor + "-PST-PJN-0001" ;
+            e.printStackTrace(); // Cetak stack trace untuk mengetahui sumber NullPointerException
+            return nota;
         }
-
-        kd = String.format("%04d", tmp);
-
-        // Format nota
-        String nomor = now.format(DateTimeFormatter.ofPattern("MMyy")); // Format bulan dan tahun
-        String nota = nomor + "-PST-PJN-" + kd;
-
-        return nota;
     }
     public List<Transaksi> getExcelcomBYMonthAndYear(int bulan , int tahun){
         return transaksiRepository.findTransaksiByMonthAndYear(bulan,tahun , "excelcom");
