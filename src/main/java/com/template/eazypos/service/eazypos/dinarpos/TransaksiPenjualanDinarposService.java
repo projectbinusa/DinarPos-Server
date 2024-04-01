@@ -162,7 +162,7 @@ public class TransaksiPenjualanDinarposService {
     }
     public List<BarangTransaksi> getDinarposByIdTransaksi(Long idTransaksi){
         String status = "dinarpos";
-        return barangTransaksiRepository.findBarangTransaksiByIdTransaksi(idTransaksi);
+        return barangTransaksiRepository.findBarangTransaksiByIdTransaksi(idTransaksi ,status);
     }
     public List<Transaksi> getAll(){
         return transaksiRepository.findAll();

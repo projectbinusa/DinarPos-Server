@@ -29,7 +29,7 @@ public interface TransaksiRepository extends JpaRepository<Transaksi, Long> {
     @Query(value = "SELECT * FROM tabel_transaksi WHERE status = 'dinarpos' AND MONTH(tanggal) = :bulan AND YEAR(tanggal) =:tahun  AND del_flag = 1  ", nativeQuery = true)
     List<Transaksi> findTransaksiDinarposByPeriode(@Param("bulan") int bulan ,  @Param("tahun") int tahun);
 
-    @Query(value = "SELECT t FROM Transaksi t WHERE t.tanggalNotif7 <= :tgl AND t.status = 'excelcom' AND t.hari7 = 1")
+    @Query(value = "SELECT * FROM tabel_transaksi  WHERE tanggal_notif_7 <= :tgl AND status = 'excelcom' AND 7_hari = 1" , nativeQuery = true)
     List<Transaksi> findAllTransaksi7Excelcom(Date tgl);
 
     @Query(value = "SELECT t FROM Transaksi t WHERE t.tanggalNotif30 <= :tgl AND t.status = 'excelcom' AND t.hari30 = 1")

@@ -88,6 +88,8 @@ public class TransaksiBeli extends DateConfig {
         return suplier;
     }
 
+
+
     public String getKekurangan() {
         return kekurangan;
     }

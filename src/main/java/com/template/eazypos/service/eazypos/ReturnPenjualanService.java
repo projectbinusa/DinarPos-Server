@@ -40,7 +40,7 @@ public class ReturnPenjualanService {
         transaksi.setDelFlag(0);
 
 
-        List<BarangTransaksi> barangTransaksiList = barangTransaksiRepository.findBarangTransaksiByIdTransaksi(id);
+        List<BarangTransaksi> barangTransaksiList = barangTransaksiRepository.findBarangTransaksiByIdTransaksi2(id);
 
         // Perbarui stok barang kembali ke nilai semula
         for (BarangTransaksi barangTransaksi : barangTransaksiList) {

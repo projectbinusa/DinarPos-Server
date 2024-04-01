@@ -53,6 +53,7 @@ public class TransaksiPenjualanExcelcomService {
         transaksi.setHari30(1);
         transaksi.setHari90(1);
         transaksi.setHari120(1);
+        transaksi.setNota("1");
         transaksi.setHari365(1);
         transaksi.setKekurangan(transaksiDTO.getKekurangan());
 
@@ -180,7 +181,7 @@ public class TransaksiPenjualanExcelcomService {
 
         // Format nota
         String nomor = now.format(DateTimeFormatter.ofPattern("MMyy")); // Format bulan dan tahun
-        String nota = nomor + "-PST-PJN-0" + kd;
+        String nota = nomor + "-PST-PJN-" + kd;
 
         return nota;
     }
@@ -189,7 +190,7 @@ public class TransaksiPenjualanExcelcomService {
     }
     public List<BarangTransaksi> getExcelcomByIdTransaksi(Long idTransaksi){
         String status = "excelcom";
-        return barangTransaksiRepository.findBarangTransaksiByIdTransaksi(idTransaksi);
+        return barangTransaksiRepository.findBarangTransaksiByIdTransaksi(idTransaksi , status);
     }
     public Transaksi getById(Long id){
         return transaksiRepository.findById(id).orElseThrow(() -> new NotFoundException("Id tidak dinemukan"));

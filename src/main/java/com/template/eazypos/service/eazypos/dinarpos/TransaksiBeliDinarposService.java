@@ -36,7 +36,7 @@ public class TransaksiBeliDinarposService {
 
     public TransaksiBeli addTransaksiBeli(TransaksiBeliDTO transaksiBeliDTO) {
         Date now = new Date();
-        String not = getNoNotaTransaksiPenjualanExcelcom();
+        String not = getNoNotaTransaksi();
         Suplier suplier = suplierRepository.findById(transaksiBeliDTO.getIdSuplier()).orElseThrow(() -> new NotFoundException("Id tidak dinemukan"));
 
         TransaksiBeli transaksiBeli = new TransaksiBeli();
@@ -91,30 +91,36 @@ public class TransaksiBeliDinarposService {
         }
         return savedTransaksiBeli;
     }
-    public String getNoNotaTransaksiPenjualanExcelcom() {
-        String kd = "";
-        LocalDateTime now = LocalDateTime.now();
-        int dateNow = Integer.parseInt(now.format(DateTimeFormatter.ofPattern("MM")));
+    public String getNoNotaTransaksi() {
+        try {
+            String kd = "";
+            LocalDateTime now = LocalDateTime.now();
+            int dateNow = Integer.parseInt(now.format(DateTimeFormatter.ofPattern("MM")));
 
-        Integer kdMax = transaksiBeliRepository.findMaxKd();
-        int tmp = (kdMax != null) ? kdMax + 1 : 1;
+            Integer kdMax = transaksiBeliRepository.findMaxKd();
+            int tmp = (kdMax != null) ? kdMax + 1 : 1;
 
-        String fullLastDate = transaksiBeliRepository.findLastDate();
-        int lastDate = Integer.parseInt(fullLastDate.substring(5, 7)); // Extract month from the full date
+            String fullLastDate = transaksiBeliRepository.findLastDate();
+            int lastDate = Integer.parseInt(fullLastDate.substring(5, 7)); // Extract month from the full date
 
-        // Check if it's a new month
-        if (lastDate != dateNow) {
-            tmp = 1;
+            // Check if it's a new month
+            if (lastDate != dateNow) {
+                tmp = 1;
+            }
+
+            kd = String.format("%04d", tmp);
+
+            // Format nota
+            String nomor = now.format(DateTimeFormatter.ofPattern("MMyy")); // Format bulan dan tahun
+            String nota = nomor + "-PST-PJN-" + kd;
+
+            return nota;
+        } catch (Exception e) {
+            e.printStackTrace(); // Cetak stack trace untuk mengetahui sumber NullPointerException
+            return null; // Mengembalikan null jika terjadi kesalahan
         }
-
-        kd = String.format("%04d", tmp);
-
-        // Format nota
-        String nomor = now.format(DateTimeFormatter.ofPattern("MMyy")); // Format bulan dan tahun
-        String nota = nomor + "-PST-PJN-0" + kd;
-
-        return nota;
     }
+
     public TransaksiBeli getById(Long id){
         return transaksiBeliRepository.findById(id).orElseThrow(() -> new NotFoundException("Id tidak dinemukan"));
     }
