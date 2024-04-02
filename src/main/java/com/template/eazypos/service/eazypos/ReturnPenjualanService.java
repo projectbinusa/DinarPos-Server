@@ -3,9 +3,11 @@ package com.template.eazypos.service.eazypos;
 import com.template.eazypos.exception.NotFoundException;
 import com.template.eazypos.model.Barang;
 import com.template.eazypos.model.BarangTransaksi;
+import com.template.eazypos.model.StokMasuk;
 import com.template.eazypos.model.Transaksi;
 import com.template.eazypos.repository.BarangRepository;
 import com.template.eazypos.repository.BarangTransaksiRepository;
+import com.template.eazypos.repository.StokMasukRepository;
 import com.template.eazypos.repository.TransaksiRepository;
 import org.apache.juli.logging.Log;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,9 @@ public class ReturnPenjualanService {
 
     @Autowired
     private BarangRepository barangRepository;
+
+    @Autowired
+    private StokMasukRepository stokMasukRepository;
 
     public List<Transaksi> getAllExcelcom() {
         return transaksiRepository.findTransaksiExcelcom();
@@ -46,6 +51,13 @@ public class ReturnPenjualanService {
         for (BarangTransaksi barangTransaksi : barangTransaksiList) {
             Barang barang = barangRepository.findByBarcode(barangTransaksi.getBarcodeBarang());
             barang.setJumlahStok(barang.getJumlahStok() + barangTransaksi.getQty());
+            StokMasuk stokMasuk = new StokMasuk();
+            stokMasuk.setDelFlag(1);
+            stokMasuk.setSuplier(null);
+            stokMasuk.setBarang(barang);
+            stokMasuk.setJumlahStok(String.valueOf(barangTransaksi.getQty()));
+            stokMasuk.setKeteranganStokMasuk("Return Barang " + transaksi.getNoFaktur());
+            stokMasukRepository.save(stokMasuk);
             barangRepository.save(barang);
             barangTransaksi.setDelFlag(0);
             barangTransaksiRepository.save(barangTransaksi);

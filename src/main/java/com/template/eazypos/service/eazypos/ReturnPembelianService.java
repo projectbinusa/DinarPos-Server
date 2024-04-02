@@ -4,6 +4,7 @@ import com.template.eazypos.exception.NotFoundException;
 import com.template.eazypos.model.*;
 import com.template.eazypos.repository.BarangRepository;
 import com.template.eazypos.repository.BarangTransaksiBeliRepository;
+import com.template.eazypos.repository.StokMasukRepository;
 import com.template.eazypos.repository.TransaksiBeliRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,7 @@ public class ReturnPembelianService {
 
     @Autowired
     private BarangRepository barangRepository;
+
 
     public List<TransaksiBeli> getAllExcelcom() {
         return transaksiBeliRepository.findTransaksiBeliExcelcom();
