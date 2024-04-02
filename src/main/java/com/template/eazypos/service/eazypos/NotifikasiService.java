@@ -5,6 +5,7 @@ import com.template.eazypos.exception.NotFoundException;
 import com.template.eazypos.model.Salesman;
 import com.template.eazypos.model.Transaksi;
 import com.template.eazypos.model.TransaksiBeli;
+import com.template.eazypos.repository.SalesmanRepository;
 import com.template.eazypos.repository.TransaksiRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,9 @@ import java.util.List;
 public class NotifikasiService {
     @Autowired
     private TransaksiRepository transaksiRepository;
+
+    @Autowired
+    private SalesmanRepository salesmanRepository;
 
     public List<Transaksi> getAll7HariExelcom() {
         Date tanggal = new Date();
@@ -119,7 +123,7 @@ public class NotifikasiService {
     public Transaksi konfirmasi7Hari(KonfirmasiDTO konfirmasiDTO, Long id) {
         Transaksi update = transaksiRepository.findById(id).orElseThrow(() -> new NotFoundException("Id tidak dinemukan"));
         update.setKet7Hari(konfirmasiDTO.getKet());
-        update.setSalesman7Hari(konfirmasiDTO.getSalesman());
+        update.setSalesman7Hari(salesmanRepository.findById(konfirmasiDTO.getId_salesman()).orElse(null));
         update.setHari7(0);
         update.setTanggalKonfirmasi7(new Date());
         return transaksiRepository.save(update);
@@ -128,7 +132,7 @@ public class NotifikasiService {
     public Transaksi konfirmasi30Hari(KonfirmasiDTO konfirmasiDTO, Long id) {
         Transaksi update = transaksiRepository.findById(id).orElseThrow(() -> new NotFoundException("Id tidak dinemukan"));
         update.setKet30Hari(konfirmasiDTO.getKet());
-        update.setSalesman30Hari(konfirmasiDTO.getSalesman());
+        update.setSalesman30Hari(salesmanRepository.findById(konfirmasiDTO.getId_salesman()).orElse(null));
         update.setHari30(0);
         update.setTanggalKonfirmasi30(new Date());
         return transaksiRepository.save(update);
@@ -137,7 +141,7 @@ public class NotifikasiService {
     public Transaksi konfirmasi90Hari(KonfirmasiDTO konfirmasiDTO, Long id) {
         Transaksi update = transaksiRepository.findById(id).orElseThrow(() -> new NotFoundException("Id tidak dinemukan"));
         update.setKet90Hari(konfirmasiDTO.getKet());
-        update.setSalesman90Hari(konfirmasiDTO.getSalesman());
+        update.setSalesman90Hari(salesmanRepository.findById(konfirmasiDTO.getId_salesman()).orElse(null));
         update.setHari90(0);
         update.setTanggalKonfirmasi90(new Date());
         return transaksiRepository.save(update);
@@ -146,7 +150,7 @@ public class NotifikasiService {
     public Transaksi konfirmasi120Hari(KonfirmasiDTO konfirmasiDTO, Long id) {
         Transaksi update = transaksiRepository.findById(id).orElseThrow(() -> new NotFoundException("Id tidak dinemukan"));
         update.setKet120Hari(konfirmasiDTO.getKet());
-        update.setSalesman120Hari(konfirmasiDTO.getSalesman());
+        update.setSalesman120Hari(salesmanRepository.findById(konfirmasiDTO.getId_salesman()).orElse(null));
         update.setHari120(0);
         update.setTanggalKonfirmasi120(new Date());
         return transaksiRepository.save(update);
@@ -155,7 +159,7 @@ public class NotifikasiService {
     public Transaksi konfirmasi365Hari(KonfirmasiDTO konfirmasiDTO, Long id) {
         Transaksi update = transaksiRepository.findById(id).orElseThrow(() -> new NotFoundException("Id tidak dinemukan"));
         update.setKet365Hari(konfirmasiDTO.getKet());
-        update.setSalesman365Hari(konfirmasiDTO.getSalesman());
+        update.setSalesman365Hari(salesmanRepository.findById(konfirmasiDTO.getId_salesman()).orElse(null));
         update.setHari365(0);
         update.setTanggalKonfirmasi365(new Date());
         return transaksiRepository.save(update);

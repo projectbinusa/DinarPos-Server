@@ -3,7 +3,7 @@ package com.template.eazypos.dto;
 public class KonfirmasiDTO {
     String ket;
 
-    String salesman;
+    Long id_salesman;
 
     public String getKet() {
         return ket;
@@ -13,11 +13,11 @@ public class KonfirmasiDTO {
         this.ket = ket;
     }
 
-    public String getSalesman() {
-        return salesman;
+    public Long getId_salesman() {
+        return id_salesman;
     }
 
-    public void setSalesman(String salesman) {
-        this.salesman = salesman;
+    public void setId_salesman(Long id_salesman) {
+        this.id_salesman = id_salesman;
     }
 }

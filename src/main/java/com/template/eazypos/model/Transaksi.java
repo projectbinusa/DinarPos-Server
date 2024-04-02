@@ -131,20 +131,26 @@ public class Transaksi extends DateConfig {
     @Column(name = "ket_365_hari", columnDefinition = "text")
     private String ket365Hari;
 
-    @Column(name = "salesman_7_hari", length = 100)
-    private String salesman7Hari;
 
-    @Column(name = "salesman_30_hari", length = 100)
-    private String salesman30Hari;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "salesman_7_hari", updatable = false)
+    private Salesman salesman7Hari;
 
-    @Column(name = "salesman_90_hari", length = 100)
-    private String salesman90Hari;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "salesman_30_hari", updatable = false)
+    private Salesman salesman30Hari;
 
-    @Column(name = "salesman_120_hari", length = 100)
-    private String salesman120Hari;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "salesman_90_hari", updatable = false)
+    private Salesman salesman90Hari;
 
-    @Column(name = "salesman_365_hari", length = 100)
-    private String salesman365Hari;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "salesman_120_hari", updatable = false)
+    private Salesman salesman120Hari;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "salesman_365_hari", updatable = false)
+    private Salesman salesman365Hari;
 
     @Column(name = "tanggal_konfirmasi_7")
     @Temporal(TemporalType.TIMESTAMP)
@@ -464,43 +470,43 @@ public class Transaksi extends DateConfig {
         this.ket365Hari = ket365Hari;
     }
 
-    public String getSalesman7Hari() {
+    public Salesman getSalesman7Hari() {
         return salesman7Hari;
     }
 
-    public void setSalesman7Hari(String salesman7Hari) {
+    public void setSalesman7Hari(Salesman salesman7Hari) {
         this.salesman7Hari = salesman7Hari;
     }
 
-    public String getSalesman30Hari() {
+    public Salesman getSalesman30Hari() {
         return salesman30Hari;
     }
 
-    public void setSalesman30Hari(String salesman30Hari) {
+    public void setSalesman30Hari(Salesman salesman30Hari) {
         this.salesman30Hari = salesman30Hari;
     }
 
-    public String getSalesman90Hari() {
+    public Salesman getSalesman90Hari() {
         return salesman90Hari;
     }
 
-    public void setSalesman90Hari(String salesman90Hari) {
+    public void setSalesman90Hari(Salesman salesman90Hari) {
         this.salesman90Hari = salesman90Hari;
     }
 
-    public String getSalesman120Hari() {
+    public Salesman getSalesman120Hari() {
         return salesman120Hari;
     }
 
-    public void setSalesman120Hari(String salesman120Hari) {
+    public void setSalesman120Hari(Salesman salesman120Hari) {
         this.salesman120Hari = salesman120Hari;
     }
 
-    public String getSalesman365Hari() {
+    public Salesman getSalesman365Hari() {
         return salesman365Hari;
     }
 
-    public void setSalesman365Hari(String salesman365Hari) {
+    public void setSalesman365Hari(Salesman salesman365Hari) {
         this.salesman365Hari = salesman365Hari;
     }
 
