@@ -67,27 +67,32 @@ public class TransaksiPenjualanDinarposService {
 
 // Tambahkan 7 hari
         calendar.add(Calendar.DAY_OF_MONTH, 7);
-        transaksi.setTanggalNotif7(calendar.getTime());
+        Date tanggalNotif7 = calendar.getTime();
+        transaksi.setTanggalNotif7(tanggalNotif7);
 
 // Tambahkan 30 hari
         calendar.setTime(now); // Kembalikan waktu ke semula
         calendar.add(Calendar.MONTH, 1);
-        transaksi.setTanggalNotif30(calendar.getTime());
+        Date tanggalNotif30 = calendar.getTime();
+        transaksi.setTanggalNotif30(tanggalNotif30);
 
 // Tambahkan 90 hari
         calendar.setTime(now); // Kembalikan waktu ke semula
         calendar.add(Calendar.MONTH, 3);
-        transaksi.setTanggalNotif90(calendar.getTime());
+        Date tanggalNotif90 = calendar.getTime();
+        transaksi.setTanggalNotif90(tanggalNotif90);
 
 // Tambahkan 120 hari
         calendar.setTime(now); // Kembalikan waktu ke semula
         calendar.add(Calendar.MONTH, 4);
-        transaksi.setTanggalNotif120(calendar.getTime());
+        Date tanggalNotif120 = calendar.getTime();
+        transaksi.setTanggalNotif120(tanggalNotif120);
 
 // Tambahkan 365 hari
         calendar.setTime(now); // Kembalikan waktu ke semula
         calendar.add(Calendar.YEAR, 1);
-        transaksi.setTanggalNotif365(calendar.getTime());
+        Date tanggalNotif365 = calendar.getTime();
+        transaksi.setTanggalNotif365(tanggalNotif365);
         transaksi.setDelFlag(1);
 
         Transaksi savedTransaksi = transaksiRepository.save(transaksi);
