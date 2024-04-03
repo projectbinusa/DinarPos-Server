@@ -1,5 +1,6 @@
 package com.template.eazypos.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.template.eazypos.auditing.DateConfig;
 
 import javax.persistence.*;
@@ -35,6 +36,7 @@ public class StokMasuk extends DateConfig {
     private String keteranganStokMasuk;
 
     @Column(name = "c_date")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" , timezone = "Asia/Jakarta")
     @Temporal(TemporalType.TIMESTAMP)
     private Date cDate;
 

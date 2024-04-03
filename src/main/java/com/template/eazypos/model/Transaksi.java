@@ -1,5 +1,6 @@
 package com.template.eazypos.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.template.eazypos.auditing.DateConfig;
 
 import javax.persistence.*;
@@ -75,27 +76,33 @@ public class Transaksi extends DateConfig {
 
     @Column(name = "tanggal")
     @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" , timezone = "Asia/Jakarta")
     private Date tanggal;
 
 
     @Column(name = "tanggal_notif_30")
     @Temporal(TemporalType.DATE)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" , timezone = "Asia/Jakarta")
     private Date tanggalNotif30;
 
     @Column(name = "tanggal_notif_7")
     @Temporal(TemporalType.DATE)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" , timezone = "Asia/Jakarta")
     private Date tanggalNotif7;
 
     @Column(name = "tanggal_notif_90")
     @Temporal(TemporalType.DATE)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" , timezone = "Asia/Jakarta")
     private Date tanggalNotif90;
 
     @Column(name = "tanggal_notif_120")
     @Temporal(TemporalType.DATE)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" , timezone = "Asia/Jakarta")
     private Date tanggalNotif120;
 
     @Column(name = "tanggal_notif_365")
     @Temporal(TemporalType.DATE)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" , timezone = "Asia/Jakarta")
     private Date tanggalNotif365;
 
     @Column(name = "del_flag")
@@ -154,22 +161,27 @@ public class Transaksi extends DateConfig {
 
     @Column(name = "tanggal_konfirmasi_7")
     @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" , timezone = "Asia/Jakarta")
     private Date tanggalKonfirmasi7;
 
     @Column(name = "tanggal_konfirmasi_30")
     @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" , timezone = "Asia/Jakarta")
     private Date tanggalKonfirmasi30;
 
     @Column(name = "tanggal_konfirmasi_90")
     @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" , timezone = "Asia/Jakarta")
     private Date tanggalKonfirmasi90;
 
     @Column(name = "tanggal_konfirmasi_120")
     @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" , timezone = "Asia/Jakarta")
     private Date tanggalKonfirmasi120;
 
     @Column(name = "tanggal_konfirmasi_365")
     @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" , timezone = "Asia/Jakarta")
     private Date tanggalKonfirmasi365;
 
     public String getKekurangan() {

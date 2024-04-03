@@ -1,5 +1,6 @@
 package com.template.eazypos.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.template.eazypos.auditing.DateConfig;
 
 import javax.persistence.*;
@@ -62,6 +63,7 @@ public class TransaksiBeli extends DateConfig {
 
     @Column(name = "tanggal", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" , timezone = "Asia/Jakarta")
     private Date tanggal;
 
     @Column(name = "del_flag", nullable = false, columnDefinition = "int default 1")

@@ -1,5 +1,6 @@
 package com.template.eazypos.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.template.eazypos.auditing.DateConfig;
 
 import javax.persistence.*;
@@ -28,6 +29,7 @@ public class Kunjungan extends DateConfig {
     private String idCustomer;
 
     @Column(name = "tgl_kunjungan")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" , timezone = "Asia/Jakarta")
     private Date tanggalKunjungan;
 
     @Lob
@@ -62,6 +64,7 @@ public class Kunjungan extends DateConfig {
     private String waktuPengadaan;
 
     @Column(name = "tgl_deal")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" , timezone = "Asia/Jakarta")
     private Date tanggalDeal;
 
     @Lob
@@ -69,6 +72,7 @@ public class Kunjungan extends DateConfig {
     private String foto;
 
     @Column(name = "timestamp")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" , timezone = "Asia/Jakarta")
     private Date timestamp;
 
     @Column(name = "lokasi_lat")

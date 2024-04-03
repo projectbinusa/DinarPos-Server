@@ -1,5 +1,6 @@
 package com.template.eazypos.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.template.eazypos.auditing.DateConfig;
 
 import javax.persistence.*;
@@ -23,6 +24,7 @@ public class PoinHistory extends DateConfig {
 
     @Column(name = "tgl", nullable = false)
     @Temporal(TemporalType.DATE)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" , timezone = "Asia/Jakarta")
     private Date tanggal;
 
     @Column(name = "poin", nullable = false)

@@ -1,5 +1,6 @@
 package com.template.eazypos.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.template.eazypos.auditing.DateConfig;
 
 import javax.persistence.*;
@@ -22,6 +23,7 @@ public class Omzet extends DateConfig {
     private Marketting marketting;
 
     @Column(name = "tgl", nullable = false)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" , timezone = "Asia/Jakarta")
     private Date tgl;
 
     @Column(name = "omzet", nullable = false)

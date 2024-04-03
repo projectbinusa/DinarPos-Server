@@ -1,5 +1,6 @@
 package com.template.eazypos.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.template.eazypos.auditing.DateConfig;
 
 import javax.persistence.*;
@@ -24,6 +25,7 @@ public class Planning extends DateConfig {
     private String idCustomer;
 
     @Column(name = "tgl", nullable = false)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" , timezone = "Asia/Jakarta")
     private Date tgl;
 
     @Column(name = "bertemu", nullable = false, length = 50)
@@ -33,6 +35,7 @@ public class Planning extends DateConfig {
     private String ket;
 
     @Column(name = "timestamp", nullable = false, columnDefinition = "TIMESTAMP DEFAULT current_timestamp() ON UPDATE current_timestamp()")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" , timezone = "Asia/Jakarta")
     private Date timestamp;
 
     public Long getIdPlan() {

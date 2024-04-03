@@ -1,5 +1,6 @@
 package com.template.eazypos.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.template.eazypos.auditing.DateConfig;
 
 import javax.persistence.*;
@@ -65,14 +66,17 @@ public class ServiceBarang extends DateConfig {
 
     @Column(name = "tgl_masuk", nullable = false)
     @Temporal(TemporalType.DATE)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" , timezone = "Asia/Jakarta")
     private Date tanggalMasuk;
 
     @Column(name = "tgl_jadi", nullable = false)
     @Temporal(TemporalType.DATE)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" , timezone = "Asia/Jakarta")
     private Date tanggalJadi;
 
     @Column(name = "tgl_ambil", nullable = false)
     @Temporal(TemporalType.DATE)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" , timezone = "Asia/Jakarta")
     private Date tanggalAmbil;
 
     @Column(name = "b_sparepart", nullable = false)
@@ -107,6 +111,7 @@ public class ServiceBarang extends DateConfig {
 
     @Column(name = "timestamp", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" , timezone = "Asia/Jakarta")
     private Date timestamp;
 
     public Long getIdTT() {
