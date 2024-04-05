@@ -15,8 +15,9 @@ public class ServiceBarang extends DateConfig {
     @Column(name = "id_tt")
     private Long idTT;
 
-    @Column(name = "id_teknisi", nullable = false, length = 10)
-    private String idTeknisi;
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @JoinColumn(name = "id_teknisi", nullable = false, updatable = false)
+    private Teknisi teknisi;
 
     @Column(name = "checker", nullable = false, length = 255)
     private String checker;
@@ -122,12 +123,12 @@ public class ServiceBarang extends DateConfig {
         this.idTT = idTT;
     }
 
-    public String getIdTeknisi() {
-        return idTeknisi;
+    public Teknisi getTeknisi() {
+        return teknisi;
     }
 
-    public void setIdTeknisi(String idTeknisi) {
-        this.idTeknisi = idTeknisi;
+    public void setTeknisi(Teknisi teknisi) {
+        this.teknisi = teknisi;
     }
 
     public String getChecker() {
