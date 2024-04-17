@@ -6,9 +6,11 @@ import com.template.eazypos.model.ServiceBarang;
 import com.template.eazypos.repository.ReturRepository;
 import com.template.eazypos.repository.ServiceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.Date;
 
+@Service
 public class ReturService {
 
     @Autowired
