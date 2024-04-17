@@ -18,6 +18,7 @@ public class Retur extends DateConfig {
 //    @Column(name = "id_tt_lama", nullable = false)
 //    private Long idTTLama;
 
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     @JoinColumn(name = "id_tt_lama", updatable = false)
     private ServiceBarang TTLama;
 
