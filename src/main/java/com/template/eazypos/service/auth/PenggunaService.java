@@ -78,6 +78,15 @@ public class PenggunaService {
     public Pengguna get(Long id) {
             return penggunaRepository.findById(id).orElseThrow(() -> new NotFoundException("Id tidak dinemukan"));
     }
+    public Pengguna getByNama(String nama) {
+        List<Pengguna> penggunaList = penggunaRepository.findByNama(nama);
+
+        if (penggunaList.size() == 1) {
+            return penggunaList.get(0);
+        } else  {
+            throw new BadRequestException("Data Lebih Dari 1!!");
+        }
+    }
 
     public List<Pengguna> getAll() {
             return penggunaRepository.findAll();

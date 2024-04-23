@@ -30,7 +30,11 @@ public class PenggunaController {
     @GetMapping("/{id}")
     public CommonResponse <Pengguna> get(@PathVariable("id") Long id){
         return ResponseHelper.ok( penggunaService.get(id ));
+    } @GetMapping("/nama")
+    public CommonResponse<Pengguna> getByNama(@RequestParam("nama") String nama){
+        return ResponseHelper.ok( penggunaService.getByNama(nama));
     }
+
     @GetMapping
     public CommonResponse<List<Pengguna>> getAll(){
         return ResponseHelper.ok( penggunaService.getAll());
