@@ -17,8 +17,8 @@ public class TransaksiIndent {
     private Customer customer;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "id_marketting", updatable = false)
-    private Marketting marketting;
+    @JoinColumn(name = "id_salesman", updatable = false)
+    private Salesman salesman;
 
     @Column(name = "status", nullable = false)
     private String status;
@@ -190,12 +190,12 @@ public class TransaksiIndent {
         this.customer = customer;
     }
 
-    public Marketting getMarketting() {
-        return marketting;
+    public Salesman getSalesman() {
+        return salesman;
     }
 
-    public void setMarketting(Marketting marketting) {
-        this.marketting = marketting;
+    public void setSalesman(Salesman salesman) {
+        this.salesman = salesman;
     }
 
     public String getStatus() {
