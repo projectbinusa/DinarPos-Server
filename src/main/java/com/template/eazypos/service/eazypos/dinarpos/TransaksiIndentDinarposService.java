@@ -15,7 +15,7 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-public class TransakiIndentDinarposService {
+public class TransaksiIndentDinarposService {
     @Autowired
     private TransaksiIndentRepository transaksiRepository;
 

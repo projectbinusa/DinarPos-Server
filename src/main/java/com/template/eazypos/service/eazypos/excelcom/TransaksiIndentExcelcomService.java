@@ -161,7 +161,8 @@ public class TransaksiIndentExcelcomService {
     public Transaksi checklist(Long id) {
         TransaksiIndent transaksiIndent = transaksiIndentRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Id Not Found"));
-
+        transaksiIndent.setDelFlag(0);
+        transaksiIndentRepository.save(transaksiIndent);
         Date now = new Date();
         Customer customer = customerRepository.findById(transaksiIndent.getCustomer().getId())
                 .orElseThrow(() -> new NotFoundException("Customer not found"));

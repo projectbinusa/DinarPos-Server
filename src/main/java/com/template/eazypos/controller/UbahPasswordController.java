@@ -1,5 +1,6 @@
 package com.template.eazypos.controller;
 
+import com.template.eazypos.dto.PasswordAdminDTO;
 import com.template.eazypos.dto.PasswordDTO;
 import com.template.eazypos.dto.TeknisiDTO;
 import com.template.eazypos.exception.CommonResponse;
@@ -20,5 +21,9 @@ public class UbahPasswordController {
     @PutMapping("/{id}")
     public CommonResponse<Pengguna> put(@PathVariable("id") Long id , @RequestBody PasswordDTO passwordDTO){
         return ResponseHelper.ok( ubahPasswordService.ubahPass(passwordDTO , id));
+    }
+    @PutMapping("admin/{id}")
+    public CommonResponse<Pengguna> putAdmin(@PathVariable("id") Long id , @RequestBody PasswordAdminDTO passwordDTO){
+        return ResponseHelper.ok( ubahPasswordService.ubahPassAdmin(passwordDTO , id));
     }
 }
