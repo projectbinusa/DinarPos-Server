@@ -263,4 +263,7 @@ public class TransaksiIndentExcelcomService {
     public List<TransaksiIndent> getTransaksiIndentExcelcom(){
         return transaksiIndentRepository.findTransaksiExcelcom();
     }
+    public List<BarangTransaksiIndent> getBarangTransaksiIndent(Long id){
+        return barangTransaksiIndentRepository.findByTransaksiIndentId(id);
+    }
 }

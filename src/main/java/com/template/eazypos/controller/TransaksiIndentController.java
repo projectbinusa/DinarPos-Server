@@ -3,6 +3,7 @@ package com.template.eazypos.controller;
 import com.template.eazypos.dto.TransaksiPenjualanDTO;
 import com.template.eazypos.exception.CommonResponse;
 import com.template.eazypos.exception.ResponseHelper;
+import com.template.eazypos.model.BarangTransaksiIndent;
 import com.template.eazypos.model.Transaksi;
 import com.template.eazypos.model.TransaksiBeli;
 import com.template.eazypos.model.TransaksiIndent;
@@ -26,7 +27,7 @@ public class TransaksiIndentController {
     public CommonResponse<TransaksiIndent> addExcelcom(@RequestBody TransaksiPenjualanDTO transaksiPenjualanDTO){
         return ResponseHelper.ok( transaksiIndentExcelcomService.addTransaksi(transaksiPenjualanDTO));
     }
-    @PostMapping("/dianrpos")
+    @PostMapping("/dinarpos")
     public CommonResponse<TransaksiIndent> addDinarpos(@RequestBody TransaksiPenjualanDTO transaksiPenjualanDTO){
         return ResponseHelper.ok( transaksiIndentDinarposService.addTransaksi(transaksiPenjualanDTO));
     }
@@ -41,5 +42,9 @@ public class TransaksiIndentController {
     @GetMapping("/dinarpos")
     public CommonResponse <List<TransaksiIndent>> getDinarpos(){
         return ResponseHelper.ok( transaksiIndentDinarposService.getTransaksiIndentDinarpos());
+    }
+    @GetMapping("/barang")
+    public CommonResponse <List<BarangTransaksiIndent>> getBarangById(@RequestParam Long id){
+        return ResponseHelper.ok( transaksiIndentExcelcomService.getBarangTransaksiIndent(id));
     }
 }
