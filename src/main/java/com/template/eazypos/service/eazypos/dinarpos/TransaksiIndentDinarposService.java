@@ -151,4 +151,7 @@ public class TransaksiIndentDinarposService {
             return nota;
         }
     }
+    public List<TransaksiIndent> getTransaksiIndentDinarpos(){
+        return transaksiRepository.findTransaksiDinarpos();
+    }
 }

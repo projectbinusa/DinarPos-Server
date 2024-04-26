@@ -260,4 +260,7 @@ public class TransaksiIndentExcelcomService {
         }
         return transaksi;
     }
+    public List<TransaksiIndent> getTransaksiIndentExcelcom(){
+        return transaksiIndentRepository.findTransaksiExcelcom();
+    }
 }

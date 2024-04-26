@@ -4,11 +4,14 @@ import com.template.eazypos.dto.TransaksiPenjualanDTO;
 import com.template.eazypos.exception.CommonResponse;
 import com.template.eazypos.exception.ResponseHelper;
 import com.template.eazypos.model.Transaksi;
+import com.template.eazypos.model.TransaksiBeli;
 import com.template.eazypos.model.TransaksiIndent;
 import com.template.eazypos.service.eazypos.dinarpos.TransaksiIndentDinarposService;
 import com.template.eazypos.service.eazypos.excelcom.TransaksiIndentExcelcomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("api/transaksi_indent")
@@ -31,7 +34,12 @@ public class TransaksiIndentController {
     public CommonResponse<Transaksi> checklist(@PathVariable("id") Long id){
         return ResponseHelper.ok( transaksiIndentExcelcomService.checklist(id));
     }
-
-
-
+    @GetMapping("/excelcom")
+    public CommonResponse <List<TransaksiIndent>> getExcelcom(){
+        return ResponseHelper.ok( transaksiIndentExcelcomService.getTransaksiIndentExcelcom());
+    }
+    @GetMapping("/dinarpos")
+    public CommonResponse <List<TransaksiIndent>> getDinarpos(){
+        return ResponseHelper.ok( transaksiIndentDinarposService.getTransaksiIndentDinarpos());
+    }
 }
