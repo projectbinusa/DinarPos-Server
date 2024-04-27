@@ -40,7 +40,7 @@ public class TransaksiIndentController {
         return ResponseHelper.ok( transaksiIndentExcelcomService.getTransaksiIndentExcelcom());
     }
     @GetMapping("/{id}")
-    public CommonResponse <TransaksiIndent> getById(Long id){
+    public CommonResponse <TransaksiIndent> getById(@PathVariable("id") Long id){
         return ResponseHelper.ok( transaksiIndentExcelcomService.getById(id));
     }
     @GetMapping("/dinarpos")
