@@ -3,14 +3,8 @@ package com.template.eazypos.service.eazypos.dinarpos;
 import com.template.eazypos.dto.BarangTransaksiDTO;
 import com.template.eazypos.dto.TransaksiBeliDTO;
 import com.template.eazypos.exception.NotFoundException;
-import com.template.eazypos.model.Barang;
-import com.template.eazypos.model.BarangTransaksiBeli;
-import com.template.eazypos.model.Suplier;
-import com.template.eazypos.model.TransaksiBeli;
-import com.template.eazypos.repository.BarangRepository;
-import com.template.eazypos.repository.BarangTransaksiBeliRepository;
-import com.template.eazypos.repository.SuplierRepository;
-import com.template.eazypos.repository.TransaksiBeliRepository;
+import com.template.eazypos.model.*;
+import com.template.eazypos.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,6 +27,9 @@ public class TransaksiBeliDinarposService {
 
     @Autowired
     private SuplierRepository suplierRepository;
+
+    @Autowired
+    private HutangRepository hutangRepository;
 
     public TransaksiBeli addTransaksiBeli(TransaksiBeliDTO transaksiBeliDTO) {
         Date now = new Date();
@@ -58,6 +55,13 @@ public class TransaksiBeliDinarposService {
         transaksiBeli.setStatus("dinarpos");
 
         TransaksiBeli savedTransaksiBeli = transaksiBeliRepository.save(transaksiBeli);
+        if(transaksiBeliDTO.getCashCredit().equals("Kredit")){
+            Hutang hutang = new Hutang();
+            hutang.setTransaksiBeli(transaksiBeliRepository.findById(savedTransaksiBeli.getIdTransaksiBeli()).get());
+            hutang.setDate(new Date());
+            hutang.setHutang(savedTransaksiBeli.getKekurangan());
+            hutangRepository.save(hutang);
+        }
 
         // Simpan detail barang transaksi beli
         List<BarangTransaksiDTO> listProduk = transaksiBeliDTO.getProduk();

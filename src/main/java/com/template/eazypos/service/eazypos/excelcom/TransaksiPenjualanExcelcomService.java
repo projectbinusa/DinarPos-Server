@@ -32,6 +32,9 @@ public class TransaksiPenjualanExcelcomService {
     @Autowired
     private BarangRepository barangRepository;
 
+    @Autowired
+    private PiutangRepository piutangRepository;
+
     public Transaksi addTransaksi(TransaksiPenjualanDTO transaksiDTO) {
         Date now = new Date();
         String not = getNoNotaTransaksi() ; // method generateNotaNumber() menghasilkan nomor nota baru
@@ -98,6 +101,13 @@ public class TransaksiPenjualanExcelcomService {
         transaksi.setDelFlag(1);
 
         Transaksi savedTransaksi = transaksiRepository.save(transaksi);
+        if(transaksiDTO.getCashKredit().equals("Kredit")){
+            Piutang piutang = new Piutang();
+            piutang.setTransaksi(transaksiRepository.findById(savedTransaksi.getIdTransaksi()).get());
+            piutang.setDate(new Date());
+            piutang.setKekurangan(savedTransaksi.getKekurangan());
+            piutangRepository.save(piutang);
+        }
 
         List<BarangTransaksiDTO> listProduk = transaksiDTO.getProduk();
         for (BarangTransaksiDTO barangDTO : listProduk) {
