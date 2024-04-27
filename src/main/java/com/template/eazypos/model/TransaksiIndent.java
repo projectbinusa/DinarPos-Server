@@ -20,16 +20,16 @@ public class TransaksiIndent {
     @JoinColumn(name = "id_salesman", updatable = false)
     private Salesman salesman;
 
-    @Column(name = "status", nullable = false)
+    @Column(name = "status")
     private String status;
 
-    @Column(name = "total_bayar_barang", nullable = false)
+    @Column(name = "total_bayar_barang")
     private String totalBayarBarang;
 
-    @Column(name = "pembayaran", nullable = false)
+    @Column(name = "pembayaran")
     private String pembayaran;
 
-    @Column(name = "diskon", nullable = false)
+    @Column(name = "diskon")
     private String diskon;
 
     @Column(name = "total_belanja")
@@ -38,31 +38,31 @@ public class TransaksiIndent {
     @Column(name = "total_belanja_dua")
     private String totalBelanjaDua;
 
-    @Column(name = "total_beli", nullable = false)
+    @Column(name = "total_beli")
     private String totalBeli;
 
-    @Column(name = "sisa", nullable = false)
+    @Column(name = "sisa")
     private String sisa;
 
-    @Column(name = "potongan", nullable = false)
+    @Column(name = "potongan")
     private String potongan;
 
-    @Column(name = "kekurangan", nullable = false)
+    @Column(name = "kekurangan")
     private String kekurangan;
 
-    @Column(name = "ttl_bayar_hemat", nullable = false)
+    @Column(name = "ttl_bayar_hemat")
     private String ttlBayarHemat;
 
-    @Column(name = "nota", nullable = false)
+    @Column(name = "nota")
     private String nota;
 
-    @Column(name = "no_faktur", nullable = false)
+    @Column(name = "no_faktur")
     private String noFaktur;
 
-    @Column(name = "keterangan", nullable = false)
+    @Column(name = "keterangan")
     private String keterangan;
 
-    @Column(name = "cash_kredit", nullable = false)
+    @Column(name = "cash_kredit")
     private String cashKredit;
 
     @Column(name = "tanggal")
@@ -95,37 +95,37 @@ public class TransaksiIndent {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" , timezone = "Asia/Jakarta")
     private Date tanggalNotif365;
 
-    @Column(name = "del_flag", nullable = false)
+    @Column(name = "del_flag")
     private Integer delFlag;
 
-    @Column(name = "7_hari", nullable = false)
+    @Column(name = "7_hari")
     private Integer hari7;
 
-    @Column(name = "30_hari", nullable = false)
+    @Column(name = "30_hari")
     private Integer hari30;
 
-    @Column(name = "90_hari", nullable = false)
+    @Column(name = "90_hari")
     private Integer hari90;
 
-    @Column(name = "120_hari", nullable = false)
+    @Column(name = "120_hari")
     private Integer hari120;
 
-    @Column(name = "365_hari", nullable = false)
+    @Column(name = "365_hari")
     private Integer hari365;
 
-    @Column(name = "ket_7_hari", nullable = false, columnDefinition = "TEXT")
+    @Column(name = "ket_7_hari", columnDefinition = "TEXT")
     private String ket7Hari;
 
-    @Column(name = "ket_30_hari", nullable = false, columnDefinition = "TEXT")
+    @Column(name = "ket_30_hari", columnDefinition = "TEXT")
     private String ket30Hari;
 
-    @Column(name = "ket_90_hari", nullable = false, columnDefinition = "TEXT")
+    @Column(name = "ket_90_hari", columnDefinition = "TEXT")
     private String ket90Hari;
 
-    @Column(name = "ket_120_hari", nullable = false, columnDefinition = "TEXT")
+    @Column(name = "ket_120_hari", columnDefinition = "TEXT")
     private String ket120Hari;
 
-    @Column(name = "ket_365_hari", nullable = false, columnDefinition = "TEXT")
+    @Column(name = "ket_365_hari", columnDefinition = "TEXT")
     private String ket365Hari;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})

@@ -39,6 +39,10 @@ public class TransaksiIndentController {
     public CommonResponse <List<TransaksiIndent>> getExcelcom(){
         return ResponseHelper.ok( transaksiIndentExcelcomService.getTransaksiIndentExcelcom());
     }
+    @GetMapping("/{id}")
+    public CommonResponse <TransaksiIndent> getById(Long id){
+        return ResponseHelper.ok( transaksiIndentExcelcomService.getById(id));
+    }
     @GetMapping("/dinarpos")
     public CommonResponse <List<TransaksiIndent>> getDinarpos(){
         return ResponseHelper.ok( transaksiIndentDinarposService.getTransaksiIndentDinarpos());
