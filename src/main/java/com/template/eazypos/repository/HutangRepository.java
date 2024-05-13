@@ -10,7 +10,7 @@ import java.util.Date;
 import java.util.List;
 
 public interface HutangRepository extends JpaRepository<Hutang , Long> {
-    @Query(value = "SELECT * FROM hutang WHERE  pelunasan != '0'' ", nativeQuery = true)
+    @Query(value = "SELECT h FROM Hutang h WHERE h.pelunasan <> '0'")
     List<Hutang> findAllHutang();
 
     @Query("SELECT h FROM Hutang h WHERE h.date BETWEEN :tglAwal AND :tglAkhir")

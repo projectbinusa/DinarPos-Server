@@ -8,6 +8,6 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface PiutangRepository extends JpaRepository<Piutang , Long> {
-    @Query(value = "SELECT * FROM piutang WHERE  pelunasan != '0' ", nativeQuery = true)
+    @Query(value = "SELECT h FROM Piutang h WHERE h.pelunasan <> '0'")
     List<Piutang> findAllPiutang();
 }
