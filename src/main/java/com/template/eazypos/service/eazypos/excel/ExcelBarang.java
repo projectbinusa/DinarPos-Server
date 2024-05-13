@@ -65,6 +65,7 @@ public class ExcelBarang {
         }
     }
 
+
     public static ByteArrayInputStream templateToExcel(List<Barang> barangs) throws IOException {
         try (Workbook workbook = new XSSFWorkbook(); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
             Sheet sheet = workbook.createSheet(SHEET);
@@ -148,4 +149,5 @@ public class ExcelBarang {
             throw new RuntimeException("fail to parse Excel file: " + e.getMessage());
         }
     }
+
 }
