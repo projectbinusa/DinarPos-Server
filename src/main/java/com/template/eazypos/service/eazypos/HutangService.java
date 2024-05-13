@@ -1,5 +1,6 @@
 package com.template.eazypos.service.eazypos;
 
+import com.template.eazypos.dto.PelunasanDTO;
 import com.template.eazypos.exception.NotFoundException;
 import com.template.eazypos.model.Hutang;
 import com.template.eazypos.repository.HutangRepository;
@@ -13,13 +14,13 @@ public class HutangService {
     @Autowired
     private HutangRepository hutangRepository;
 
-    public Hutang pelunasan(Hutang hutang , Long id) {
+    public Hutang pelunasan(PelunasanDTO pelunasanDTO , Long id) {
         Hutang pelunasan = hutangRepository.findById(id).orElseThrow(() -> new NotFoundException("Id Not Found"));
-        pelunasan.setPelunasan(hutang.getPelunasan());
+        pelunasan.setPelunasan(pelunasanDTO.getPelunasan());
        return hutangRepository.save(pelunasan);
     }
     public List<Hutang> getAll(){
-        return hutangRepository.findAll();
+        return hutangRepository.findAllHutang();
     }
 
     public Hutang getById(Long id){

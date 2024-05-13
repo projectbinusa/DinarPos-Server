@@ -1,5 +1,6 @@
 package com.template.eazypos.controller;
 
+import com.template.eazypos.dto.PelunasanDTO;
 import com.template.eazypos.exception.CommonResponse;
 import com.template.eazypos.exception.ResponseHelper;
 import com.template.eazypos.model.Hutang;
@@ -22,7 +23,7 @@ public class HutangController {
         return ResponseHelper.ok(hutangService.getById(id));
     }
     @PutMapping("/{id}")
-    public CommonResponse<Hutang> pelunasan(@RequestBody Hutang hutang , @PathVariable("id") Long id) {
+    public CommonResponse<Hutang> pelunasan(@RequestBody PelunasanDTO hutang , @PathVariable("id") Long id) {
         return ResponseHelper.ok(hutangService.pelunasan(hutang ,id));
     }
     @GetMapping()
