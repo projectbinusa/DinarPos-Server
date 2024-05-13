@@ -5,6 +5,7 @@ import com.template.eazypos.exception.CommonResponse;
 import com.template.eazypos.exception.ResponseHelper;
 import com.template.eazypos.model.Hutang;
 import com.template.eazypos.model.Piutang;
+import com.template.eazypos.model.Transaksi;
 import com.template.eazypos.service.eazypos.HutangService;
 import com.template.eazypos.service.eazypos.PiutangService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,7 @@ public class PiutangController {
         return ResponseHelper.ok(piutangService.pelunasan(piutang ,id));
     }
     @GetMapping()
-    public CommonResponse<List<Piutang>> getAll() {
+    public CommonResponse<List<Transaksi>> getAll() {
         return ResponseHelper.ok(piutangService.getAll());
     }
 }

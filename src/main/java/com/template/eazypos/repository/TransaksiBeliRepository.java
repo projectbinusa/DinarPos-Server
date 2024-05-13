@@ -1,5 +1,6 @@
 package com.template.eazypos.repository;
 
+import com.template.eazypos.model.Hutang;
 import com.template.eazypos.model.Transaksi;
 import com.template.eazypos.model.TransaksiBeli;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,6 +18,9 @@ public interface TransaksiBeliRepository extends JpaRepository<TransaksiBeli , L
 
     @Query(value = "SELECT tanggal FROM tabel_transaksi_beli WHERE no_faktur LIKE '%PJN%' ORDER BY tanggal DESC LIMIT 1", nativeQuery = true)
     String findLastDate();
+
+    @Query(value = "SELECT h FROM TransaksiBeli h WHERE h.kekurangan <> '0'")
+    List<TransaksiBeli> findAllHutang();
 
     @Query(value = "SELECT * FROM tabel_transaksi_beli WHERE status = 'excelcom'  AND del_flag = 0  ", nativeQuery = true)
     List<TransaksiBeli> findTransaksiBeliExcelcom();
