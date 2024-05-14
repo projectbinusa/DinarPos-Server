@@ -9,6 +9,7 @@ import com.template.eazypos.repository.TransaksiBeliRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -19,10 +20,21 @@ public class HutangService {
     @Autowired
     private TransaksiBeliRepository transaksiBeliRepository;
 
-    public Hutang pelunasan(PelunasanDTO pelunasanDTO , Long id) {
-        Hutang pelunasan = hutangRepository.findById(id).orElseThrow(() -> new NotFoundException("Id Not Found"));
-        pelunasan.setPelunasan(pelunasanDTO.getPelunasan());
-       return hutangRepository.save(pelunasan);
+
+    public Hutang pelunasan(PelunasanDTO pelunasanDTO) {
+        TransaksiBeli transaksiBeli = transaksiBeliRepository.findById(pelunasanDTO.getId_transaksi()).orElseThrow((() -> new NotFoundException("Id Not Found")));
+     int kekurangan = Integer.parseInt(transaksiBeli.getKekurangan());
+     int pelunasan = Integer.parseInt(pelunasanDTO.getPelunasan());
+     int sisaKekurangan = kekurangan - pelunasan;
+     transaksiBeli.setKekurangan(String.valueOf(sisaKekurangan));
+     transaksiBeliRepository.save(transaksiBeli);
+
+     Hutang hutang = new Hutang();
+     hutang.setPelunasan(pelunasanDTO.getPelunasan());
+     hutang.setHutang(String.valueOf(sisaKekurangan));
+     hutang.setTransaksiBeli(transaksiBeliRepository.findById(transaksiBeli.getIdTransaksiBeli()).get());
+     hutang.setDate(new Date());
+       return hutangRepository.save(hutang);
     }
     public List<TransaksiBeli> getAll(){
         return transaksiBeliRepository.findAllHutang();

@@ -31,9 +31,9 @@ public class HutangController {
     public CommonResponse<Hutang> getById(@PathVariable("id") Long id) {
         return ResponseHelper.ok(hutangService.getById(id));
     }
-    @PutMapping("/{id}")
-    public CommonResponse<Hutang> pelunasan(@RequestBody PelunasanDTO hutang , @PathVariable("id") Long id) {
-        return ResponseHelper.ok(hutangService.pelunasan(hutang ,id));
+    @PostMapping()
+    public CommonResponse<Hutang> pelunasan(@RequestBody PelunasanDTO hutang ) {
+        return ResponseHelper.ok(hutangService.pelunasan(hutang ));
     }
     @GetMapping()
     public CommonResponse<List<TransaksiBeli>> getAll() {
@@ -46,11 +46,11 @@ public class HutangController {
             @RequestParam("tglAkhir") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tglAkhir,
             HttpServletResponse response) throws IOException {
 
-        excelHutangService.excelHutang(tglAwal, tglAkhir, response);
+        excelHutangService.excelRekapHutang(tglAwal, tglAkhir, response);
     }
 
     @GetMapping("/export/excel/rekap-hutang")
     public void exportExcelRekapHutang(HttpServletResponse response) throws IOException {
-        excelHutangService.excelRekapHutang(response);
+        excelHutangService.excelHutang(response);
     }
 }
