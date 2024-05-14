@@ -16,6 +16,7 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class ExcelHutangService {
@@ -38,7 +39,6 @@ public class ExcelHutangService {
         styleHeader.setBorderRight(BorderStyle.THIN);
         styleHeader.setBorderBottom(BorderStyle.THIN);
         styleHeader.setBorderLeft(BorderStyle.THIN);
-        styleHeader.setFillForegroundColor(IndexedColors.GREEN.getIndex());
         styleHeader.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 
         CellStyle styleNumber = workbook.createCellStyle();
@@ -65,6 +65,11 @@ public class ExcelHutangService {
         styleColor3.setFillForegroundColor(IndexedColors.DARK_RED.getIndex());
         styleColor3.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 
+        CellStyle styleColor4 = workbook.createCellStyle();
+        styleColor4.cloneStyleFrom(styleNumber);
+        styleColor4.setFillForegroundColor(IndexedColors.GREEN.getIndex());
+        styleColor4.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+
         // Header
         Row headerRow = sheet.createRow(2);
         String[] headers = {"TGL INVOICE", "NO INVOICE", "NAMA SUPLIER", "SISA PIUTANG (Rp)", "UMUR PIUTANG (Hari)"};
@@ -77,58 +82,34 @@ public class ExcelHutangService {
         // Data
         List<Hutang> hutangs = hutangRepository.findByTanggalBetween(tglAwal, tglAkhir);
         int rowNum = 3;
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        Date currentDate = new Date();
-        double totalSisaHutang = 0;
-
         for (Hutang hutang : hutangs) {
             Row row = sheet.createRow(rowNum++);
-            Date tanggalInvoice = hutang.getDate();
-            String noInvoice = hutang.getTransaksiBeli().getNoFaktur();
-            String namaSuplier = hutang.getTransaksiBeli().getNamaSuplier();
-            double sisaPiutang = Double.parseDouble(hutang.getHutang());
-            long umurPiutang = Period.between(
-                    LocalDate.parse(dateFormat.format(tanggalInvoice)),
-                    LocalDate.now()
-            ).getDays();
+            row.createCell(0).setCellValue(hutang.getDate());
+            TransaksiBeli transaksiBeli = transaksiBeliRepository.findById(hutang.getTransaksiBeli().getIdTransaksiBeli()).get();
+            row.createCell(1).setCellValue(transaksiBeli.getNoFaktur());
+            row.createCell(2).setCellValue(transaksiBeli.getNamaSuplier());
+            row.createCell(3).setCellValue(hutang.getHutang());
+            long tglKembali = Math.abs(new Date().getTime() - hutang.getDate().getTime());
+            long convert = TimeUnit.DAYS.convert(tglKembali, TimeUnit.MILLISECONDS);
+            Cell cellUmurPiutang = row.createCell(4);
+            cellUmurPiutang.setCellValue(convert);
 
-            // Set cell values and styles
-            for (int i = 0; i < 5; i++) {
-                Cell cell = row.createCell(i);
-                cell.setCellStyle(styleNumber); // Set default style to number style
-                if (i == 0) {
-                    cell.setCellValue(dateFormat.format(tanggalInvoice));
-                } else if (i == 1) {
-                    cell.setCellValue(noInvoice);
-                } else if (i == 2) {
-                    cell.setCellValue(namaSuplier);
-                } else if (i == 3) {
-                    cell.setCellValue(sisaPiutang);
-                } else if (i == 4) {
-                    cell.setCellValue(umurPiutang);
-                    // Apply conditional formatting for UMUR PIUTANG column
-                    if (umurPiutang > 90) {
-                        cell.setCellStyle(styleColor3);
-                    } else if (umurPiutang > 30) {
-                        cell.setCellStyle(styleColor2);
-                    } else if (umurPiutang > 14) {
-                        cell.setCellStyle(styleColor1);
-                    }
-                }
+            // Apply cell style for UMUR PIUTANG column
+            if (convert > 90) {
+                cellUmurPiutang.setCellStyle(styleColor3);
+            } else if (convert > 30) {
+                cellUmurPiutang.setCellStyle(styleColor2);
+            } else if (convert > 14) {
+                cellUmurPiutang.setCellStyle(styleColor1);
+            } else {
+                cellUmurPiutang.setCellStyle(styleNumber);
             }
 
-            totalSisaHutang += sisaPiutang;
+            // Apply cell styles for other columns
+            for (int i = 0; i < 4; i++) {
+                row.getCell(i).setCellStyle(styleNumber);
+            }
         }
-
-
-        // Total row
-        Row totalRow = sheet.createRow(rowNum++);
-        totalRow.createCell(0).setCellValue("TOTAL");
-        totalRow.createCell(3).setCellValue(totalSisaHutang);
-        for (int i = 0; i < headers.length; i++) {
-            totalRow.getCell(i).setCellStyle(styleHeader);
-        }
-        totalRow.getCell(3).setCellStyle(styleHeader);
 
         // Auto size columns
         for (int i = 0; i < headers.length; i++) {
@@ -140,7 +121,6 @@ public class ExcelHutangService {
         workbook.write(response.getOutputStream());
         workbook.close();
     }
-
 
     public void excelHutang(HttpServletResponse response) throws IOException {
         Workbook workbook = new XSSFWorkbook();
@@ -193,25 +173,25 @@ public class ExcelHutangService {
         // Data
         List<Hutang> hutangs = hutangRepository.findAll();
         int rowNum = 3;
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S");
+        int total = 0;
         for (Hutang hutang : hutangs) {
             Row row = sheet.createRow(rowNum++);
-            row.createCell(0).setCellValue(dateFormat.format(hutang.getDate())); // Format the date
+            row.createCell(0).setCellValue(hutang.getDate());
             TransaksiBeli transaksiBeli = transaksiBeliRepository.findById(hutang.getTransaksiBeli().getIdTransaksiBeli()).get();
             row.createCell(1).setCellValue(transaksiBeli.getNoFaktur());
             row.createCell(2).setCellValue(transaksiBeli.getNamaSuplier());
             row.createCell(3).setCellValue(hutang.getHutang());
-            LocalDate tglHutang = LocalDate.parse(dateFormat.format(hutang.getDate()).substring(0, 10));
-            int umurPiutang = Period.between(tglHutang, LocalDate.now()).getDays();
+            long tglKembali = Math.abs(new Date().getTime() - hutang.getDate().getTime());
+            long convert = TimeUnit.DAYS.convert(tglKembali, TimeUnit.MILLISECONDS);
             Cell cellUmurPiutang = row.createCell(4);
-            cellUmurPiutang.setCellValue(umurPiutang);
+            cellUmurPiutang.setCellValue(convert);
 
             // Apply cell style for UMUR PIUTANG column
-            if (umurPiutang > 90) {
+            if (convert > 90) {
                 cellUmurPiutang.setCellStyle(styleColor3);
-            } else if (umurPiutang > 30) {
+            } else if (convert > 30) {
                 cellUmurPiutang.setCellStyle(styleColor2);
-            } else if (umurPiutang > 14) {
+            } else if (convert > 14) {
                 cellUmurPiutang.setCellStyle(styleColor1);
             } else {
                 cellUmurPiutang.setCellStyle(styleNumber);
@@ -221,10 +201,13 @@ public class ExcelHutangService {
             for (int i = 0; i < 4; i++) {
                 row.getCell(i).setCellStyle(styleNumber);
             }
+            int kekurangan = Integer.parseInt(hutang.getHutang());
+            total += kekurangan;
         }
 
+
         // Auto size columns
-        for (int i = 0; i < headers.length; i++) {
+        for (int i = 0; i < headers.length;  i++) {
             sheet.autoSizeColumn(i);
         }
 

@@ -24,9 +24,9 @@ public class PiutangController {
     public CommonResponse<Piutang> getById(@PathVariable("id") Long id) {
         return ResponseHelper.ok(piutangService.getById(id));
     }
-    @PutMapping("/{id}")
-    public CommonResponse<Piutang> pelunasan(@RequestBody PelunasanDTO piutang , @PathVariable("id") Long id) {
-        return ResponseHelper.ok(piutangService.pelunasan(piutang ,id));
+    @PostMapping()
+    public CommonResponse<Piutang> pelunasan(@RequestBody PelunasanDTO piutang) {
+        return ResponseHelper.ok(piutangService.pelunasan(piutang));
     }
     @GetMapping()
     public CommonResponse<List<Transaksi>> getAll() {
