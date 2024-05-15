@@ -43,7 +43,7 @@ public class DataService {
         return serviceRepository.findAll();
     }
     public ServiceBarang getById(Long id){
-        return serviceRepository.findById(id).orElseThrow(() -> new NotFoundException("Id tidak dinemukan"));
+        return serviceRepository.findByIdTT(id).orElseThrow(() -> new NotFoundException("Id tidak dinemukan"));
     }
     public Map<String, Boolean> delete(Long id ) {
         try {
