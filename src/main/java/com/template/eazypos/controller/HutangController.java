@@ -46,11 +46,11 @@ public class HutangController {
             @RequestParam("tglAkhir") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tglAkhir,
             HttpServletResponse response) throws IOException {
 
-        excelHutangService.excelRekapHutang(tglAwal, tglAkhir, response);
+        excelHutangService.excelBukuHutang(tglAwal, tglAkhir, response);
     }
 
     @GetMapping("/export/excel/rekap-hutang")
     public void exportExcelRekapHutang(HttpServletResponse response) throws IOException {
-        excelHutangService.excelHutang(response);
+        excelHutangService.excelRekapHutang(response);
     }
 }
