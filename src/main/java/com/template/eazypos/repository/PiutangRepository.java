@@ -14,5 +14,5 @@ public interface PiutangRepository extends JpaRepository<Piutang , Long> {
     List<Piutang> findAllPiutang();
 
     @Query("SELECT h FROM Piutang h WHERE h.date BETWEEN :tglAwal AND :tglAkhir")
-    List<Hutang> findByTanggalBetween(@Param("tglAwal") Date tglAwal, @Param("tglAkhir") Date tglAkhir);
+    List<Piutang> findByTanggalBetween(@Param("tglAwal") Date tglAwal, @Param("tglAkhir") Date tglAkhir);
 }

@@ -1,6 +1,7 @@
 package com.template.eazypos.service.eazypos.excel;
 
 import com.template.eazypos.model.Hutang;
+import com.template.eazypos.model.Piutang;
 import com.template.eazypos.model.Transaksi;
 import com.template.eazypos.model.TransaksiBeli;
 import com.template.eazypos.repository.HutangRepository;
@@ -85,17 +86,17 @@ public class ExcelPiutangService {
         }
 
         // Data
-        List<Hutang> hutangs = hutangRepository.findByTanggalBetween(tglAwal, tglAkhir);
+        List<Piutang> hutangs = hutangRepository.findByTanggalBetween(tglAwal, tglAkhir);
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         SimpleDateFormat month = new SimpleDateFormat("MM");
         SimpleDateFormat year = new SimpleDateFormat("yyyy");
         int rowNum = 3;
-        double sisaHutang = 0;
+        double sisaPiutang = 0;
         double nominalInvoice = 0;
         double pembayaran = 0;
 
-        for (Hutang hutang : hutangs) {
-            Transaksi transaksiBeli = transaksiBeliRepository.findById(hutang.getTransaksiBeli().getIdTransaksiBeli()).get();
+        for (Piutang hutang : hutangs) {
+            Transaksi transaksiBeli = transaksiBeliRepository.findById(hutang.getTransaksi().getIdTransaksi()).get();
             Row row = sheet.createRow(rowNum++);
             Date now = hutang.getDate();
             row.createCell(0).setCellValue(month.format(now));
@@ -105,11 +106,11 @@ public class ExcelPiutangService {
             row.createCell(4).setCellValue(transaksiBeli.getNoFaktur());
             row.createCell(5).setCellValue(transaksiBeli.getTotalBelanja());
             row.createCell(6).setCellValue(transaksiBeli.getPembayaran());
-            row.createCell(7).setCellValue(hutang.getHutang());
-            double sisaHutangSementara = Double.parseDouble(hutang.getHutang());
+            row.createCell(7).setCellValue(hutang.getKekurangan());
+            double sisaPiutangSementara = Double.parseDouble(hutang.getKekurangan());
             double nominalInvoiceSementara = transaksiBeli.getTotalBelanja();
             double pembayaranSementara = transaksiBeli.getPembayaran();
-            sisaHutang += sisaHutangSementara;
+            sisaPiutang += sisaPiutangSementara;
             nominalInvoice += nominalInvoiceSementara;
             pembayaran += pembayaranSementara;
             long tglKembali = Math.abs(new Date().getTime() - hutang.getDate().getTime());
@@ -145,7 +146,7 @@ public class ExcelPiutangService {
 
         // Set and style the totals
         Cell totalNominalCell = totalRow.createCell(7);
-        totalNominalCell.setCellValue(sisaHutang);
+        totalNominalCell.setCellValue(sisaPiutang);
         totalNominalCell.setCellStyle(styleNumber);
 
         Cell invoce = totalRow.createCell(5);
