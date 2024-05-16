@@ -31,6 +31,10 @@ public class ServiceController {
     public CommonResponse<List<ServiceBarang>> getAll() {
         return ResponseHelper.ok(dataService.getAll());
     }
+    @GetMapping("/taken")
+    public CommonResponse<List<ServiceBarang>> getAllByTaken() {
+        return ResponseHelper.ok(dataService.getByTaken());
+    }
     @DeleteMapping("/{id}")
     public CommonResponse<?> delete(@PathVariable("id") Long id) {
         return ResponseHelper.ok(dataService.delete(id));
