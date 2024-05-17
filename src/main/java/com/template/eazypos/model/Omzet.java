@@ -19,18 +19,22 @@ public class Omzet extends DateConfig {
 //    private Long idMarketting;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
-    @JoinColumn(name = "id_marketting", nullable = false, updatable = false)
-    private Marketting marketting;
+    @JoinColumn(name = "id_salesman", nullable = false, updatable = false)
+    private Salesman salesman;
 
     @Column(name = "tgl", nullable = false)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" , timezone = "Asia/Jakarta")
     private Date tgl;
 
     @Column(name = "omzet", nullable = false)
-    private Long omzet;
+    private Double omzet;
 
     @Column(name = "nm_customer", nullable = false)
     private String nmCustomer;
+
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @JoinColumn(name = "id_transaksi", nullable = false, updatable = false)
+    private Transaksi transaksi;
 
     public Long getId() {
         return id;
@@ -49,12 +53,12 @@ public class Omzet extends DateConfig {
 //    }
 
 
-    public Marketting getMarketting() {
-        return marketting;
+    public Salesman getSalesman() {
+        return salesman;
     }
 
-    public void setMarketting(Marketting marketting) {
-        this.marketting = marketting;
+    public void setSalesman(Salesman salesman) {
+        this.salesman = salesman;
     }
 
     public Date getTgl() {
@@ -65,11 +69,11 @@ public class Omzet extends DateConfig {
         this.tgl = tgl;
     }
 
-    public Long getOmzet() {
+    public Double getOmzet() {
         return omzet;
     }
 
-    public void setOmzet(Long omzet) {
+    public void setOmzet(Double omzet) {
         this.omzet = omzet;
     }
 
@@ -79,5 +83,13 @@ public class Omzet extends DateConfig {
 
     public void setNmCustomer(String nmCustomer) {
         this.nmCustomer = nmCustomer;
+    }
+
+    public Transaksi getTransaksi() {
+        return transaksi;
+    }
+
+    public void setTransaksi(Transaksi transaksi) {
+        this.transaksi = transaksi;
     }
 }

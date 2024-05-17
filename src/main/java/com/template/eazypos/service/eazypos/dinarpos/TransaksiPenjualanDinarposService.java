@@ -42,7 +42,7 @@ public class TransaksiPenjualanDinarposService {
 
         Transaksi transaksi = new Transaksi();
         transaksi.setTotalBelanja(transaksiDTO.getTotalBelanja());
-        transaksi.setPembayaran(transaksiDTO.getPembayaran());
+        transaksi.setPembayaran(Double.valueOf(transaksiDTO.getPembayaran()));
         transaksi.setPotongan(transaksiDTO.getPotongan());
         transaksi.setDiskon(transaksiDTO.getDiskon());
         transaksi.setTotalBayarBarang(transaksiDTO.getTotalBayarBarang());

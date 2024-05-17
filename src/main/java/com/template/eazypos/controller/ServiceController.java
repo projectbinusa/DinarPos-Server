@@ -1,9 +1,11 @@
 package com.template.eazypos.controller;
 
 import com.template.eazypos.dto.AddServiceDTO;
+import com.template.eazypos.dto.TakenServiceDTO;
 import com.template.eazypos.exception.CommonResponse;
 import com.template.eazypos.exception.ResponseHelper;
 import com.template.eazypos.model.ServiceBarang;
+import com.template.eazypos.model.Status;
 import com.template.eazypos.service.itc.admin.DataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -22,6 +24,10 @@ public class ServiceController {
     @PostMapping("/add")
     public CommonResponse<ServiceBarang> add(@RequestBody AddServiceDTO addServiceDTO) {
         return ResponseHelper.ok(dataService.addService(addServiceDTO));
+    }
+    @PostMapping("/taken")
+    public CommonResponse<Status> add(@RequestBody TakenServiceDTO takenServiceDTO) {
+        return ResponseHelper.ok(dataService.takenService(takenServiceDTO));
     }
     @GetMapping("/{id}")
     public CommonResponse<ServiceBarang> getById(@PathVariable("id") Long id) {

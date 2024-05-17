@@ -16,6 +16,9 @@ public class StokAwal {
     @Column(name = "barcode_barang")
     private String barcodeBarang;
 
+    @Column(name = "qty")
+    private String qty;
+
     @Column(name = "tanggal")
     @Temporal(TemporalType.TIMESTAMP)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" , timezone = "Asia/Jakarta")
@@ -43,5 +46,13 @@ public class StokAwal {
 
     public void setTanggal(Date tanggal) {
         this.tanggal = tanggal;
+    }
+
+    public String getQty() {
+        return qty;
+    }
+
+    public void setQty(String qty) {
+        this.qty = qty;
     }
 }
