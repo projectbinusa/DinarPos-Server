@@ -15,6 +15,6 @@ public interface ServiceRepository extends JpaRepository<ServiceBarang, Long> {
 
     @Query(value = "SELECT * FROM service WHERE id_tt = :id" , nativeQuery = true)
     Optional<ServiceBarang> findByIdTT (Long id);
-    @Query(value = "SELECT * FROM service WHERE taken = 'N'" , nativeQuery = true)
+    @Query(value = "SELECT * FROM service WHERE taken = 'Y'" , nativeQuery = true)
     List<ServiceBarang> findByTaken ( );
 }
