@@ -43,7 +43,7 @@ public class TeknisiService {
         }
         pengguna.setUsernamePengguna(teknisi.getNama());
         pengguna.setNamaPengguna(teknisi.getNama());
-        pengguna.setLevelPengguna("teknisi");
+        pengguna.setLevelPengguna("Tekinisi");
         pengguna.setDelFlag(1);
         String userPass = teknisiDTO.getPassword().trim();
         boolean PasswordIsNotValid = !userPass.matches("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{8,20}");
