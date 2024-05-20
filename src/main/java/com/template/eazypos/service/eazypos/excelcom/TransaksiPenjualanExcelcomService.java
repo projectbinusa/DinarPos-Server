@@ -266,31 +266,6 @@ public class TransaksiPenjualanExcelcomService {
     }
 
 
-
-    private String generateNotaNumber() {
-        // Dapatkan tanggal saat ini
-        Calendar calendar = Calendar.getInstance();
-        int month = calendar.get(Calendar.MONTH) + 1;
-        int year = calendar.get(Calendar.YEAR) % 100;
-
-        // Dapatkan nomor nota terakhir dari database untuk bulan dan tahun saat ini
-        String lastNota = transaksiRepository.findLastNotaByMonthAndYear(month, year);
-
-            // Periksa apakah nomor nota terakhir berasal dari bulan dan tahun yang sama
-            String[] parts = lastNota.split("-");
-            int lastMonth = Integer.parseInt(parts[0]);
-            int lastYear = Integer.parseInt(parts[1]);
-            int lastNumber = Integer.parseInt(parts[3]);
-
-            if (lastMonth == month && lastYear == year) {
-                lastNumber++; // Tambahkan satu pada angka terakhir
-                // Format ulang nomor nota baru
-                return String.format("%02d%02d-PST-PJN-%04d", month, year, lastNumber);
-            } else {
-                return String.format("%02d%02d-PST-PJN-0001", month, year); // Mulai nomor nota baru
-            }
-
-    }
     public String getNoNotaTransaksi() {
         try {
             String kd = "";

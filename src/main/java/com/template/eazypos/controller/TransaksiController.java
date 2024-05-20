@@ -39,11 +39,11 @@ public class TransaksiController {
     }
     @PostMapping("/pembelian/excelcom")
     public CommonResponse<TransaksiBeli> addExcelcom(@RequestBody TransaksiBeliDTO transaksiBeliDTO){
-        return ResponseHelper.ok( transaksiBeliExcelcomService.addTransaksiBeli(transaksiBeliDTO));
+        return ResponseHelper.ok( transaksiBeliExcelcomService.addTransaksi(transaksiBeliDTO));
     }
     @PostMapping("/pembelian/dinarpos")
     public CommonResponse<TransaksiBeli> addDinarpos(@RequestBody TransaksiBeliDTO transaksiBeliDTO){
-        return ResponseHelper.ok( transaksiBeliDinarposService.addTransaksiBeli(transaksiBeliDTO));
+        return ResponseHelper.ok( transaksiBeliDinarposService.addTransaksi(transaksiBeliDTO));
     }
     @GetMapping("/pembelian/{id}")
     public CommonResponse <TransaksiBeli> get(@PathVariable("id") Long id){
