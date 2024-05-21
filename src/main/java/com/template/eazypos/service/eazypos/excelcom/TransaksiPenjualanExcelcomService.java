@@ -75,6 +75,7 @@ public class TransaksiPenjualanExcelcomService {
         transaksi.setHari90(1);
         transaksi.setHari120(1);
         transaksi.setNota("1");
+        transaksi.setDp("0");
         transaksi.setHari365(1);
         transaksi.setKekurangan(transaksiDTO.getKekurangan());
         transaksi.setNoFaktur(not);

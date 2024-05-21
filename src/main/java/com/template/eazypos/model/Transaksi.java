@@ -22,6 +22,17 @@ public class Transaksi extends DateConfig {
     @JoinColumn(name = "id_customer", updatable = false)
     private Customer customer;
 
+    @ManyToOne( cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_tanda_terima", updatable = false)
+    private ServiceBarang serviceBarang;
+
+    @Column(name = "nominal_piutang")
+    private String nominalPiutang;
+
+    @Column(name = "dp")
+    private String dp ;
+
+
 //    @Column(name = "id_marketting")
 //    private Long idMarketting;
 
@@ -216,6 +227,36 @@ public class Transaksi extends DateConfig {
 //        this.idSalesman = idSalesman;
 //    }
 
+
+    public ServiceBarang getServiceBarang() {
+        return serviceBarang;
+    }
+
+    public void setServiceBarang(ServiceBarang serviceBarang) {
+        this.serviceBarang = serviceBarang;
+
+
+
+
+
+
+    }
+
+    public String getNominalPiutang() {
+        return nominalPiutang;
+    }
+
+    public void setNominalPiutang(String nominalPiutang) {
+        this.nominalPiutang = nominalPiutang;
+    }
+
+    public String getDp() {
+        return dp;
+    }
+
+    public void setDp(String dp) {
+        this.dp = dp;
+    }
 
     public Customer getCustomer() {
         return customer;

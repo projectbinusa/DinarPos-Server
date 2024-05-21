@@ -1,5 +1,6 @@
 package com.template.eazypos.controller;
 
+import com.template.eazypos.dto.PembayaranDTO;
 import com.template.eazypos.dto.TransaksiPenjualanDTO;
 import com.template.eazypos.exception.CommonResponse;
 import com.template.eazypos.exception.ResponseHelper;
@@ -32,8 +33,8 @@ public class TransaksiIndentController {
         return ResponseHelper.ok( transaksiIndentDinarposService.addTransaksi(transaksiPenjualanDTO));
     }
     @PostMapping("/checklist/{id}")
-    public CommonResponse<Transaksi> checklist(@PathVariable("id") Long id){
-        return ResponseHelper.ok( transaksiIndentExcelcomService.checklist(id));
+    public CommonResponse<Transaksi> checklist(@PathVariable("id") Long id , @RequestBody PembayaranDTO pembayaranDTO){
+        return ResponseHelper.ok( transaksiIndentExcelcomService.checklist(id , pembayaranDTO));
     }
     @GetMapping("/excelcom")
     public CommonResponse <List<TransaksiIndent>> getExcelcom(){
