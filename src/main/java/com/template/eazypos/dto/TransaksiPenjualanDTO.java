@@ -5,7 +5,7 @@ import java.util.List;
 public class TransaksiPenjualanDTO {
 
     private Double totalBelanja;
-    private Double pembayaran;
+    private int pembayaran;
     private Double potongan;
     private Double diskon;
     private Double totalBayarBarang;
@@ -36,11 +36,11 @@ public class TransaksiPenjualanDTO {
         this.totalBelanja = totalBelanja;
     }
 
-    public Double getPembayaran() {
+    public int getPembayaran() {
         return pembayaran;
     }
 
-    public void setPembayaran(Double pembayaran) {
+    public void setPembayaran(int pembayaran) {
         this.pembayaran = pembayaran;
     }
 

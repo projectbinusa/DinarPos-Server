@@ -1,9 +1,13 @@
 package com.template.eazypos.service.eazypos.excel;
 
 import com.template.eazypos.model.Hutang;
+import com.template.eazypos.model.Piutang;
+import com.template.eazypos.model.Transaksi;
 import com.template.eazypos.model.TransaksiBeli;
 import com.template.eazypos.repository.HutangRepository;
+import com.template.eazypos.repository.PiutangRepository;
 import com.template.eazypos.repository.TransaksiBeliRepository;
+import com.template.eazypos.repository.TransaksiRepository;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -22,17 +26,17 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Service
-public class ExcelHutangService {
+public class ExcelPiutangService {
 
     @Autowired
-    private HutangRepository hutangRepository;
+    private PiutangRepository hutangRepository;
 
     @Autowired
-    private TransaksiBeliRepository transaksiBeliRepository;
+    private TransaksiRepository transaksiBeliRepository;
 
-    public void excelBukuHutang(Date tglAwal, Date tglAkhir, HttpServletResponse response) throws IOException {
+    public void excelBukuPiutang(Date tglAwal, Date tglAkhir, HttpServletResponse response) throws IOException {
         Workbook workbook = new XSSFWorkbook();
-        Sheet sheet = workbook.createSheet("BukuHutang");
+        Sheet sheet = workbook.createSheet("BukuPiutang");
 
         // Cell styles
         CellStyle styleHeader = workbook.createCellStyle();
@@ -74,7 +78,7 @@ public class ExcelHutangService {
 
         // Header
         Row headerRow = sheet.createRow(2);
-        String[] headers = {"BULAN" ,"TAHUN","NAMA SUPLIER", "TGL INVOICE", "NO INVOICE","NOMINAL INVOICE","PEMBAYARAN", "SISA HUTANG (Rp)", "UMUR HUTANG (Hari)"};
+        String[] headers = {"BULAN" ,"TAHUN","NAMA CUSTOMER", "TGL INVOICE", "NO INVOICE","NOMINAL INVOICE","PEMBAYARAN", "SISA PIUTANG (Rp)", "UMUR PIUTANG (Hari)"};
         for (int i = 0; i < headers.length; i++) {
             Cell cell = headerRow.createCell(i);
             cell.setCellValue(headers[i]);
@@ -82,31 +86,31 @@ public class ExcelHutangService {
         }
 
         // Data
-        List<Hutang> hutangs = hutangRepository.findByTanggalBetween(tglAwal, tglAkhir);
+        List<Piutang> hutangs = hutangRepository.findByTanggalBetween(tglAwal, tglAkhir);
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         SimpleDateFormat month = new SimpleDateFormat("MM");
         SimpleDateFormat year = new SimpleDateFormat("yyyy");
         int rowNum = 3;
-        double sisaHutang = 0;
+        double sisaPiutang = 0;
         double nominalInvoice = 0;
         double pembayaran = 0;
 
-        for (Hutang hutang : hutangs) {
-            TransaksiBeli transaksiBeli = transaksiBeliRepository.findById(hutang.getTransaksiBeli().getIdTransaksiBeli()).get();
+        for (Piutang hutang : hutangs) {
+            Transaksi transaksiBeli = transaksiBeliRepository.findById(hutang.getTransaksi().getIdTransaksi()).get();
             Row row = sheet.createRow(rowNum++);
             Date now = hutang.getDate();
             row.createCell(0).setCellValue(month.format(now));
             row.createCell(1).setCellValue(year.format(now));
-            row.createCell(2).setCellValue(transaksiBeli.getNamaSuplier());
+            row.createCell(2).setCellValue(transaksiBeli.getNamaCustomer());
             row.createCell(3).setCellValue(dateFormat.format(transaksiBeli.getTanggal()));
             row.createCell(4).setCellValue(transaksiBeli.getNoFaktur());
             row.createCell(5).setCellValue(transaksiBeli.getTotalBelanja());
             row.createCell(6).setCellValue(transaksiBeli.getPembayaran());
-            row.createCell(7).setCellValue(hutang.getHutang());
-            double sisaHutangSementara = Double.parseDouble(hutang.getHutang());
-            double nominalInvoiceSementara = Double.parseDouble(transaksiBeli.getTotalBelanja());
+            row.createCell(7).setCellValue(hutang.getKekurangan());
+            double sisaPiutangSementara = Double.parseDouble(hutang.getKekurangan());
+            double nominalInvoiceSementara = transaksiBeli.getTotalBelanja();
             double pembayaranSementara = transaksiBeli.getPembayaran();
-            sisaHutang += sisaHutangSementara;
+            sisaPiutang += sisaPiutangSementara;
             nominalInvoice += nominalInvoiceSementara;
             pembayaran += pembayaranSementara;
             long tglKembali = Math.abs(new Date().getTime() - hutang.getDate().getTime());
@@ -142,7 +146,7 @@ public class ExcelHutangService {
 
         // Set and style the totals
         Cell totalNominalCell = totalRow.createCell(7);
-        totalNominalCell.setCellValue(sisaHutang);
+        totalNominalCell.setCellValue(sisaPiutang);
         totalNominalCell.setCellStyle(styleNumber);
 
         Cell invoce = totalRow.createCell(5);
@@ -160,14 +164,14 @@ public class ExcelHutangService {
         }
 
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-        response.setHeader("Content-Disposition", "attachment; filename=BukuHutang.xlsx");
+        response.setHeader("Content-Disposition", "attachment; filename=BukuPiutang.xlsx");
         workbook.write(response.getOutputStream());
         workbook.close();
     }
 
-    public void excelRekapHutang(HttpServletResponse response) throws IOException {
+    public void excelRekapPiutang(HttpServletResponse response) throws IOException {
         Workbook workbook = new XSSFWorkbook();
-        Sheet sheet = workbook.createSheet("RekapHutang");
+        Sheet sheet = workbook.createSheet("RekapPiutang");
 
         // Cell styles
         CellStyle styleHeader = workbook.createCellStyle();
@@ -209,7 +213,7 @@ public class ExcelHutangService {
 
         // Header
         Row headerRow = sheet.createRow(2);
-        String[] headers = {"TGL INVOICE", "NO INVOICE", "NAMA SUPLIER", "SISA HUTANG (Rp)", "UMUR HUTANG (Hari)"};
+        String[] headers = {"TGL INVOICE", "NO INVOICE", "NAMA CUSTOMER", "SISA piutang (Rp)", "UMUR piutang (Hari)"};
         for (int i = 0; i < headers.length; i++) {
             Cell cell = headerRow.createCell(i);
             cell.setCellValue(headers[i]);
@@ -217,14 +221,14 @@ public class ExcelHutangService {
         }
 
         // Data
-        List<TransaksiBeli> hutangs = transaksiBeliRepository.findAllHutang();
+        List<Transaksi> hutangs = transaksiBeliRepository.findAllPiutang();
         int rowNum = 3;
         int total = 0;
-        for (TransaksiBeli hutang : hutangs) {
+        for (Transaksi hutang : hutangs) {
             Row row = sheet.createRow(rowNum++);
             row.createCell(0).setCellValue(hutang.getTanggal());
             row.createCell(1).setCellValue(hutang.getNoFaktur());
-            row.createCell(2).setCellValue(hutang.getNamaSuplier());
+            row.createCell(2).setCellValue(hutang.getNamaCustomer());
             row.createCell(3).setCellValue(hutang.getKekurangan());
             long tglKembali = Math.abs(new Date().getTime() - hutang.getTanggal().getTime());
             long convert = TimeUnit.DAYS.convert(tglKembali, TimeUnit.MILLISECONDS);
@@ -269,7 +273,7 @@ public class ExcelHutangService {
         }
 
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-        response.setHeader("Content-Disposition", "attachment; filename=RekapHutang.xlsx");
+        response.setHeader("Content-Disposition", "attachment; filename=RekapPiutang.xlsx");
         workbook.write(response.getOutputStream());
         workbook.close();
     }

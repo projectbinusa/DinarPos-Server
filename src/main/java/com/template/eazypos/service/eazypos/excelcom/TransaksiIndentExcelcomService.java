@@ -1,6 +1,7 @@
 package com.template.eazypos.service.eazypos.excelcom;
 
 import com.template.eazypos.dto.BarangTransaksiDTO;
+import com.template.eazypos.dto.PembayaranDTO;
 import com.template.eazypos.dto.TransaksiPenjualanDTO;
 import com.template.eazypos.exception.BadRequestException;
 import com.template.eazypos.exception.NotFoundException;
@@ -14,6 +15,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TransaksiIndentExcelcomService {
@@ -36,6 +38,24 @@ public class TransaksiIndentExcelcomService {
     private SalesmanRepository markettingRepository;
     @Autowired
     private BarangRepository barangRepository;
+
+    @Autowired
+    OmzetRepository omzetRepository;
+
+    @Autowired
+    private KasHarianRepository kasHarianRepository;
+
+    @Autowired
+    private PiutangRepository piutangRepository;
+
+    @Autowired
+    private PersediaanAwalRepository persediaanAwalRepository;
+
+    @Autowired
+    private StokAwalrepository stokAwalrepository;
+
+    @Autowired
+    private PersediaanRepository persediaanRepository;
 
     public TransaksiIndent addTransaksi(TransaksiPenjualanDTO transaksiDTO) {
         Date now = new Date();
@@ -158,7 +178,7 @@ public class TransaksiIndentExcelcomService {
             return nota;
         }
     }
-    public Transaksi checklist(Long id) {
+    public Transaksi checklist(Long id , PembayaranDTO pembayaranDTO) {
         TransaksiIndent transaksiIndent = transaksiIndentRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Id Not Found"));
         transaksiIndent.setDelFlag(0);
@@ -171,7 +191,7 @@ public class TransaksiIndentExcelcomService {
 
         Transaksi transaksi = new Transaksi();
         transaksi.setTotalBelanja(Double.valueOf(transaksiIndent.getTotalBelanja()));
-        transaksi.setPembayaran(Double.valueOf(transaksiIndent.getPembayaran()));
+        transaksi.setPembayaran(Double.valueOf(pembayaranDTO.getPrembayaran()));
         transaksi.setPotongan(Double.valueOf(transaksiIndent.getPotongan()));
         transaksi.setDiskon(Double.valueOf(transaksiIndent.getDiskon()));
         transaksi.setTotalBayarBarang(Double.valueOf(transaksiIndent.getTotalBayarBarang()));
@@ -186,6 +206,7 @@ public class TransaksiIndentExcelcomService {
         transaksi.setHari120(1);
         transaksi.setNota("1");
         transaksi.setHari365(1);
+        transaksi.setDp(transaksiIndent.getPembayaran());
         transaksi.setKekurangan(transaksiIndent.getKekurangan());
         transaksi.setNoFaktur(transaksiIndent.getNoFaktur());
         transaksi.setKeterangan(transaksiIndent.getKeterangan());
@@ -193,55 +214,55 @@ public class TransaksiIndentExcelcomService {
         transaksi.setSisa(Double.valueOf(transaksiIndent.getSisa()));
         transaksi.setTtlBayarHemat(Double.valueOf(transaksiIndent.getTtlBayarHemat()));
         transaksi.setTanggal(now);
+        transaksi.setDelFlag(1);
 
-        // Set tanggal notifikasi
+        // Set notification dates
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(now);
-        // Tambahkan 7 hari
+
+        // Add 7 days
         calendar.add(Calendar.DAY_OF_MONTH, 7);
         transaksi.setTanggalNotif7(calendar.getTime());
-        // Tambahkan 30 hari
+
+        // Add 30 days
         calendar.setTime(now);
         calendar.add(Calendar.MONTH, 1);
         transaksi.setTanggalNotif30(calendar.getTime());
-        // Tambahkan 90 hari
+
+        // Add 90 days
         calendar.setTime(now);
         calendar.add(Calendar.MONTH, 3);
         transaksi.setTanggalNotif90(calendar.getTime());
-        // Tambahkan 120 hari
+
+        // Add 120 days
         calendar.setTime(now);
         calendar.add(Calendar.MONTH, 4);
         transaksi.setTanggalNotif120(calendar.getTime());
-        // Tambahkan 365 hari
+
+        // Add 365 days
         calendar.setTime(now);
         calendar.add(Calendar.YEAR, 1);
         transaksi.setTanggalNotif365(calendar.getTime());
-        transaksi.setDelFlag(1);
+
         Transaksi savedTransaksi = transaksiRepository.save(transaksi);
 
-        // Mengambil daftar barang dari BarangTransaksiIndent berdasarkan ID transaksi indent
+
+        // Handle Produk details
         List<BarangTransaksiIndent> listProduk = barangTransaksiIndentRepository.findByTransaksiIndentId(id);
-        for (BarangTransaksiIndent barangIndent : listProduk) {
-            Barang barang = barangRepository.findByBarcode(barangIndent.getBarcodeBarang());
-            if (barang == null) {
-                throw new NotFoundException("Barang dengan barcode '" + barangIndent.getBarcodeBarang() + "' tidak ditemukan");
-            }
-
-            int sisaStok = barang.getJumlahStok() - barangIndent.getQty();
-            if (sisaStok < 0) {
-                throw new BadRequestException("Stok Barang '" + barang.getNamaBarang() + "' Habis");
-            }
-
-            // Membuat barang transaksi
+        for (BarangTransaksiIndent  barangDTO : listProduk) {
             BarangTransaksi barangTransaksi = new BarangTransaksi();
             barangTransaksi.setTransaksi(savedTransaksi);
-            barangTransaksi.setBarcodeBarang(barangIndent.getBarcodeBarang());
-            barangTransaksi.setQty(barangIndent.getQty());
-            barangTransaksi.setDiskon(barangIndent.getDiskon());
-            barangTransaksi.setHargaBrng(barangIndent.getHargaBrng());
-            barangTransaksi.setTotalHarga(barangIndent.getTotalHarga());
+            barangTransaksi.setBarcodeBarang(barangDTO.getBarcodeBarang());
+            barangTransaksi.setQty(barangDTO.getQty());
+            barangTransaksi.setDiskon(barangDTO.getDiskon());
+            barangTransaksi.setHargaBrng(barangDTO.getHargaBrng());
+            barangTransaksi.setTotalHarga(barangDTO.getTotalHarga());
+            Barang barang = barangRepository.findByBarcode(barangDTO.getBarcodeBarang());
+            if (barang == null) {
+                throw new BadRequestException("Barang Tidak Ada");
+            }
             barangTransaksi.setUnit(barang.getUnit());
-            barangTransaksi.setTotalHargaBarang(barangIndent.getTotalHargaBarang());
+            barangTransaksi.setTotalHargaBarang(barangDTO.getTotalHargaBarang());
             barangTransaksi.setNamaBarang(barang.getNamaBarang());
             barangTransaksi.setTanggal(now);
             barangTransaksi.setHari7(1);
@@ -250,16 +271,132 @@ public class TransaksiIndentExcelcomService {
             barangTransaksi.setHari120(1);
             barangTransaksi.setHari367(1);
             barangTransaksi.setDelFlag(1);
-            barangTransaksi.setHemat(String.valueOf(barangIndent.getHemat()));
-            barangTransaksi.setStatus(barangIndent.getStatus());
+            barangTransaksi.setHemat(String.valueOf(barangDTO.getHemat()));
+            barangTransaksi.setStatus(transaksiIndent.getStatus());
             barangTransaksiRepository.save(barangTransaksi);
 
-            // Mengurangi stok barang
+            // Update stock
+            int sisaStok = barang.getJumlahStok() - barangDTO.getQty();
+            if (sisaStok < 0) {
+                throw new BadRequestException("Stok Barang Habis");
+            }
+            StokAwal stokAwal = new StokAwal();
+            stokAwal.setQty(String.valueOf(barangDTO.getQty()));
+            stokAwal.setBarcodeBarang(barangDTO.getBarcodeBarang());
+            stokAwal.setTanggal(new Date());
             barang.setJumlahStok(sisaStok);
             barangRepository.save(barang);
+            stokAwalrepository.save(stokAwal);
         }
-        return transaksi;
+
+        // Update Kas Harian
+        String cash = transaksiIndent.getCashKredit();
+        int pembayaran = Integer.parseInt(transaksiIndent.getPembayaran());
+        int kekurangan = Integer.parseInt(transaksiIndent.getKekurangan());
+        int penjualan = pembayaran + kekurangan;
+
+        KasHarian kasHarian = new KasHarian();
+        kasHarian.setTransaksi(savedTransaksi);
+        kasHarian.setPenjualan(String.valueOf(pembayaran));
+        kasHarian.setTimestamp(new Date());
+
+        if (cash.equals("Cash Uang")) {
+            kasHarian.setPenjualan(String.valueOf(pembayaran));
+        } else if (cash.equals("Cash Bank")) {
+            kasHarian.setPenjualan(String.valueOf(pembayaran));
+            kasHarian.setBank(String.valueOf(pembayaran));
+        } else {
+            kasHarian.setPenjualan(String.valueOf(penjualan));
+            kasHarian.setPiutang(String.valueOf(kekurangan));
+
+            Piutang piutang = new Piutang();
+            piutang.setTransaksi(savedTransaksi);
+            piutang.setDate(now);
+            piutang.setKekurangan(String.valueOf(kekurangan));
+            piutangRepository.save(piutang);
+        }
+        kasHarianRepository.save(kasHarian);
+
+        // Update Omzet
+        Omzet omzet = new Omzet();
+        omzet.setOmzet(Double.valueOf(transaksiIndent.getTotalBelanja()));
+        omzet.setTransaksi(transaksiRepository.findById(savedTransaksi.getIdTransaksi()).get());
+        omzet.setNmCustomer(customer.getNama_customer());
+        omzet.setSalesman(transaksiIndent.getSalesman());
+        omzet.setTgl(now);
+        omzetRepository.save(omzet);
+
+        // Insert into Persediaan Awal
+        PersediaanAwal persediaanAwal = new PersediaanAwal();
+        persediaanAwal.setTransaksi(transaksiRepository.findById(savedTransaksi.getIdTransaksi()).get());
+        persediaanAwal.setNominal(String.valueOf(transaksiIndent.getTotalBelanja()));
+        persediaanAwal.setTanggal(new Date());
+
+        persediaanAwalRepository.save(persediaanAwal);
+
+        // Update Penjualan Tabel Persediaan
+        updatePenjualanTabelPersediaan(now);
+
+        return savedTransaksi;
     }
+
+
+    // Method to update Penjualan Tabel Persediaan
+    private void updatePenjualanTabelPersediaan(Date date) {
+
+        // Retrieve the persediaan entry for the given date
+        Optional<Persediaan> persediaanOpt = persediaanRepository.findByDate(date);
+
+        // Calculate the total penjualan
+        List<PersediaanAwal> totalPenjualanList = persediaanAwalRepository.findByTanggal(date);
+        int totalPenjualan = totalPenjualanList.stream()
+                .mapToInt(pa -> {
+                    try {
+                        return Integer.parseInt((pa.getNominal()));
+                    } catch (NumberFormatException e) {
+                        // Handle the error, e.g., log it and return 0
+                        System.err.println("Invalid nominal value: " + pa.getNominal());
+                        return 0;
+                    }
+                })
+                .sum();
+
+        if (persediaanOpt.isPresent()) {
+            Persediaan persediaan = persediaanOpt.get();
+            persediaan.setPenjualan(String.valueOf(totalPenjualan));
+            int barangSiapJual = Integer.parseInt(persediaan.getBarangSiapJual());
+            int persediaanAkhir = barangSiapJual - totalPenjualan;
+            persediaan.setPersediaanAkhir(String.valueOf(persediaanAkhir));
+
+            persediaanRepository.save(persediaan);
+        } else {
+            // Assuming persediaanService is autowired
+            int persediaanAwal =  persediaanAkhirToAwal(date);
+
+            Persediaan newPersediaan = new Persediaan();
+            newPersediaan.setPersediaanAwal(String.valueOf(persediaanAwal));
+            newPersediaan.setBarangSiapJual(String.valueOf(persediaanAwal));
+            newPersediaan.setPenjualan(String.valueOf(totalPenjualan));
+            int akhir = persediaanAwal - totalPenjualan;
+            newPersediaan.setPersediaanAkhir(String.valueOf(akhir));
+            newPersediaan.setDate(new Date());
+
+            persediaanRepository.save(newPersediaan);
+        }
+    }
+
+
+    public int persediaanAkhirToAwal(Date date) {
+        Optional<Persediaan> persediaanOpt = persediaanRepository.findLastBeforeDate(date);
+
+        if (persediaanOpt.isPresent()) {
+            Persediaan persediaan = persediaanOpt.get();
+            return Integer.parseInt(persediaan.getPersediaanAkhir());
+        } else {
+            return 0;
+        }
+    }
+
     public List<TransaksiIndent> getTransaksiIndentExcelcom(){
         return transaksiIndentRepository.findTransaksiExcelcom();
     }
