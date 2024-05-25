@@ -178,7 +178,7 @@ public class TransaksiIndentExcelcomService {
             return nota;
         }
     }
-    public Transaksi checklist(Long id , PembayaranDTO pembayaranDTO) {
+    public Transaksi checklist(Long id, PembayaranDTO pembayaranDTO) {
         TransaksiIndent transaksiIndent = transaksiIndentRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Id Not Found"));
         transaksiIndent.setDelFlag(0);
@@ -190,11 +190,11 @@ public class TransaksiIndentExcelcomService {
                 .orElseThrow(() -> new NotFoundException("Salesman not found"));
 
         Transaksi transaksi = new Transaksi();
-        transaksi.setTotalBelanja(Double.valueOf(transaksiIndent.getTotalBelanja()));
-        transaksi.setPembayaran(Double.valueOf(pembayaranDTO.getPrembayaran()));
-        transaksi.setPotongan(Double.valueOf(transaksiIndent.getPotongan()));
-        transaksi.setDiskon(Double.valueOf(transaksiIndent.getDiskon()));
-        transaksi.setTotalBayarBarang(Double.valueOf(transaksiIndent.getTotalBayarBarang()));
+        transaksi.setTotalBelanja(transaksiIndent.getTotalBelanja() != null ? Double.valueOf(transaksiIndent.getTotalBelanja()) : 0.0);
+        transaksi.setPembayaran(pembayaranDTO.getPrembayaran() != null ? Double.valueOf(pembayaranDTO.getPrembayaran()) : 0.0);
+        transaksi.setPotongan(transaksiIndent.getPotongan() != null ? Double.valueOf(transaksiIndent.getPotongan()) : 0.0);
+        transaksi.setDiskon(transaksiIndent.getDiskon() != null ? Double.valueOf(transaksiIndent.getDiskon()) : 0.0);
+        transaksi.setTotalBayarBarang(transaksiIndent.getTotalBayarBarang() != null ? Double.valueOf(transaksiIndent.getTotalBayarBarang()) : 0.0);
         transaksi.setCustomer(customer);
         transaksi.setSalesman(salesman);
         transaksi.setNamaSalesman(salesman.getNamaSalesman());
@@ -207,12 +207,12 @@ public class TransaksiIndentExcelcomService {
         transaksi.setNota("1");
         transaksi.setHari365(1);
         transaksi.setDp(transaksiIndent.getPembayaran());
-        transaksi.setKekurangan(transaksiIndent.getKekurangan());
+        transaksi.setKekurangan(pembayaranDTO.getPrembayaran());
         transaksi.setNoFaktur(transaksiIndent.getNoFaktur());
         transaksi.setKeterangan(transaksiIndent.getKeterangan());
         transaksi.setCashKredit(transaksiIndent.getCashKredit());
-        transaksi.setSisa(Double.valueOf(transaksiIndent.getSisa()));
-        transaksi.setTtlBayarHemat(Double.valueOf(transaksiIndent.getTtlBayarHemat()));
+        transaksi.setSisa(transaksiIndent.getSisa() != null ? Double.valueOf(transaksiIndent.getSisa()) : 0.0);
+        transaksi.setTtlBayarHemat(transaksiIndent.getTtlBayarHemat() != null ? Double.valueOf(transaksiIndent.getTtlBayarHemat()) : 0.0);
         transaksi.setTanggal(now);
         transaksi.setDelFlag(1);
 
@@ -246,10 +246,9 @@ public class TransaksiIndentExcelcomService {
 
         Transaksi savedTransaksi = transaksiRepository.save(transaksi);
 
-
         // Handle Produk details
         List<BarangTransaksiIndent> listProduk = barangTransaksiIndentRepository.findByTransaksiIndentId(id);
-        for (BarangTransaksiIndent  barangDTO : listProduk) {
+        for (BarangTransaksiIndent barangDTO : listProduk) {
             BarangTransaksi barangTransaksi = new BarangTransaksi();
             barangTransaksi.setTransaksi(savedTransaksi);
             barangTransaksi.setBarcodeBarang(barangDTO.getBarcodeBarang());
@@ -291,8 +290,8 @@ public class TransaksiIndentExcelcomService {
 
         // Update Kas Harian
         String cash = transaksiIndent.getCashKredit();
-        int pembayaran = Integer.parseInt(transaksiIndent.getPembayaran());
-        int kekurangan = Integer.parseInt(transaksiIndent.getKekurangan());
+        int pembayaran = transaksiIndent.getPembayaran() != null ? Integer.parseInt(transaksiIndent.getPembayaran()) : 0;
+        int kekurangan = transaksiIndent.getKekurangan() != null ? Integer.parseInt(transaksiIndent.getKekurangan()) : 0;
         int penjualan = pembayaran + kekurangan;
 
         KasHarian kasHarian = new KasHarian();
@@ -300,9 +299,9 @@ public class TransaksiIndentExcelcomService {
         kasHarian.setPenjualan(String.valueOf(pembayaran));
         kasHarian.setTimestamp(new Date());
 
-        if (cash.equals("Cash Uang")) {
+        if ("Cash Uang".equals(cash)) {
             kasHarian.setPenjualan(String.valueOf(pembayaran));
-        } else if (cash.equals("Cash Bank")) {
+        } else if ("Cash Bank".equals(cash)) {
             kasHarian.setPenjualan(String.valueOf(pembayaran));
             kasHarian.setBank(String.valueOf(pembayaran));
         } else {
@@ -319,7 +318,7 @@ public class TransaksiIndentExcelcomService {
 
         // Update Omzet
         Omzet omzet = new Omzet();
-        omzet.setOmzet(Double.valueOf(transaksiIndent.getTotalBelanja()));
+        omzet.setOmzet(transaksiIndent.getTotalBelanja() != null ? Double.valueOf(transaksiIndent.getTotalBelanja()) : 0.0);
         omzet.setTransaksi(transaksiRepository.findById(savedTransaksi.getIdTransaksi()).get());
         omzet.setNmCustomer(customer.getNama_customer());
         omzet.setSalesman(transaksiIndent.getSalesman());
@@ -329,7 +328,7 @@ public class TransaksiIndentExcelcomService {
         // Insert into Persediaan Awal
         PersediaanAwal persediaanAwal = new PersediaanAwal();
         persediaanAwal.setTransaksi(transaksiRepository.findById(savedTransaksi.getIdTransaksi()).get());
-        persediaanAwal.setNominal(String.valueOf(transaksiIndent.getTotalBelanja()));
+        persediaanAwal.setNominal(transaksiIndent.getTotalBelanja() != null ? String.valueOf(transaksiIndent.getTotalBelanja()) : "0");
         persediaanAwal.setTanggal(new Date());
 
         persediaanAwalRepository.save(persediaanAwal);
@@ -339,6 +338,7 @@ public class TransaksiIndentExcelcomService {
 
         return savedTransaksi;
     }
+
 
 
     // Method to update Penjualan Tabel Persediaan
