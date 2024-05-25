@@ -342,7 +342,7 @@ public class TransaksiIndentExcelcomService {
     // Method to update Penjualan Tabel Persediaan
     private void updatePenjualanTabelPersediaan(Date date) {
         // Retrieve the persediaan entry for the given date
-        Optional<Persediaan> persediaanOpt = persediaanRepository.findByDate(date);
+        List<Persediaan> persediaanOpt = persediaanRepository.findByDate(date);
 
         // Calculate the total penjualan
         List<PersediaanAwal> totalPenjualanList = persediaanAwalRepository.findByTanggal(date);
@@ -358,8 +358,8 @@ public class TransaksiIndentExcelcomService {
                 })
                 .sum();
 
-        if (persediaanOpt.isPresent()) {
-            Persediaan persediaan = persediaanOpt.get();
+        if (!persediaanOpt.isEmpty()) {
+            Persediaan persediaan = persediaanOpt.get(0);
             persediaan.setPenjualan(String.valueOf(totalPenjualan));
             int barangSiapJual = Integer.parseInt(persediaan.getBarangSiapJual());
             int persediaanAkhir = barangSiapJual - (int) totalPenjualan;
@@ -383,10 +383,11 @@ public class TransaksiIndentExcelcomService {
     }
 
     public int persediaanAkhirToAwal(Date date) {
-        Optional<Persediaan> persediaanOpt = persediaanRepository.findLastBeforeDate(date);
+        List<Persediaan> persediaanList = persediaanRepository.findLastBeforeDate(date);
 
-        if (persediaanOpt.isPresent()) {
-            Persediaan persediaan = persediaanOpt.get();
+        if (!persediaanList.isEmpty()) {
+            // Choose the first record if multiple exist
+            Persediaan persediaan = persediaanList.get(0);
             return (int) Double.parseDouble(persediaan.getPersediaanAkhir());
         } else {
             return 0;
