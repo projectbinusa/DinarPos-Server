@@ -190,11 +190,12 @@ public class TransaksiIndentExcelcomService {
                 .orElseThrow(() -> new NotFoundException("Salesman not found"));
 
         Transaksi transaksi = new Transaksi();
-        transaksi.setTotalBelanja(Double.parseDouble(transaksiIndent.getTotalBelanja()));
-        transaksi.setPembayaran(Double.valueOf(pembayaranDTO.getPrembayaran()));
-        transaksi.setPotongan(Double.parseDouble(transaksiIndent.getPotongan()));
-        transaksi.setDiskon(Double.parseDouble(transaksiIndent.getDiskon()));
-        transaksi.setTotalBayarBarang(Double.parseDouble(transaksiIndent.getTotalBayarBarang()));
+        int dp = Integer.parseInt(transaksiIndent.getPembayaran()) + pembayaranDTO.getPrembayaran();
+        transaksi.setTotalBelanja(parseDouble(transaksiIndent.getTotalBelanja()));
+        transaksi.setPembayaran((double) dp);
+        transaksi.setPotongan(parseDouble(transaksiIndent.getPotongan()));
+        transaksi.setDiskon(parseDouble(transaksiIndent.getDiskon()));
+        transaksi.setTotalBayarBarang(parseDouble(transaksiIndent.getTotalBayarBarang()));
         transaksi.setCustomer(customer);
         transaksi.setSalesman(salesman);
         transaksi.setNamaSalesman(salesman.getNamaSalesman());
@@ -211,8 +212,8 @@ public class TransaksiIndentExcelcomService {
         transaksi.setNoFaktur(transaksiIndent.getNoFaktur());
         transaksi.setKeterangan(transaksiIndent.getKeterangan());
         transaksi.setCashKredit(transaksiIndent.getCashKredit());
-        transaksi.setSisa(Double.parseDouble(transaksiIndent.getSisa()));
-        transaksi.setTtlBayarHemat(Double.parseDouble(transaksiIndent.getTtlBayarHemat()));
+        transaksi.setSisa(parseDouble(transaksiIndent.getSisa()));
+        transaksi.setTtlBayarHemat(parseDouble(transaksiIndent.getTtlBayarHemat()));
         transaksi.setTanggal(now);
         transaksi.setDelFlag(1);
 
@@ -270,7 +271,7 @@ public class TransaksiIndentExcelcomService {
             barangTransaksi.setHari120(1);
             barangTransaksi.setHari367(1);
             barangTransaksi.setDelFlag(1);
-            barangTransaksi.setHemat(String.valueOf(Double.parseDouble(barangDTO.getHemat())));
+            barangTransaksi.setHemat(parseDoubleString(barangDTO.getHemat()));
             barangTransaksi.setStatus(transaksiIndent.getStatus());
             barangTransaksiRepository.save(barangTransaksi);
 
@@ -290,8 +291,8 @@ public class TransaksiIndentExcelcomService {
 
         // Update Kas Harian
         String cash = transaksiIndent.getCashKredit();
-        double pembayaran = Double.parseDouble(transaksiIndent.getPembayaran());
-        double kekurangan = Double.parseDouble(transaksiIndent.getKekurangan());
+        double pembayaran = parseDouble(transaksiIndent.getPembayaran());
+        double kekurangan = parseDouble(transaksiIndent.getKekurangan());
         double penjualan = pembayaran + kekurangan;
 
         KasHarian kasHarian = new KasHarian();
@@ -318,7 +319,7 @@ public class TransaksiIndentExcelcomService {
 
         // Update Omzet
         Omzet omzet = new Omzet();
-        omzet.setOmzet(Double.parseDouble(transaksiIndent.getTotalBelanja()));
+        omzet.setOmzet(parseDouble(transaksiIndent.getTotalBelanja()));
         omzet.setTransaksi(transaksiRepository.findById(savedTransaksi.getIdTransaksi()).get());
         omzet.setNmCustomer(customer.getNama_customer());
         omzet.setSalesman(transaksiIndent.getSalesman());
@@ -337,6 +338,24 @@ public class TransaksiIndentExcelcomService {
         updatePenjualanTabelPersediaan(now);
 
         return savedTransaksi;
+    }
+
+    // Method to parse double safely
+    private double parseDouble(String value) {
+        try {
+            return value != null ? Double.parseDouble(value) : 0.0;
+        } catch (NumberFormatException e) {
+            return 0.0;
+        }
+    }
+
+    // Method to parse double to string safely
+    private String parseDoubleString(String value) {
+        try {
+            return value != null ? String.valueOf(Double.parseDouble(value)) : "0";
+        } catch (NumberFormatException e) {
+            return "0";
+        }
     }
 
     // Method to update Penjualan Tabel Persediaan
@@ -388,11 +407,12 @@ public class TransaksiIndentExcelcomService {
         if (!persediaanList.isEmpty()) {
             // Choose the first record if multiple exist
             Persediaan persediaan = persediaanList.get(0);
-            return (int) Double.parseDouble(persediaan.getPersediaanAkhir());
+            return (int) parseDouble(persediaan.getPersediaanAkhir());
         } else {
             return 0;
         }
     }
+
 
 
     public List<TransaksiIndent> getTransaksiIndentExcelcom(){
