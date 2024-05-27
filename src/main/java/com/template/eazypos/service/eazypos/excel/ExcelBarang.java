@@ -57,6 +57,7 @@ public class ExcelBarang {
                 row.createCell(4).setCellValue(barang.getHargaBeli());
                 row.createCell(5).setCellValue(barang.getHargaBarang());
                 row.createCell(6).setCellValue(barang.getJumlahStok());
+                no++;
             }
             workbook.write(out);
             return new ByteArrayInputStream(out.toByteArray());

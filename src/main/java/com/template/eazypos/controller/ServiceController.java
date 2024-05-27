@@ -1,6 +1,7 @@
 package com.template.eazypos.controller;
 
 import com.template.eazypos.dto.AddServiceDTO;
+import com.template.eazypos.dto.TakeOverDTO;
 import com.template.eazypos.dto.TakenServiceDTO;
 import com.template.eazypos.exception.CommonResponse;
 import com.template.eazypos.exception.ResponseHelper;
@@ -32,6 +33,10 @@ public class ServiceController {
     @GetMapping("/{id}")
     public CommonResponse<ServiceBarang> getById(@PathVariable("id") Long id) {
         return ResponseHelper.ok(dataService.getById(id));
+    }
+    @PostMapping("/take_over")
+    public CommonResponse<ServiceBarang> add(@RequestBody TakeOverDTO takeOverDTO) {
+        return ResponseHelper.ok(dataService.takeOver(takeOverDTO));
     }
     @GetMapping
     public CommonResponse<List<ServiceBarang>> getAll() {

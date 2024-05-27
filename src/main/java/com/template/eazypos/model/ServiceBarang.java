@@ -16,7 +16,7 @@ public class ServiceBarang extends DateConfig {
     private Long idTT;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
-    @JoinColumn(name = "id_teknisi", nullable = false, updatable = false)
+    @JoinColumn(name = "id_teknisi", nullable = false)
     private Teknisi teknisi;
 
     @Column(name = "checker", nullable = false, length = 255)
