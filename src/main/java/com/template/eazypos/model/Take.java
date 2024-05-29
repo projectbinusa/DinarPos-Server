@@ -19,11 +19,13 @@ public class Take extends DateConfig {
     @JoinColumn(name = "id_tt", nullable = false, updatable = false)
     private ServiceBarang service;
 
-    @Column(name = "id_teknisi", nullable = false, length = 10)
-    private String idTeknisi;
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @JoinColumn(name = "id_teknisi", nullable = false, updatable = false)
+    private Teknisi id_tekinisi;
 
-    @Column(name = "id_take", nullable = false, length = 10)
-    private String idTake;
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @JoinColumn(name = "id_take", nullable = false, updatable = false)
+    private Teknisi id_take;
 
     public Long getId() {
         return id;
@@ -50,19 +52,19 @@ public class Take extends DateConfig {
         this.service = service;
     }
 
-    public String getIdTeknisi() {
-        return idTeknisi;
+    public Teknisi getId_tekinisi() {
+        return id_tekinisi;
     }
 
-    public void setIdTeknisi(String idTeknisi) {
-        this.idTeknisi = idTeknisi;
+    public void setId_tekinisi(Teknisi id_tekinisi) {
+        this.id_tekinisi = id_tekinisi;
     }
 
-    public String getIdTake() {
-        return idTake;
+    public Teknisi getId_take() {
+        return id_take;
     }
 
-    public void setIdTake(String idTake) {
-        this.idTake = idTake;
+    public void setId_take(Teknisi id_take) {
+        this.id_take = id_take;
     }
 }

@@ -6,12 +6,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 public interface PersediaanRepository extends JpaRepository<Persediaan, Long> {
-    @Query("SELECT p FROM Persediaan p WHERE p.date = :date")
-    Optional<Persediaan> findByDate(@Param("date") Date date);
+    List<Persediaan> findByDate(Date date);
 
     @Query("SELECT p FROM Persediaan p WHERE p.date < :date ORDER BY p.date DESC")
-    Optional<Persediaan> findLastBeforeDate(@Param("date") Date date);
+    List<Persediaan> findLastBeforeDate(@Param("date") Date date);
 }

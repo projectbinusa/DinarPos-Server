@@ -1,13 +1,13 @@
 package com.template.eazypos.dto;
 
 public class PembayaranDTO {
-    public  String prembayaran;
+    public  int prembayaran;
 
-    public String getPrembayaran() {
+    public int getPrembayaran() {
         return prembayaran;
     }
 
-    public void setPrembayaran(String prembayaran) {
+    public void setPrembayaran(int prembayaran) {
         this.prembayaran = prembayaran;
     }
 }

@@ -190,11 +190,12 @@ public class TransaksiIndentExcelcomService {
                 .orElseThrow(() -> new NotFoundException("Salesman not found"));
 
         Transaksi transaksi = new Transaksi();
-        transaksi.setTotalBelanja(transaksiIndent.getTotalBelanja() != null ? Double.valueOf(transaksiIndent.getTotalBelanja()) : 0.0);
-        transaksi.setPembayaran(pembayaranDTO.getPrembayaran() != null ? Double.valueOf(pembayaranDTO.getPrembayaran()) : 0.0);
-        transaksi.setPotongan(transaksiIndent.getPotongan() != null ? Double.valueOf(transaksiIndent.getPotongan()) : 0.0);
-        transaksi.setDiskon(transaksiIndent.getDiskon() != null ? Double.valueOf(transaksiIndent.getDiskon()) : 0.0);
-        transaksi.setTotalBayarBarang(transaksiIndent.getTotalBayarBarang() != null ? Double.valueOf(transaksiIndent.getTotalBayarBarang()) : 0.0);
+        int dp = Integer.parseInt(transaksiIndent.getPembayaran()) + pembayaranDTO.getPrembayaran();
+        transaksi.setTotalBelanja(parseDouble(transaksiIndent.getTotalBelanja()));
+        transaksi.setPembayaran((double) dp);
+        transaksi.setPotongan(parseDouble(transaksiIndent.getPotongan()));
+        transaksi.setDiskon(parseDouble(transaksiIndent.getDiskon()));
+        transaksi.setTotalBayarBarang(parseDouble(transaksiIndent.getTotalBayarBarang()));
         transaksi.setCustomer(customer);
         transaksi.setSalesman(salesman);
         transaksi.setNamaSalesman(salesman.getNamaSalesman());
@@ -207,12 +208,12 @@ public class TransaksiIndentExcelcomService {
         transaksi.setNota("1");
         transaksi.setHari365(1);
         transaksi.setDp(transaksiIndent.getPembayaran());
-        transaksi.setKekurangan(pembayaranDTO.getPrembayaran());
+        transaksi.setKekurangan("0");
         transaksi.setNoFaktur(transaksiIndent.getNoFaktur());
         transaksi.setKeterangan(transaksiIndent.getKeterangan());
         transaksi.setCashKredit(transaksiIndent.getCashKredit());
-        transaksi.setSisa(transaksiIndent.getSisa() != null ? Double.valueOf(transaksiIndent.getSisa()) : 0.0);
-        transaksi.setTtlBayarHemat(transaksiIndent.getTtlBayarHemat() != null ? Double.valueOf(transaksiIndent.getTtlBayarHemat()) : 0.0);
+        transaksi.setSisa(parseDouble(transaksiIndent.getSisa()));
+        transaksi.setTtlBayarHemat(parseDouble(transaksiIndent.getTtlBayarHemat()));
         transaksi.setTanggal(now);
         transaksi.setDelFlag(1);
 
@@ -270,7 +271,7 @@ public class TransaksiIndentExcelcomService {
             barangTransaksi.setHari120(1);
             barangTransaksi.setHari367(1);
             barangTransaksi.setDelFlag(1);
-            barangTransaksi.setHemat(String.valueOf(barangDTO.getHemat()));
+            barangTransaksi.setHemat(parseDoubleString(barangDTO.getHemat()));
             barangTransaksi.setStatus(transaksiIndent.getStatus());
             barangTransaksiRepository.save(barangTransaksi);
 
@@ -290,9 +291,9 @@ public class TransaksiIndentExcelcomService {
 
         // Update Kas Harian
         String cash = transaksiIndent.getCashKredit();
-        int pembayaran = transaksiIndent.getPembayaran() != null ? Integer.parseInt(transaksiIndent.getPembayaran()) : 0;
-        int kekurangan = transaksiIndent.getKekurangan() != null ? Integer.parseInt(transaksiIndent.getKekurangan()) : 0;
-        int penjualan = pembayaran + kekurangan;
+        double pembayaran = parseDouble(transaksiIndent.getPembayaran());
+        double kekurangan = parseDouble(transaksiIndent.getKekurangan());
+        double penjualan = pembayaran + kekurangan;
 
         KasHarian kasHarian = new KasHarian();
         kasHarian.setTransaksi(savedTransaksi);
@@ -318,7 +319,7 @@ public class TransaksiIndentExcelcomService {
 
         // Update Omzet
         Omzet omzet = new Omzet();
-        omzet.setOmzet(transaksiIndent.getTotalBelanja() != null ? Double.valueOf(transaksiIndent.getTotalBelanja()) : 0.0);
+        omzet.setOmzet(parseDouble(transaksiIndent.getTotalBelanja()));
         omzet.setTransaksi(transaksiRepository.findById(savedTransaksi.getIdTransaksi()).get());
         omzet.setNmCustomer(customer.getNama_customer());
         omzet.setSalesman(transaksiIndent.getSalesman());
@@ -328,7 +329,7 @@ public class TransaksiIndentExcelcomService {
         // Insert into Persediaan Awal
         PersediaanAwal persediaanAwal = new PersediaanAwal();
         persediaanAwal.setTransaksi(transaksiRepository.findById(savedTransaksi.getIdTransaksi()).get());
-        persediaanAwal.setNominal(transaksiIndent.getTotalBelanja() != null ? String.valueOf(transaksiIndent.getTotalBelanja()) : "0");
+        persediaanAwal.setNominal(String.valueOf(transaksiIndent.getTotalBelanja()));
         persediaanAwal.setTanggal(new Date());
 
         persediaanAwalRepository.save(persediaanAwal);
@@ -339,20 +340,35 @@ public class TransaksiIndentExcelcomService {
         return savedTransaksi;
     }
 
+    // Method to parse double safely
+    private double parseDouble(String value) {
+        try {
+            return value != null ? Double.parseDouble(value) : 0.0;
+        } catch (NumberFormatException e) {
+            return 0.0;
+        }
+    }
 
+    // Method to parse double to string safely
+    private String parseDoubleString(String value) {
+        try {
+            return value != null ? String.valueOf(Double.parseDouble(value)) : "0";
+        } catch (NumberFormatException e) {
+            return "0";
+        }
+    }
 
     // Method to update Penjualan Tabel Persediaan
     private void updatePenjualanTabelPersediaan(Date date) {
-
         // Retrieve the persediaan entry for the given date
-        Optional<Persediaan> persediaanOpt = persediaanRepository.findByDate(date);
+        List<Persediaan> persediaanOpt = persediaanRepository.findByDate(date);
 
         // Calculate the total penjualan
         List<PersediaanAwal> totalPenjualanList = persediaanAwalRepository.findByTanggal(date);
-        int totalPenjualan = totalPenjualanList.stream()
-                .mapToInt(pa -> {
+        double totalPenjualan = totalPenjualanList.stream()
+                .mapToDouble(pa -> {
                     try {
-                        return Integer.parseInt((pa.getNominal()));
+                        return Double.parseDouble(pa.getNominal());
                     } catch (NumberFormatException e) {
                         // Handle the error, e.g., log it and return 0
                         System.err.println("Invalid nominal value: " + pa.getNominal());
@@ -361,23 +377,23 @@ public class TransaksiIndentExcelcomService {
                 })
                 .sum();
 
-        if (persediaanOpt.isPresent()) {
-            Persediaan persediaan = persediaanOpt.get();
+        if (!persediaanOpt.isEmpty()) {
+            Persediaan persediaan = persediaanOpt.get(0);
             persediaan.setPenjualan(String.valueOf(totalPenjualan));
             int barangSiapJual = Integer.parseInt(persediaan.getBarangSiapJual());
-            int persediaanAkhir = barangSiapJual - totalPenjualan;
+            int persediaanAkhir = barangSiapJual - (int) totalPenjualan;
             persediaan.setPersediaanAkhir(String.valueOf(persediaanAkhir));
 
             persediaanRepository.save(persediaan);
         } else {
             // Assuming persediaanService is autowired
-            int persediaanAwal =  persediaanAkhirToAwal(date);
+            int persediaanAwal = persediaanAkhirToAwal(date);
 
             Persediaan newPersediaan = new Persediaan();
             newPersediaan.setPersediaanAwal(String.valueOf(persediaanAwal));
             newPersediaan.setBarangSiapJual(String.valueOf(persediaanAwal));
             newPersediaan.setPenjualan(String.valueOf(totalPenjualan));
-            int akhir = persediaanAwal - totalPenjualan;
+            int akhir = persediaanAwal - (int) totalPenjualan;
             newPersediaan.setPersediaanAkhir(String.valueOf(akhir));
             newPersediaan.setDate(new Date());
 
@@ -385,17 +401,19 @@ public class TransaksiIndentExcelcomService {
         }
     }
 
-
     public int persediaanAkhirToAwal(Date date) {
-        Optional<Persediaan> persediaanOpt = persediaanRepository.findLastBeforeDate(date);
+        List<Persediaan> persediaanList = persediaanRepository.findLastBeforeDate(date);
 
-        if (persediaanOpt.isPresent()) {
-            Persediaan persediaan = persediaanOpt.get();
-            return Integer.parseInt(persediaan.getPersediaanAkhir());
+        if (!persediaanList.isEmpty()) {
+            // Choose the first record if multiple exist
+            Persediaan persediaan = persediaanList.get(0);
+            return (int) parseDouble(persediaan.getPersediaanAkhir());
         } else {
             return 0;
         }
     }
+
+
 
     public List<TransaksiIndent> getTransaksiIndentExcelcom(){
         return transaksiIndentRepository.findTransaksiExcelcom();
