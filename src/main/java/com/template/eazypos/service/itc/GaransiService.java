@@ -1,6 +1,7 @@
 package com.template.eazypos.service.itc;
 
 import com.template.eazypos.dto.GaransiDTO;
+import com.template.eazypos.dto.TglJadiGaransiDTO;
 import com.template.eazypos.exception.NotFoundException;
 import com.template.eazypos.model.Garansi;
 import com.template.eazypos.repository.GaransiRepository;
@@ -28,8 +29,13 @@ public class GaransiService {
         garansi.setKerusakan(garansiDTO.getKerusakan());
         garansi.setMasukKe(garansiDTO.getMasukKe());
         garansi.setTanggalMasuk(garansiDTO.getTanggalMasuk());
-        garansi.setTanggalJadi(garansiDTO.getTanggalJadi());
         garansi.setServiceBarang(serviceRepository.findByIdTT(garansiDTO.getId_tt()).orElseThrow(() -> new NotFoundException("Id Garansi Not Found")));
+        return garansiRepository.save(garansi);
+    }
+
+    public Garansi updateTglJadi(TglJadiGaransiDTO tglJadiGaransiDTO , Long id){
+        Garansi garansi = garansiRepository.findById(id).orElseThrow(() -> new NotFoundException( "Id Not Found"));
+        garansi.setTanggalJadi(tglJadiGaransiDTO.getTgl_jadi());
         return garansiRepository.save(garansi);
     }
 
@@ -47,7 +53,6 @@ public class GaransiService {
         garansi.setKerusakan(garansiDTO.getKerusakan());
         garansi.setMasukKe(garansiDTO.getMasukKe());
         garansi.setTanggalMasuk(garansiDTO.getTanggalMasuk());
-        garansi.setTanggalJadi(garansiDTO.getTanggalJadi());
         return garansiRepository.save(garansi);
     }
 

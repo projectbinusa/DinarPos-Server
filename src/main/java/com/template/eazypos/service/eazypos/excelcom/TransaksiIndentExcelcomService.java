@@ -209,6 +209,7 @@ public class TransaksiIndentExcelcomService {
         transaksi.setHari365(1);
         transaksi.setDp(transaksiIndent.getPembayaran());
         transaksi.setKekurangan("0");
+        transaksi.setServiceBarang(null);
         transaksi.setNoFaktur(transaksiIndent.getNoFaktur());
         transaksi.setKeterangan(transaksiIndent.getKeterangan());
         transaksi.setCashKredit(transaksiIndent.getCashKredit());

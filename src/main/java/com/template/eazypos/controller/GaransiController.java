@@ -1,6 +1,7 @@
 package com.template.eazypos.controller;
 
 import com.template.eazypos.dto.GaransiDTO;
+import com.template.eazypos.dto.TglJadiGaransiDTO;
 import com.template.eazypos.exception.CommonResponse;
 import com.template.eazypos.exception.ResponseHelper;
 import com.template.eazypos.model.Garansi;
@@ -35,6 +36,10 @@ public class GaransiController {
     @PutMapping("/update/{id}")
     public CommonResponse<Garansi> put(@PathVariable("id") Long id, @RequestBody GaransiDTO garansiDTO){
         return ResponseHelper.ok( garansiService.edit(garansiDTO , id));
+    }
+    @PutMapping("/update/tgl_jadi/{id}")
+    public CommonResponse<Garansi> updateTglJadi(@PathVariable("id") Long id, @RequestBody TglJadiGaransiDTO garansiDTO){
+        return ResponseHelper.ok( garansiService.updateTglJadi(garansiDTO , id));
     }
 
     @DeleteMapping("delete/{id}")

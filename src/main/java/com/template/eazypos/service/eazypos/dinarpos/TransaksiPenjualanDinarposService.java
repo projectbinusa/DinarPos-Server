@@ -76,6 +76,7 @@ public class TransaksiPenjualanDinarposService {
         transaksi.setNota("1");
         transaksi.setDp("0");
         transaksi.setHari365(1);
+        transaksi.setServiceBarang(null);
         transaksi.setKekurangan(transaksiDTO.getKekurangan());
         transaksi.setNoFaktur(not);
         transaksi.setKeterangan(transaksiDTO.getKeterangan());

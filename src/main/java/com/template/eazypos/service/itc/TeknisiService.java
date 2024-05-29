@@ -4,9 +4,11 @@ import com.template.eazypos.dto.TeknisiDTO;
 import com.template.eazypos.exception.BadRequestException;
 import com.template.eazypos.exception.NotFoundException;
 import com.template.eazypos.model.Pengguna;
+import com.template.eazypos.model.Poin;
 import com.template.eazypos.model.Salesman;
 import com.template.eazypos.model.Teknisi;
 import com.template.eazypos.repository.PenggunaRepository;
+import com.template.eazypos.repository.PoinRepository;
 import com.template.eazypos.repository.TeknisiRepository;
 import com.template.eazypos.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,9 @@ public class TeknisiService {
     @Autowired
     PasswordEncoder encoder;
 
+    @Autowired
+    private PoinRepository poinRepository;
+
 
     public Teknisi add(TeknisiDTO teknisiDTO){
         Teknisi teknisi = new Teknisi();
@@ -36,7 +41,12 @@ public class TeknisiService {
         teknisi.setNohp(teknisiDTO.getNohp());
         teknisi.setNama(teknisiDTO.getNama());
         teknisi.setAlamat(teknisiDTO.getAlamat());
+        Teknisi saveTeknisi = teknisiRepository.save(teknisi);
 
+        Poin poin = new Poin();
+        poin.setPoin(0.0);
+        poin.setTeknisi(saveTeknisi);
+        poinRepository.save(poin);
         Pengguna pengguna = new Pengguna();
         if (penggunaRepository.findByUsername(teknisiDTO.getNama()).isPresent()){
             throw new BadRequestException("Username Pengguna sudah digunakan");
@@ -54,8 +64,7 @@ public class TeknisiService {
         pengguna.setRoleToko("itc");
 
         penggunaRepository.save(pengguna);
-
-        return teknisiRepository.save(teknisi);
+        return saveTeknisi;
     }
     public List<Teknisi> getAll(){
         return teknisiRepository.findAll();

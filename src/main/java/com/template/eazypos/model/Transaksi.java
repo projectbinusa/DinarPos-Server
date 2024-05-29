@@ -237,9 +237,6 @@ public class Transaksi extends DateConfig {
 
 
 
-
-
-
     }
 
     public String getNominalPiutang() {

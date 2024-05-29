@@ -45,6 +45,10 @@ public class ServiceController {
     public CommonResponse<ServiceBarang> updateCustomer(@RequestBody UpdateCustomerDTO updateCustomerDTO , @PathVariable("id") Long id) {
         return ResponseHelper.ok(dataService.updateCustomer(updateCustomerDTO , id));
     }
+    @PutMapping("/taken_service/{id}")
+    public CommonResponse<ServiceBarang> takenService(@RequestBody TransaksiPenjualanDTO transaksiPenjualanDTO , @PathVariable("id") Long id) {
+        return ResponseHelper.ok(dataService.takenServiceCustomer(transaksiPenjualanDTO , id));
+    }
     @GetMapping("/{id}")
     public CommonResponse<ServiceBarang> getById(@PathVariable("id") Long id) {
         return ResponseHelper.ok(dataService.getById(id));
