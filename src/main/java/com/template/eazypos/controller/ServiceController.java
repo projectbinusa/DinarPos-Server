@@ -10,6 +10,7 @@ import com.template.eazypos.service.itc.admin.DataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
 import java.util.List;
@@ -25,9 +26,21 @@ public class ServiceController {
     public CommonResponse<ServiceBarang> add(@RequestBody AddServiceDTO addServiceDTO) {
         return ResponseHelper.ok(dataService.addService(addServiceDTO));
     }
-    @PostMapping("/taken")
-    public CommonResponse<Status> add(@RequestBody TakenServiceDTO takenServiceDTO) {
-        return ResponseHelper.ok(dataService.takenService(takenServiceDTO));
+    @PostMapping("/proses")
+    public CommonResponse<Status> proses(@RequestBody TakenServiceDTO takenServiceDTO) {
+        return ResponseHelper.ok(dataService.prosesService(takenServiceDTO));
+    }
+    @PostMapping("/tambah_status")
+    public CommonResponse<Status> tambahStatus(@RequestBody TakenServiceDTO takenServiceDTO) {
+        return ResponseHelper.ok(dataService.prosesServiceTeknisi(takenServiceDTO));
+    }
+    @PutMapping(path = "/foto_before/{id}" , consumes = "multipart/form-data")
+    public CommonResponse<ServiceBarang> fotoBefore(@RequestPart("file") MultipartFile multipartFile , Long id) {
+        return ResponseHelper.ok(dataService.fotoBefore(multipartFile ,id));
+    }
+    @PutMapping(path = "/foto_after/{id}" , consumes = "multipart/form-data")
+    public CommonResponse<ServiceBarang> fotoAfter(@RequestPart("file") MultipartFile multipartFile , Long id) {
+        return ResponseHelper.ok(dataService.fotoAfter(multipartFile , id));
     }
     @PostMapping("/konfirm")
     public CommonResponse<TglKonf> konfirm(@RequestBody KonfirmDTO konfirmDTO) {

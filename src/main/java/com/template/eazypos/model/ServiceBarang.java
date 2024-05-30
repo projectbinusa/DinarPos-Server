@@ -104,9 +104,11 @@ public class ServiceBarang extends DateConfig {
     @Column(name = "taken", nullable = false, length = 1, columnDefinition = "varchar(1) default 'N'")
     private String taken;
 
+    @Lob
     @Column(name = "f_b", nullable = false, columnDefinition = "text")
     private String fb;
 
+    @Lob
     @Column(name = "f_a", nullable = false, columnDefinition = "text")
     private String fa;
 

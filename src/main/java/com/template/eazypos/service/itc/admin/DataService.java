@@ -7,6 +7,8 @@ import com.template.eazypos.model.*;
 import com.template.eazypos.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import com.google.api.client.util.Base64;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -68,6 +70,20 @@ public class DataService {
     private PoinRepository poinRepository;
 
 
+    private String convertToBase64Url(MultipartFile file) {
+        String url = "";
+        try {
+            byte[] byteData = Base64.encodeBase64(file.getBytes());
+            String result = new String(byteData);
+            url = "data:" + file.getContentType() + ";base64," + result;
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            return url;
+        }
+
+    }
+
     public ServiceBarang addService(AddServiceDTO serviceDTO){
         ServiceBarang service = new ServiceBarang();
         Customer customer = customerRepository.findById(serviceDTO.getId_customer()).get();
@@ -90,8 +106,8 @@ public class DataService {
         service.setNama(customer.getNama_customer());
         return serviceRepository.save(service);
     }
-    public Status takenService(TakenServiceDTO takenServiceDTO){
-        ServiceBarang serviceBarang = serviceRepository.findByIdTT(takenServiceDTO.getId_teknisi()).orElseThrow(() -> new NotFoundException("Id Service Not Found"));
+    public Status prosesService(TakenServiceDTO takenServiceDTO){
+        ServiceBarang serviceBarang = serviceRepository.findByIdTeknisi(takenServiceDTO.getId_teknisi()).orElseThrow(() -> new NotFoundException("Id Service Not Found"));
         serviceBarang.setStatusEnd("PROSES");
         serviceBarang.setTeknisi(teknisiRepository.findById(takenServiceDTO.getId_teknisi()).get());
         Status status = new Status();
@@ -104,6 +120,29 @@ public class DataService {
         status.setValidasi("0");
         serviceRepository.save(serviceBarang);
         return statusRepository.save(status);
+    }
+    public Status prosesServiceTeknisi(TakenServiceDTO takenServiceDTO){
+        ServiceBarang serviceBarang = serviceRepository.findByIdTeknisi(takenServiceDTO.getId_teknisi()).orElseThrow(() -> new NotFoundException("Id Service Not Found"));
+        Status status = new Status();
+        status.setService(serviceRepository.findByIdTT(serviceBarang.getIdTT()).get());
+        status.setStatus(takenServiceDTO.getStatus());
+        status.setSolusi(takenServiceDTO.getSolusi());
+        status.setTanggal(new Date());
+        status.setKet(takenServiceDTO.getKet());
+        status.setType(takenServiceDTO.getType());
+        status.setValidasi("0");
+        return statusRepository.save(status);
+    }
+
+    public ServiceBarang fotoBefore(MultipartFile multipartFile , Long id){
+        ServiceBarang serviceBarang = serviceRepository.findByIdTT(id).orElseThrow(() -> new NotFoundException("Id Not Found"));
+        serviceBarang.setFb(convertToBase64Url(multipartFile));
+        return serviceRepository.save(serviceBarang);
+    }
+    public ServiceBarang fotoAfter(MultipartFile multipartFile , Long id){
+        ServiceBarang serviceBarang = serviceRepository.findByIdTT(id).orElseThrow(() -> new NotFoundException("Id Not Found"));
+        serviceBarang.setFa(convertToBase64Url(multipartFile));
+        return serviceRepository.save(serviceBarang);
     }
     public ServiceBarang takeOver(TakeOverDTO takeOverDTO) {
         ServiceBarang teknisi = serviceRepository.findByIdTT(takeOverDTO.getId_service()).orElseThrow(() -> new NotFoundException("Id Service Not Found"));
