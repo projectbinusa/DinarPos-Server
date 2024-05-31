@@ -6,6 +6,7 @@ import com.template.eazypos.exception.ResponseHelper;
 import com.template.eazypos.model.ServiceBarang;
 import com.template.eazypos.model.Status;
 import com.template.eazypos.model.TglKonf;
+import com.template.eazypos.model.Transaksi;
 import com.template.eazypos.service.itc.admin.DataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -59,7 +60,7 @@ public class ServiceController {
         return ResponseHelper.ok(dataService.updateCustomer(updateCustomerDTO , id));
     }
     @PutMapping("/taken_service/{id}")
-    public CommonResponse<ServiceBarang> takenService(@RequestBody TransaksiPenjualanDTO transaksiPenjualanDTO , @PathVariable("id") Long id) {
+    public CommonResponse<Transaksi> takenService(@RequestBody TransaksiPenjualanDTO transaksiPenjualanDTO , @PathVariable("id") Long id) {
         return ResponseHelper.ok(dataService.takenServiceCustomer(transaksiPenjualanDTO , id));
     }
     @GetMapping("/{id}")

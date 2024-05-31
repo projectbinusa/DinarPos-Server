@@ -192,7 +192,7 @@ public class DataService {
         customerRepository.save(customer);
         return serviceRepository.save(serviceBarang);
     }
-    public ServiceBarang takenServiceCustomer(TransaksiPenjualanDTO transaksiDTO, Long id) {
+    public Transaksi takenServiceCustomer(TransaksiPenjualanDTO transaksiDTO, Long id) {
         Date now = new Date();
         String not = getNoNotaTransaksi();
         Long idCustomer = transaksiDTO.getIdCustomer();
@@ -381,7 +381,7 @@ public class DataService {
             poinHistoryRepository.save(poinHistory);
         }
 
-        return serviceBarang;
+        return savedTransaksi;
     }
 
     // Method to update Penjualan Tabel Persediaan
