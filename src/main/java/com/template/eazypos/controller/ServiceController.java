@@ -86,6 +86,10 @@ public class ServiceController {
     public CommonResponse<?> delete(@PathVariable("id") Long id) {
         return ResponseHelper.ok(dataService.delete(id));
     }
+    @DeleteMapping("/tgl_konfirm/{id}")
+    public CommonResponse<?> deleteTglKonf(@PathVariable("id") Long id) {
+        return ResponseHelper.ok(dataService.deleteTglKonf(id));
+    }
     @GetMapping("/tanggal")
     public CommonResponse<List<ServiceBarang>> getAllByTanggalAndStatus(@RequestParam(name = "tanggal_awal") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggalAwal, @RequestParam(name = "tanggal_akhir") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggalAkhir , @RequestParam("status") String status) {
         return ResponseHelper.ok(dataService.getByTanggalAndStatus(tanggalAwal,tanggalAkhir,status));

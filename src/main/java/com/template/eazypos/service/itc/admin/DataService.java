@@ -498,6 +498,16 @@ public class DataService {
     public List<TglKonf> getAllKonfirm(Long id){
         return tglKonfRepository.findByIdTT(id);
     }
+    public Map<String , Boolean> deleteTglKonf(Long id){
+        try {
+            tglKonfRepository.deleteById(id);
+            Map<String, Boolean> res = new HashMap<>();
+            res.put("Deleted", Boolean.TRUE);
+            return res;
+        } catch (Exception e) {
+            return null;
+        }
+    }
     public ServiceBarang getById(Long id){
         return serviceRepository.findByIdTT(id).orElseThrow(() -> new NotFoundException("Id tidak dinemukan"));
     }
