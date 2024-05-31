@@ -9,5 +9,5 @@ import java.util.Optional;
 
 public interface PoinRepository extends JpaRepository<Poin , Long> {
     @Query(value = "SELECT * FROM poin WHERE id_teknisi = :id" , nativeQuery = true)
-    Optional<Poin> findByIdTeknisi (Long id);
+    Optional<Poin> findByIdTeknisi(Long id);
 }

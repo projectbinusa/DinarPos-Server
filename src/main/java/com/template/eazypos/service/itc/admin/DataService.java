@@ -341,7 +341,8 @@ public class DataService {
             double nominal = service / (rtake + 1);
             for (Take take : takeList) {
                 PoinHistory poinHistory = new PoinHistory();
-                Poin poin = poinRepository.findByIdTeknisi(take.getId_tekinisi().getId()).get();
+                Teknisi teknisi = teknisiRepository.findById(take.getId_tekinisi().getId()).orElseThrow(() -> new NotFoundException("Id Teknisi Not Found"));
+                Poin poin = poinRepository.findByIdTeknisi(teknisi.getId()).get();
                 double poinAwal = poin.getPoin();
                 double hasilPoin = join + poinAwal;
                 poin.setPoin(hasilPoin);
@@ -367,7 +368,7 @@ public class DataService {
             poinHistoryRepository.save(poinHistory);
         } else {
             PoinHistory poinHistory = new PoinHistory();
-            Poin poin = poinRepository.findByIdTeknisi(serviceBarang.getTeknisi().getId()).get();
+            Poin poin = poinRepository.findByIdTeknisi(serviceBarang.getTeknisi().getId()).orElseThrow(() -> new NotFoundException("ID Not Found"));
             double poinAwal = poin.getPoin();
             double hasilPoin = hasil + poinAwal;
             poin.setPoin(hasilPoin);
@@ -384,17 +385,34 @@ public class DataService {
     }
 
     // Method to update Penjualan Tabel Persediaan
-    private void updatePenjualanTabelPersediaan(Date date) {
+    private double parseDouble(String value) {
+        try {
+            return value != null ? Double.parseDouble(value) : 0.0;
+        } catch (NumberFormatException e) {
+            return 0.0;
+        }
+    }
 
+    // Method to parse double to string safely
+    private String parseDoubleString(String value) {
+        try {
+            return value != null ? String.valueOf(Double.parseDouble(value)) : "0";
+        } catch (NumberFormatException e) {
+            return "0";
+        }
+    }
+
+    // Method to update Penjualan Tabel Persediaan
+    private void updatePenjualanTabelPersediaan(Date date) {
         // Retrieve the persediaan entry for the given date
         List<Persediaan> persediaanOpt = persediaanRepository.findByDate(date);
 
         // Calculate the total penjualan
         List<PersediaanAwal> totalPenjualanList = persediaanAwalRepository.findByTanggal(date);
-        int totalPenjualan = totalPenjualanList.stream()
-                .mapToInt(pa -> {
+        double totalPenjualan = totalPenjualanList.stream()
+                .mapToDouble(pa -> {
                     try {
-                        return Integer.parseInt((pa.getNominal()));
+                        return Double.parseDouble(pa.getNominal());
                     } catch (NumberFormatException e) {
                         // Handle the error, e.g., log it and return 0
                         System.err.println("Invalid nominal value: " + pa.getNominal());
@@ -407,19 +425,19 @@ public class DataService {
             Persediaan persediaan = persediaanOpt.get(0);
             persediaan.setPenjualan(String.valueOf(totalPenjualan));
             int barangSiapJual = Integer.parseInt(persediaan.getBarangSiapJual());
-            int persediaanAkhir = barangSiapJual - totalPenjualan;
+            int persediaanAkhir = barangSiapJual - (int) totalPenjualan;
             persediaan.setPersediaanAkhir(String.valueOf(persediaanAkhir));
 
             persediaanRepository.save(persediaan);
         } else {
             // Assuming persediaanService is autowired
-            int persediaanAwal =  persediaanAkhirToAwal(date);
+            int persediaanAwal = persediaanAkhirToAwal(date);
 
             Persediaan newPersediaan = new Persediaan();
             newPersediaan.setPersediaanAwal(String.valueOf(persediaanAwal));
             newPersediaan.setBarangSiapJual(String.valueOf(persediaanAwal));
             newPersediaan.setPenjualan(String.valueOf(totalPenjualan));
-            int akhir = persediaanAwal - totalPenjualan;
+            int akhir = persediaanAwal - (int) totalPenjualan;
             newPersediaan.setPersediaanAkhir(String.valueOf(akhir));
             newPersediaan.setDate(new Date());
 
@@ -427,18 +445,19 @@ public class DataService {
         }
     }
 
-
     public int persediaanAkhirToAwal(Date date) {
         List<Persediaan> persediaanList = persediaanRepository.findLastBeforeDate(date);
 
         if (!persediaanList.isEmpty()) {
             // Choose the first record if multiple exist
             Persediaan persediaan = persediaanList.get(0);
-            return (int) Double.parseDouble(persediaan.getPersediaanAkhir());
+            return (int) parseDouble(persediaan.getPersediaanAkhir());
         } else {
             return 0;
         }
     }
+
+
 
 
     public String getNoNotaTransaksi() {
