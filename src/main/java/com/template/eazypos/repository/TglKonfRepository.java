@@ -8,6 +8,6 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface TglKonfRepository extends JpaRepository<TglKonf , Long> {
-    @Query(value = "SELECT * FROM tgl_konf WHERE id_tt =: id ", nativeQuery = true)
+    @Query(value = "SELECT * FROM tgl_konf WHERE id_tt = :id ", nativeQuery = true)
     List<TglKonf> findByIdTT(Long id);
 }
