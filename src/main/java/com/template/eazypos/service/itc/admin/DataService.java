@@ -192,6 +192,14 @@ public class DataService {
         customerRepository.save(customer);
         return serviceRepository.save(serviceBarang);
     }
+
+    public List<Take> getTakeByIdTT(Long id) {
+        return takeRepository.findByIdTT(id);
+    }
+    public List<Status> getStatusByIdTT(Long id) {
+        return statusRepository.findByIdTT(id);
+    }
+
     public Transaksi takenServiceCustomer(TransaksiPenjualanDTO transaksiDTO, Long id) {
         Date now = new Date();
         String not = getNoNotaTransaksi();

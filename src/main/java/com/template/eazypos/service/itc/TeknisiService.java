@@ -72,6 +72,9 @@ public class TeknisiService {
     public Teknisi getById(Long id){
         return teknisiRepository.findById(id).orElseThrow(() -> new NotFoundException("Id  tidak dinemukan"));
     }
+    public Teknisi getByNama(String username) {
+        return teknisiRepository.findByNama(username).orElseThrow(() -> new NotFoundException("Username Not Found"));
+    }
     public Teknisi put(TeknisiDTO teknisi , Long id){
         Teknisi update = teknisiRepository.findById(id).orElseThrow(() -> new NotFoundException("Id Teknisi tidak dinemukan"));
         Pengguna pengguna = penggunaRepository.findByUsername(update.getNama()).orElseThrow(() -> new NotFoundException("Username Pengguna tidak dinemukan"));
