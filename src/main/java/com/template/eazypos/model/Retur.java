@@ -12,8 +12,8 @@ public class Retur extends DateConfig {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_tt_baru")
-    private Long TTBaru;
+    @Column(name = "id")
+    private Long id;
 
 //    @Column(name = "id_tt_lama", nullable = false)
 //    private Long idTTLama;
@@ -21,6 +21,9 @@ public class Retur extends DateConfig {
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     @JoinColumn(name = "id_tt_lama", updatable = false)
     private ServiceBarang TTLama;
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @JoinColumn(name = "id_tt_baru", updatable = false)
+    private ServiceBarang TTBaru;
 
 
     @Column(name = "tgl_retur", nullable = false)
@@ -56,11 +59,19 @@ public class Retur extends DateConfig {
     }
 
 
-    public Long getTTBaru() {
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public ServiceBarang getTTBaru() {
         return TTBaru;
     }
 
-    public void setTTBaru(Long TTBaru) {
+    public void setTTBaru(ServiceBarang TTBaru) {
         this.TTBaru = TTBaru;
     }
 
