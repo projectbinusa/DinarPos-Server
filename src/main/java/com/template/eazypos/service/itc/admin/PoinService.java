@@ -17,4 +17,7 @@ public class PoinService {
     public List<PoinHistory> getPoinByMonth(LocalDate month) {
         return poinHistoryRepository.findByMonth(month);
     }
+    public List<PoinHistory> getByTanggal(Date tanggalAwal , Date tanggalAkhir){
+        return poinHistoryRepository.findByTanggal(tanggalAwal , tanggalAkhir);
+    }
 }

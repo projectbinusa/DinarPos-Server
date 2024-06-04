@@ -28,8 +28,8 @@ public class TeknisiController {
     public CommonResponse <Teknisi> get(@PathVariable("id") Long id){
         return ResponseHelper.ok( teknisiService.getById(id));
     }
-    @GetMapping("/{username}")
-    public CommonResponse <Teknisi> getByUsername(@PathVariable("username") String username){
+    @GetMapping("/username")
+    public CommonResponse <Teknisi> getByUsername(@RequestParam("username") String username){
         return ResponseHelper.ok( teknisiService.getByNama(username));
     }
     @GetMapping

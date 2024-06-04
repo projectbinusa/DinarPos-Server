@@ -23,14 +23,14 @@ public class EditDataController {
     }
 
     @PutMapping("/update_poin_history/{id}")
-    public CommonResponse<PoinHistory> editPoinHistory(@RequestBody EditPoinDTO editPoinDTO , @PathVariable("id") Long id) {
+    public CommonResponse<PoinHistory> editPoinHistory(@RequestBody EditPoinDTO editPoinDTO , @PathVariable("id") String id) {
         return ResponseHelper.ok(dataService.editPoinHistory(editPoinDTO , id));
     }
 
-//    @PutMapping("/update_tt_service/{id}")
-//    public CommonResponse<ServiceBarang> editTandaTerima(@RequestBody EditIdTtDTO editIdTtDTO, @PathVariable("id") Long id) {
-//        return ResponseHelper.ok(dataService.editTandaTerima(editIdTtDTO, id));
-//    }
+    @PutMapping("/update_tt_service/{id}")
+    public CommonResponse<ServiceBarang> editTandaTerima(@RequestBody EditIdTtDTO editIdTtDTO, @PathVariable("id") Long id) {
+        return ResponseHelper.ok(dataService.editTandaTerima(editIdTtDTO, id));
+    }
 
     @PutMapping("/update_status_tt_service/{id}")
     public CommonResponse<ServiceBarang> editStatusTandaTerima(@RequestBody EditStatusTtDTO editStatusTtDTO, @PathVariable("id") Long id) {
