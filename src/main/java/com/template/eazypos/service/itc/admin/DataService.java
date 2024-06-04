@@ -192,7 +192,15 @@ public class DataService {
         customerRepository.save(customer);
         return serviceRepository.save(serviceBarang);
     }
-    public ServiceBarang takenServiceCustomer(TransaksiPenjualanDTO transaksiDTO, Long id) {
+
+    public List<Take> getTakeByIdTT(Long id) {
+        return takeRepository.findByIdTT(id);
+    }
+    public List<Status> getStatusByIdTT(Long id) {
+        return statusRepository.findByIdTT(id);
+    }
+
+    public Transaksi takenServiceCustomer(TransaksiPenjualanDTO transaksiDTO, Long id) {
         Date now = new Date();
         String not = getNoNotaTransaksi();
         Long idCustomer = transaksiDTO.getIdCustomer();
@@ -381,7 +389,7 @@ public class DataService {
             poinHistoryRepository.save(poinHistory);
         }
 
-        return serviceBarang;
+        return savedTransaksi;
     }
 
     // Method to update Penjualan Tabel Persediaan
@@ -497,6 +505,16 @@ public class DataService {
     }
     public List<TglKonf> getAllKonfirm(Long id){
         return tglKonfRepository.findByIdTT(id);
+    }
+    public Map<String , Boolean> deleteTglKonf(Long id){
+        try {
+            tglKonfRepository.deleteById(id);
+            Map<String, Boolean> res = new HashMap<>();
+            res.put("Deleted", Boolean.TRUE);
+            return res;
+        } catch (Exception e) {
+            return null;
+        }
     }
     public ServiceBarang getById(Long id){
         return serviceRepository.findByIdTT(id).orElseThrow(() -> new NotFoundException("Id tidak dinemukan"));

@@ -28,6 +28,10 @@ public class TeknisiController {
     public CommonResponse <Teknisi> get(@PathVariable("id") Long id){
         return ResponseHelper.ok( teknisiService.getById(id));
     }
+    @GetMapping("/{username}")
+    public CommonResponse <Teknisi> getByUsername(@PathVariable("username") String username){
+        return ResponseHelper.ok( teknisiService.getByNama(username));
+    }
     @GetMapping
     public CommonResponse<List<Teknisi>> getAll(){
         return ResponseHelper.ok( teknisiService.getAll());
