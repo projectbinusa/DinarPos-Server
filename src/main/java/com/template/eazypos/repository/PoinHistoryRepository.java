@@ -22,7 +22,7 @@ public interface PoinHistoryRepository extends JpaRepository<PoinHistory , Long>
             "ORDER BY SUM(ph.poin) DESC")
     List<PoinHistory> findByMonth(@Param("month") LocalDate month);
 
-    @Query(value = "SELECT * FROM poin_history  WHERE tgl BETWEEN :tanggalAwal AND :tanggalAkhir")
+    @Query(value = "SELECT * FROM poin_history  WHERE tgl BETWEEN :tanggalAwal AND :tanggalAkhir" , nativeQuery = true)
     List<PoinHistory> findByTanggal(Date tanggalAwal, Date tanggalAkhir);
 
     @Query(value = "SELECT * FROM poin_history WHERE ket = :id" , nativeQuery = true)
