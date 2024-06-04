@@ -536,5 +536,45 @@ public class DataService {
         return serviceRepository.findByTaken();
     }
 
+    public ServiceBarang editBiayaService(EditBiayaServiceDTO editDataDTO, Long id) {
+        ServiceBarang serviceBarang = serviceRepository.findByIdTT(id).orElseThrow(() -> new NotFoundException("Id Not Found"));
+        serviceBarang.setBiayaService(editDataDTO.getBiaya_service());
+        serviceBarang.setBiayaSparepart(editDataDTO.getBiaya_sparepart());
+        serviceBarang.setTotal(editDataDTO.getTotal());
+        return serviceRepository.save(serviceBarang);
+    }
+
+    public PoinHistory editPoinHistory(EditPoinDTO editPoinDTO , Long id) {
+        PoinHistory poinHistory = poinHistoryRepository.findById(id).orElseThrow(() -> new NotFoundException("Id Not Found"));
+        poinHistory.setPoin(editPoinDTO.getPoin());
+        return poinHistoryRepository.save(poinHistory);
+    }
+
+//    public ServiceBarang editTandaTerima(EditIdTtDTO editIdTtDTO, Long id) {
+//        ServiceBarang serviceBarang = serviceRepository.findByIdTT(id)
+//                .orElseThrow(() -> new NotFoundException("Id Not Found"));
+//
+//        serviceBarang.setIdTT(editIdTtDTO.getId_tt());
+//        return serviceRepository.save(serviceBarang);
+//    }
+
+    public ServiceBarang editStatusTandaTerima(EditStatusTtDTO editStatusTtDTO, Long id) {
+        ServiceBarang serviceBarang = serviceRepository.findByIdTT(id)
+                .orElseThrow(() -> new NotFoundException("Id Not Found"));
+        serviceBarang.setStatusEnd(editStatusTtDTO.getStatusEnd());
+        return serviceRepository.save(serviceBarang);
+    }
+
+    public Map<String , Boolean> deleteStatus(Long id) {
+        try {
+            statusRepository.deleteById(id);
+            Map<String , Boolean> res = new HashMap<>();
+            res.put("Delete", Boolean.TRUE);
+            return res;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
 }
 
