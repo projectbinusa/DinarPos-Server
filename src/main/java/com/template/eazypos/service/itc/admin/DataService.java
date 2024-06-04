@@ -109,7 +109,7 @@ public class DataService {
     public Status prosesService(TakenServiceDTO takenServiceDTO){
         ServiceBarang serviceBarang = serviceRepository.findByIdTeknisi(takenServiceDTO.getId_teknisi()).orElseThrow(() -> new NotFoundException("Id Service Not Found"));
         serviceBarang.setStatusEnd("PROSES");
-        serviceBarang.setTeknisi(teknisiRepository.findById(takenServiceDTO.getId_teknisi()).get());
+        serviceBarang.setTeknisi(teknisiRepository.findById(takenServiceDTO.getId_teknisi()).orElseThrow((() -> new NotFoundException("Id Teknisi Not Found"))));
         Status status = new Status();
         status.setService(serviceRepository.findByIdTT(serviceBarang.getIdTT()).get());
         status.setStatus(takenServiceDTO.getStatus());
@@ -544,19 +544,28 @@ public class DataService {
         return serviceRepository.save(serviceBarang);
     }
 
-    public PoinHistory editPoinHistory(EditPoinDTO editPoinDTO , Long id) {
-        PoinHistory poinHistory = poinHistoryRepository.findById(id).orElseThrow(() -> new NotFoundException("Id Not Found"));
+    public PoinHistory editPoinHistory(EditPoinDTO editPoinDTO , String id) {
+        PoinHistory poinHistory = poinHistoryRepository.findByIdTT(id).orElseThrow(() -> new NotFoundException("Id Service Not Found"));
+        ServiceBarang serviceBarang = serviceRepository.findByIdTT(Long.valueOf(id)).orElseThrow(() -> new NotFoundException("Id Not Found"));
+        Poin poin = poinRepository.findByIdTeknisi(serviceBarang.getIdTT()).orElseThrow(() -> new NotFoundException("Id Teknisi Not Found"));
+        double poinlama = poinHistory.getPoin();
+        double totalPoinLama = poin.getPoin() - poinlama;
+        double totalPoinBaru = totalPoinLama + editPoinDTO.getPoin();
+        poin.setPoin(totalPoinBaru);
+        poinRepository.save(poin);
         poinHistory.setPoin(editPoinDTO.getPoin());
         return poinHistoryRepository.save(poinHistory);
     }
 
-//    public ServiceBarang editTandaTerima(EditIdTtDTO editIdTtDTO, Long id) {
-//        ServiceBarang serviceBarang = serviceRepository.findByIdTT(id)
-//                .orElseThrow(() -> new NotFoundException("Id Not Found"));
-//
-//        serviceBarang.setIdTT(editIdTtDTO.getId_tt());
-//        return serviceRepository.save(serviceBarang);
-//    }
+    public ServiceBarang editTandaTerima(EditIdTtDTO editIdTtDTO, Long id) {
+        ServiceBarang serviceBarang = serviceRepository.findByIdTT(id)
+                .orElseThrow(() -> new NotFoundException("Id Not Found"));
+        if (serviceBarang.getIdTT().equals(editIdTtDTO.getId_tt())){
+            throw new  NotFoundException("Id Already Exists");
+        }
+        serviceBarang.setIdTT(editIdTtDTO.getId_tt());
+        return serviceRepository.save(serviceBarang);
+    }
 
     public ServiceBarang editStatusTandaTerima(EditStatusTtDTO editStatusTtDTO, Long id) {
         ServiceBarang serviceBarang = serviceRepository.findByIdTT(id)
