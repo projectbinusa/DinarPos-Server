@@ -24,7 +24,7 @@ public class PoinController {
     public List<PoinHistory> getPoinByMonth(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate month) {
         return poinService.getPoinByMonth(month);
     }
-    @GetMapping("/salesman/tanggal/excelcom")
+    @GetMapping("/tanggal/")
     public CommonResponse<List<PoinHistory>> getAllByTanggal(@RequestParam(name = "tanggal_awal") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggalAwal, @RequestParam(name = "tanggal_akhir") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggalAkhir ) {
         return ResponseHelper.ok(poinService.getByTanggal(tanggalAwal,tanggalAkhir));
     }
