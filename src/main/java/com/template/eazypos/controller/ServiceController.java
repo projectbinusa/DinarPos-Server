@@ -101,4 +101,39 @@ public class ServiceController {
         return ResponseHelper.ok(dataService.getByTanggalAndStatus(tanggalAwal,tanggalAkhir,status));
     }
 
+    @GetMapping("/data-service")
+    public List<Object[]> getDataService(@RequestParam("months") @DateTimeFormat(pattern = "yyyy-MM") Date months) {
+        return dataService.getDataService(months);
+    }
+
+    @GetMapping("/total-service-elektro")
+    public int getTotalServiceElektro(@RequestParam("months") @DateTimeFormat(pattern = "yyyy-MM") Date months) {
+        return dataService.getTotalServiceElektro(months);
+    }
+
+    @GetMapping("/total-service-cpu")
+    public int getTotalServiceCPU(@RequestParam("months") @DateTimeFormat(pattern = "yyyy-MM") Date months) {
+        return dataService.getTotalServiceCPU(months);
+    }
+
+    @GetMapping("/total-service-success-elektro")
+    public int getTotalServiceSuccessElektro(@RequestParam("months") @DateTimeFormat(pattern = "yyyy-MM") Date months) {
+        return dataService.getTotalServiceSuccessElektro(months);
+    }
+
+    @GetMapping("/total-service-not-elektro")
+    public int getTotalServiceNotElektro(@RequestParam("months") @DateTimeFormat(pattern = "yyyy-MM") Date months) {
+        return dataService.getTotalServiceNotElektro(months);
+    }
+
+    @GetMapping("/total-service-not-cpu")
+    public int getTotalServiceNotCPU(@RequestParam("months") @DateTimeFormat(pattern = "yyyy-MM") Date months) {
+        return dataService.getTotalServiceNotCPU(months);
+    }
+
+    @GetMapping("/total-service-success-cpu")
+    public int getTotalServiceSuccessCPU(@RequestParam("months") @DateTimeFormat(pattern = "yyyy-MM") Date months) {
+        return dataService.getTotalServiceSuccessCPU(months);
+    }
+
 }
