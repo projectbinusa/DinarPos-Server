@@ -124,6 +124,7 @@ public class DataService {
     public Status prosesServiceTeknisi(TakenServiceDTO takenServiceDTO){
         ServiceBarang serviceBarang = serviceRepository.findByIdTeknisi(takenServiceDTO.getId_teknisi()).orElseThrow(() -> new NotFoundException("Id Service Not Found"));
         Status status = new Status();
+        status.setTeknisi(serviceBarang.getTeknisi());
         status.setService(serviceRepository.findByIdTT(serviceBarang.getIdTT()).get());
         status.setStatus(takenServiceDTO.getStatus());
         status.setSolusi(takenServiceDTO.getSolusi());
