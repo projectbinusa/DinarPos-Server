@@ -86,7 +86,6 @@ public class DataService {
 
     public ServiceBarang addService(AddServiceDTO serviceDTO){
         ServiceBarang service = new ServiceBarang();
-        Customer customer = customerRepository.findById(serviceDTO.getId_customer()).get();
         service.setCustomer(customerRepository.findById(serviceDTO.getId_customer()).orElseThrow(() -> new NotFoundException("Id Customer tidak dinemukan")));
         service.setKet(serviceDTO.getKet());
         service.setProduk(serviceDTO.getJenis_produk());
@@ -100,10 +99,10 @@ public class DataService {
         service.setBmax(serviceDTO.getBiaya_maximal());
         service.setEstimasi(serviceDTO.getEstimasi_biaya());
         service.setChecker(serviceDTO.getChecker());
-        service.setCp(customer.getTelp());
+        service.setCp(serviceDTO.getCp());
         service.setStatusEnd("N_A");
-        service.setAlamat(customer.getAlamat());
-        service.setNama(customer.getNama_customer());
+        service.setAlamat(serviceDTO.getAlamat());
+        service.setNama(serviceDTO.getNama());
         return serviceRepository.save(service);
     }
     public Status prosesService(TakenServiceDTO takenServiceDTO){
@@ -584,6 +583,33 @@ public class DataService {
         } catch (Exception e) {
             return null;
         }
+    }
+    public List<Object[]> getDataService(Date months) {
+        return serviceRepository.findDataService(months);
+    }
+
+    public int getTotalServiceElektro(Date months) {
+        return serviceRepository.countTotalServiceElektro(months);
+    }
+
+    public int getTotalServiceCPU(Date months) {
+        return serviceRepository.countTotalServiceCPU(months);
+    }
+
+    public int getTotalServiceSuccessElektro(Date months) {
+        return serviceRepository.countTotalServiceSuccessElektro(months);
+    }
+
+    public int getTotalServiceNotElektro(Date months) {
+        return serviceRepository.countTotalServiceNotElektro(months);
+    }
+
+    public int getTotalServiceNotCPU(Date months) {
+        return serviceRepository.countTotalServiceNotCPU(months);
+    }
+
+    public int getTotalServiceSuccessCPU(Date months) {
+        return serviceRepository.countTotalServiceSuccessCPU(months);
     }
 
 }

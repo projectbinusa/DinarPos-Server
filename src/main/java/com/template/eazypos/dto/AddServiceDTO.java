@@ -6,6 +6,12 @@ import java.util.Date;
 public class AddServiceDTO {
     private Long id_customer;
 
+    private String nama;
+
+    private String  alamat;
+
+    private String cp;
+
     @Lob
     private String ket;
 
@@ -135,5 +141,29 @@ public class AddServiceDTO {
 
     public void setChecker(String checker) {
         this.checker = checker;
+    }
+
+    public String getNama() {
+        return nama;
+    }
+
+    public void setNama(String nama) {
+        this.nama = nama;
+    }
+
+    public String getAlamat() {
+        return alamat;
+    }
+
+    public void setAlamat(String alamat) {
+        this.alamat = alamat;
+    }
+
+    public String getCp() {
+        return cp;
+    }
+
+    public void setCp(String cp) {
+        this.cp = cp;
     }
 }
