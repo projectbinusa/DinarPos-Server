@@ -21,6 +21,8 @@ public interface ServiceRepository extends JpaRepository<ServiceBarang, Long> {
     Optional<ServiceBarang> findByIdTeknisi (Long id);
     @Query(value = "SELECT * FROM service WHERE taken = 'Y'" , nativeQuery = true)
     List<ServiceBarang> findByTaken ();
+    @Query(value = "SELECT * FROM service WHERE taken = 'N'" , nativeQuery = true)
+    List<ServiceBarang> findByTakenN();
 
     @Query("SELECT t.nama, t.id AS id_teknisi, " +
             "(SELECT COUNT(s.idTT) FROM ServiceBarang s WHERE s.teknisi.id = t.id AND FUNCTION('DATE_FORMAT', s.tanggalMasuk, '%Y-%m') = FUNCTION('DATE_FORMAT', :months, '%Y-%m')) AS ttl, " +

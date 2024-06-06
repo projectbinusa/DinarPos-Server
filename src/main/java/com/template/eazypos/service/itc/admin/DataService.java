@@ -615,6 +615,9 @@ public class DataService {
     public List<ServiceBarang> getService() {
         return serviceRepository.getService();
     }
+    public List<ServiceBarang> getTakenN(){
+        return serviceRepository.findByTakenN();
+    }
 
     public List<ServiceBarang> filterServiceByDateAndStatus(Date awal, Date akhir, String status) {
         return serviceRepository.filterByDateAndStatus(awal, akhir, status);

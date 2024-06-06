@@ -84,6 +84,10 @@ public class ServiceController {
     public CommonResponse<List<ServiceBarang>> getAllByTaken() {
         return ResponseHelper.ok(dataService.getByTaken());
     }
+    @GetMapping("/taken/N")
+    public CommonResponse<List<ServiceBarang>> getAllByTakenN() {
+        return ResponseHelper.ok(dataService.getTakenN());
+    }
     @GetMapping("/tgl_konfirm")
     public CommonResponse<List<TglKonf>> getAllByTglKonfirm(Long id) {
         return ResponseHelper.ok(dataService.getAllKonfirm(id));
