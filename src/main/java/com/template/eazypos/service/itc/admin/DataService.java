@@ -105,14 +105,15 @@ public class DataService {
         service.setNama(serviceDTO.getNama());
         return serviceRepository.save(service);
     }
-    public Status prosesService(TakenServiceDTO takenServiceDTO){
-        ServiceBarang serviceBarang = serviceRepository.findByIdTeknisi(takenServiceDTO.getId_teknisi()).orElseThrow(() -> new NotFoundException("Id Service Not Found"));
+    public Status prosesService(TakenServiceDTO takenServiceDTO , Long id){
+        ServiceBarang serviceBarang = serviceRepository.findByIdTT(id).orElseThrow(() -> new NotFoundException("Id Service Not Found"));
         serviceBarang.setStatusEnd("PROSES");
         serviceBarang.setTeknisi(teknisiRepository.findById(takenServiceDTO.getId_teknisi()).orElseThrow((() -> new NotFoundException("Id Teknisi Not Found"))));
         Status status = new Status();
         status.setService(serviceRepository.findByIdTT(serviceBarang.getIdTT()).get());
         status.setStatus(takenServiceDTO.getStatus());
         status.setSolusi(takenServiceDTO.getSolusi());
+        status.setTeknisi(teknisiRepository.findById(takenServiceDTO.getId_teknisi()).orElseThrow((() -> new NotFoundException("Id Teknisi Not Found"))));
         status.setTanggal(new Date());
         status.setKet(takenServiceDTO.getKet());
         status.setType(takenServiceDTO.getType());
@@ -120,8 +121,8 @@ public class DataService {
         serviceRepository.save(serviceBarang);
         return statusRepository.save(status);
     }
-    public Status prosesServiceTeknisi(TakenServiceDTO takenServiceDTO){
-        ServiceBarang serviceBarang = serviceRepository.findByIdTeknisi(takenServiceDTO.getId_teknisi()).orElseThrow(() -> new NotFoundException("Id Service Not Found"));
+    public Status prosesServiceTeknisi(TakenServiceDTO takenServiceDTO , Long id){
+        ServiceBarang serviceBarang = serviceRepository.findByIdTT(id).orElseThrow(() -> new NotFoundException("Id Service Not Found"));
         Status status = new Status();
         status.setTeknisi(serviceBarang.getTeknisi());
         status.setService(serviceRepository.findByIdTT(serviceBarang.getIdTT()).get());
@@ -341,7 +342,7 @@ public class DataService {
 
         List<Take> takeList = takeRepository.findByIdTT(id);
         int rtake = takeList.size();
-        double service = serviceBarang.getBiayaService();
+        int service = serviceBarang.getBiayaService();
         double bagi = service / 90000;
         double hasil = Math.round(bagi * 10) / 10.0;
         if (rtake > 0) {
@@ -384,7 +385,7 @@ public class DataService {
             poinHistory.setTanggal(now);
             poinHistory.setPoin(hasil);
             poinHistory.setKeterangan(String.valueOf(id));
-            poinHistory.setNominal(Double.hashCode(service));
+            poinHistory.setNominal(service);
             poinRepository.save(poin);
             poinHistoryRepository.save(poinHistory);
         }
@@ -584,7 +585,7 @@ public class DataService {
             return null;
         }
     }
-    public List<Object[]> getDataService(Date months) {
+    public List<ServiceBarang> getDataService(Date months) {
         return serviceRepository.findDataService(months);
     }
 
@@ -610,6 +611,20 @@ public class DataService {
 
     public int getTotalServiceSuccessCPU(Date months) {
         return serviceRepository.countTotalServiceSuccessCPU(months);
+    }
+    public List<ServiceBarang> getService() {
+        return serviceRepository.getService();
+    }
+
+    public List<ServiceBarang> filterServiceByDateAndStatus(Date awal, Date akhir, String status) {
+        return serviceRepository.filterByDateAndStatus(awal, akhir, status);
+    }
+
+    public List<ServiceBarang> filterServiceByStatus(String status) {
+        return serviceRepository.filterByStatus(status);
+    }
+    public List<ServiceBarang> filterServiceByDateRange(Date awal, Date akhir) {
+        return serviceRepository.filterByDateRange(awal, akhir);
     }
 
 }

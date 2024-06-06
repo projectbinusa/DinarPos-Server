@@ -102,7 +102,7 @@ public class ServiceBarang extends DateConfig {
     private String statusEnd;
 
     @Column(name = "taken", nullable = false, length = 1, columnDefinition = "varchar(1) default 'N'")
-    private String taken;
+    private String taken ="N";
 
     @Lob
     @Column(name = "f_b", nullable = false, columnDefinition = "text")
