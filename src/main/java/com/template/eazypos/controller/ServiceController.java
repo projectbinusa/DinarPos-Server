@@ -106,8 +106,8 @@ public class ServiceController {
     }
 
     @GetMapping("/data-service")
-    public CommonResponse<List<ServiceBarang>> getDataService(@RequestParam("months") @DateTimeFormat(pattern = "yyyy-MM") Date months) {
-        return ResponseHelper.ok(dataService.getDataService(months));
+    public CommonResponse<List<ServiceDataDTO>> getDataService(@RequestParam("months") @DateTimeFormat(pattern = "yyyy-MM") Date months) {
+        return ResponseHelper.ok(dataService.findDataService(months));
     }
 
     @GetMapping("/total-service-elektro")

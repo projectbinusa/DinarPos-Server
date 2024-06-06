@@ -13,6 +13,7 @@ import com.google.api.client.util.Base64;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class DataService {
@@ -585,8 +586,11 @@ public class DataService {
             return null;
         }
     }
-    public List<ServiceBarang> getDataService(Date months) {
-        return serviceRepository.findDataService(months);
+    public List<ServiceDataDTO> findDataService(Date months) {
+        List<ServiceDataDTO> data = serviceRepository.findDataService(months);
+        return data.stream()
+                .sorted((d1, d2) -> Long.compare(d2.getSuccess(), d1.getSuccess()))
+                .collect(Collectors.toList());
     }
 
     public int getTotalServiceElektro(Date months) {
