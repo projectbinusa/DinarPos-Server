@@ -32,13 +32,13 @@ public class ServiceController {
     public CommonResponse<List<Status>> getStatusByIdTT(@PathVariable("id") Long id){
         return ResponseHelper.ok(dataService.getStatusByIdTT(id));
     }
-    @PostMapping("/proses")
-    public CommonResponse<Status> proses(@RequestBody TakenServiceDTO takenServiceDTO) {
-        return ResponseHelper.ok(dataService.prosesService(takenServiceDTO));
+    @PostMapping("/proses/{id}")
+    public CommonResponse<Status> proses(@RequestBody TakenServiceDTO takenServiceDTO , @PathVariable("id") Long id) {
+        return ResponseHelper.ok(dataService.prosesService(takenServiceDTO , id));
     }
     @PostMapping("/tambah_status")
-    public CommonResponse<Status> tambahStatus(@RequestBody TakenServiceDTO takenServiceDTO) {
-        return ResponseHelper.ok(dataService.prosesServiceTeknisi(takenServiceDTO));
+    public CommonResponse<Status> tambahStatus( @RequestParam(name = "id") Long id,@RequestBody TakenServiceDTO takenServiceDTO) {
+        return ResponseHelper.ok(dataService.prosesServiceTeknisi(takenServiceDTO , id));
     }
     @PutMapping(path = "/foto_before/{id}" , consumes = "multipart/form-data")
     public CommonResponse<ServiceBarang> fotoBefore(@RequestPart("file") MultipartFile multipartFile , Long id) {
@@ -84,6 +84,10 @@ public class ServiceController {
     public CommonResponse<List<ServiceBarang>> getAllByTaken() {
         return ResponseHelper.ok(dataService.getByTaken());
     }
+    @GetMapping("/taken/N")
+    public CommonResponse<List<ServiceBarang>> getAllByTakenN() {
+        return ResponseHelper.ok(dataService.getTakenN());
+    }
     @GetMapping("/tgl_konfirm")
     public CommonResponse<List<TglKonf>> getAllByTglKonfirm(Long id) {
         return ResponseHelper.ok(dataService.getAllKonfirm(id));
@@ -102,38 +106,60 @@ public class ServiceController {
     }
 
     @GetMapping("/data-service")
-    public List<Object[]> getDataService(@RequestParam("months") @DateTimeFormat(pattern = "yyyy-MM") Date months) {
-        return dataService.getDataService(months);
+    public CommonResponse<List<ServiceDataDTO>> getDataService(@RequestParam("months") @DateTimeFormat(pattern = "yyyy-MM") Date months) {
+        return ResponseHelper.ok(dataService.findDataService(months));
     }
 
     @GetMapping("/total-service-elektro")
-    public int getTotalServiceElektro(@RequestParam("months") @DateTimeFormat(pattern = "yyyy-MM") Date months) {
-        return dataService.getTotalServiceElektro(months);
+    public CommonResponse<Integer> getTotalServiceElektro(@RequestParam("months") @DateTimeFormat(pattern = "yyyy-MM") Date months) {
+        return ResponseHelper.ok(dataService.getTotalServiceElektro(months));
     }
 
     @GetMapping("/total-service-cpu")
-    public int getTotalServiceCPU(@RequestParam("months") @DateTimeFormat(pattern = "yyyy-MM") Date months) {
-        return dataService.getTotalServiceCPU(months);
+    public CommonResponse<Integer> getTotalServiceCPU(@RequestParam("months") @DateTimeFormat(pattern = "yyyy-MM") Date months) {
+        return ResponseHelper.ok( dataService.getTotalServiceCPU(months));
     }
 
     @GetMapping("/total-service-success-elektro")
-    public int getTotalServiceSuccessElektro(@RequestParam("months") @DateTimeFormat(pattern = "yyyy-MM") Date months) {
-        return dataService.getTotalServiceSuccessElektro(months);
+    public CommonResponse<Integer> getTotalServiceSuccessElektro(@RequestParam("months") @DateTimeFormat(pattern = "yyyy-MM") Date months) {
+        return ResponseHelper.ok( dataService.getTotalServiceSuccessElektro(months));
     }
 
     @GetMapping("/total-service-not-elektro")
-    public int getTotalServiceNotElektro(@RequestParam("months") @DateTimeFormat(pattern = "yyyy-MM") Date months) {
-        return dataService.getTotalServiceNotElektro(months);
+    public CommonResponse<Integer> getTotalServiceNotElektro(@RequestParam("months") @DateTimeFormat(pattern = "yyyy-MM") Date months) {
+        return ResponseHelper.ok( dataService.getTotalServiceNotElektro(months));
     }
 
     @GetMapping("/total-service-not-cpu")
-    public int getTotalServiceNotCPU(@RequestParam("months") @DateTimeFormat(pattern = "yyyy-MM") Date months) {
-        return dataService.getTotalServiceNotCPU(months);
+    public CommonResponse<Integer> getTotalServiceNotCPU(@RequestParam("months") @DateTimeFormat(pattern = "yyyy-MM") Date months) {
+        return ResponseHelper.ok( dataService.getTotalServiceNotCPU(months));
     }
 
     @GetMapping("/total-service-success-cpu")
-    public int getTotalServiceSuccessCPU(@RequestParam("months") @DateTimeFormat(pattern = "yyyy-MM") Date months) {
-        return dataService.getTotalServiceSuccessCPU(months);
+    public CommonResponse<Integer> getTotalServiceSuccessCPU(@RequestParam("months") @DateTimeFormat(pattern = "yyyy-MM") Date months) {
+        return ResponseHelper.ok( dataService.getTotalServiceSuccessCPU(months));
+    }
+    @GetMapping("/dashboard/teknisi")
+    public CommonResponse<List<ServiceBarang>> getService() {
+        return ResponseHelper.ok( dataService.getService());
+    }
+    @GetMapping("/dashboard/teknisi/filter")
+    public CommonResponse<List<ServiceBarang>> filterService(
+            @RequestParam("awal") @DateTimeFormat(pattern = "yyyy-MM-dd") Date awal,
+            @RequestParam("akhir") @DateTimeFormat(pattern = "yyyy-MM-dd") Date akhir,
+            @RequestParam(value = "status", required = false) String status) {
+        return ResponseHelper.ok( dataService.filterServiceByDateAndStatus(awal, akhir, status));
+    }
+
+    @GetMapping("/dashboard/teknisi/filter/status")
+    public CommonResponse<List<ServiceBarang>> filterServiceByStatus(@RequestParam("status") String status) {
+        return ResponseHelper.ok( dataService.filterServiceByStatus(status));
+    }
+
+    @GetMapping("/dashboard/teknisi/filter/tanggal")
+    public CommonResponse<List<ServiceBarang>> filterServiceByDateRange(@RequestParam("awal") @DateTimeFormat(pattern="yyyy-MM-dd") Date awal,
+                                                        @RequestParam("akhir") @DateTimeFormat(pattern="yyyy-MM-dd") Date akhir) {
+        return ResponseHelper.ok( dataService.filterServiceByDateRange(awal, akhir));
     }
 
 }
