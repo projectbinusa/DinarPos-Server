@@ -28,4 +28,15 @@ public class PoinController {
     public CommonResponse<List<PoinHistory>> getAllByTanggal(@RequestParam(name = "tanggal_awal") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggalAwal, @RequestParam(name = "tanggal_akhir") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggalAkhir ) {
         return ResponseHelper.ok(poinService.getByTanggal(tanggalAwal,tanggalAkhir));
     }
+    @GetMapping("/{id_teknisi}/{month}")
+    public CommonResponse<?> getPoinForMonth(@PathVariable("id_teknisi") Long idTeknisi, @PathVariable("month") int month) {
+        return ResponseHelper.ok(poinService.getPoinForMonth(idTeknisi, month));
+    }
+    @GetMapping("/filter")
+    public List<PoinHistory> filterPoinHistory(
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date awal,
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date akhir,
+            @RequestParam Long idTeknisi) {
+        return poinService.getPoinHistory(awal, akhir, idTeknisi);
+    }
 }
