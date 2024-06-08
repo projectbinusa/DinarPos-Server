@@ -83,7 +83,7 @@ public class ReturService {
     }
 
     public List<ServiceBarang> getServiceNotif(String tglAwal, String tglAkhir) {
-        return serviceRepository.findServicesNotTakenAndOlderThanOneWeek();
+        return serviceRepository.findServicesNotif();
     }
 
     public List<ServiceBarang> getTakenServices(String tglAwal, String tglAkhir) {

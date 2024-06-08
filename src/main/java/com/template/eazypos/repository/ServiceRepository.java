@@ -94,7 +94,7 @@ public interface ServiceRepository extends JpaRepository<ServiceBarang, Long> {
     List<ServiceBarang> findServiceCansel(@Param("tglAwal") String tglAwal, @Param("tglAkhir") String tglAkhir);
 
     @Query(value = "SELECT * FROM service WHERE taken = 'N' AND tgl_masuk < NOW() - INTERVAL 1 WEEK ORDER BY tgl_masuk ASC", nativeQuery = true)
-    List<ServiceBarang> findServicesNotTakenAndOlderThanOneWeek();
+    List<ServiceBarang> findServicesNotif();
 
     @Query(value = "SELECT * FROM service WHERE taken = 'Y' AND DATE(tgl_masuk) BETWEEN :tglAwal AND :tglAkhir ORDER BY tgl_ambil DESC LIMIT 100", nativeQuery = true)
     List<ServiceBarang> findTakenServices(@Param("tglAwal") String tglAwal, @Param("tglAkhir") String tglAkhir);
