@@ -77,4 +77,25 @@ public interface ServiceRepository extends JpaRepository<ServiceBarang, Long> {
 
     @Query("SELECT s FROM ServiceBarang s WHERE s.tanggalMasuk >= :awal AND s.tanggalMasuk <= :akhir")
     List<ServiceBarang> filterByDateRange(@Param("awal") Date awal, @Param("akhir") Date akhir);
+
+    @Query(value = "SELECT * FROM service WHERE taken = 'Y'", nativeQuery = true)
+    List<ServiceBarang> findByStatusEndContainingAndTakenAndTglMasukBetween(String statusEnd, String taken, String tglAwal, String tglAkhir);
+
+    @Query(value = "SELECT * FROM service WHERE status_end = :status AND tgl_masuk BETWEEN :tglAwal AND :tglAkhir", nativeQuery = true)
+    List<ServiceBarang> findByStatusEndAndTglMasukBetween(@Param("status") String status, @Param("tglAwal") String tglAwal, @Param("tglAkhir") String tglAkhir);
+
+    @Query(value = "SELECT * FROM service WHERE status_end = :status AND tgl_masuk BETWEEN :tglAwal AND :tglAkhir", nativeQuery = true)
+    List<ServiceBarang> findByStatusAndTanggalMasukBetween(@Param("status") String status, @Param("tglAwal") String tglAwal, @Param("tglAkhir") String tglAkhir);
+
+    @Query(value = "SELECT * FROM service WHERE id_tt IN (SELECT id_tt_baru FROM retur WHERE id_tt_baru=service.id_tt) AND taken='N' AND DATE(tgl_masuk) >= :tglAwal AND DATE(tgl_masuk) <= :tglAkhir", nativeQuery = true)
+    List<ServiceBarang> findServiceRetur(String tglAwal, String tglAkhir);
+
+    @Query(value = "SELECT * FROM service WHERE id_tt IN (SELECT id_tt_baru FROM retur WHERE id_tt_baru=service.id_tt) AND taken='N' AND DATE(tgl_masuk) >= :tglAwal AND DATE(tgl_masuk) <= :tglAkhir", nativeQuery = true)
+    List<ServiceBarang> findServiceCansel(@Param("tglAwal") String tglAwal, @Param("tglAkhir") String tglAkhir);
+
+    @Query(value = "SELECT * FROM service WHERE taken = 'N' AND tgl_masuk < NOW() - INTERVAL 1 WEEK ORDER BY tgl_masuk ASC", nativeQuery = true)
+    List<ServiceBarang> findServicesNotTakenAndOlderThanOneWeek();
+
+    @Query(value = "SELECT * FROM service WHERE taken = 'Y' AND DATE(tgl_masuk) BETWEEN :tglAwal AND :tglAkhir ORDER BY tgl_ambil DESC LIMIT 100", nativeQuery = true)
+    List<ServiceBarang> findTakenServices(@Param("tglAwal") String tglAwal, @Param("tglAkhir") String tglAkhir);
 }
