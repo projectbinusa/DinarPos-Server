@@ -62,4 +62,32 @@ public class ReturService {
         return returRepository.findAll();
     }
 
+    public List<ServiceBarang> getServiceReady(String tglAwal, String tglAkhir) {
+        return serviceRepository.findByStatusEndContainingAndTakenAndTglMasukBetween("%READY%", "Y", tglAwal, tglAkhir);
+    }
+
+    public List<ServiceBarang> getServiceNA(String tglAwal, String tglAkhir) {
+        return serviceRepository.findByStatusEndAndTglMasukBetween("N_A", tglAwal, tglAkhir);
+    }
+
+    public List<ServiceBarang> getServiceByStatusAndTanggalMasuk(String status, String tglAwal, String tglAkhir) {
+        return serviceRepository.findByStatusAndTanggalMasukBetween(status, tglAwal, tglAkhir);
+    }
+
+    public List<ServiceBarang> getServiceRetur(String tglAwal, String tglAkhir) {
+        return serviceRepository.findServiceRetur(tglAwal, tglAkhir);
+    }
+
+    public List<ServiceBarang> getServiceCancel(String tglAwal, String tglAkhir) {
+        return serviceRepository.findServiceCansel(tglAwal, tglAkhir);
+    }
+
+    public List<ServiceBarang> getServiceNotif(String tglAwal, String tglAkhir) {
+        return serviceRepository.findServicesNotif();
+    }
+
+    public List<ServiceBarang> getTakenServices(String tglAwal, String tglAkhir) {
+        return serviceRepository.findTakenServices(tglAwal, tglAkhir);
+    }
+
 }
