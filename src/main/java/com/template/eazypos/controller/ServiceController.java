@@ -162,4 +162,16 @@ public class ServiceController {
         return ResponseHelper.ok( dataService.filterServiceByDateRange(awal, akhir));
     }
 
+    @GetMapping("/cancel")
+    public CommonResponse<List<ServiceBarang>> getServiceCancel() {
+      return ResponseHelper.ok(dataService.getServiceCancel());
+    }
+
+    @GetMapping("/cancel/filter")
+    public CommonResponse<List<ServiceBarang>> getTglFilterServiceCancel(
+            @RequestParam("awal") @DateTimeFormat(pattern = "yyyy-MM-dd") Date awal,
+            @RequestParam("akhir") @DateTimeFormat(pattern = "yyyy-MM-dd") Date akhir) {
+       return ResponseHelper.ok(dataService.getTglFilterServiceCancel(awal , akhir));
+    }
+
 }

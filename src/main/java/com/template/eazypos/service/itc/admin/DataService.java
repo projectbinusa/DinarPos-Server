@@ -634,5 +634,13 @@ public class DataService {
         return serviceRepository.filterByDateRange(awal, akhir);
     }
 
+    public List<ServiceBarang> getServiceCancel() {
+        return serviceRepository.findServiceCancel("CANCEL");
+    }
+
+    public List<ServiceBarang> getTglFilterServiceCancel(Date awal, Date akhir) {
+        return serviceRepository.findServiceCancelByDate("CANCEL", awal, akhir);
+    }
+
 }
 

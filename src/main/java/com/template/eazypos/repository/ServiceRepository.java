@@ -98,4 +98,17 @@ public interface ServiceRepository extends JpaRepository<ServiceBarang, Long> {
 
     @Query(value = "SELECT * FROM service WHERE taken = 'Y' AND DATE(tgl_masuk) BETWEEN :tglAwal AND :tglAkhir ORDER BY tgl_ambil DESC LIMIT 100", nativeQuery = true)
     List<ServiceBarang> findTakenServices(@Param("tglAwal") String tglAwal, @Param("tglAkhir") String tglAkhir);
+
+    @Query("SELECT s, (SELECT st.status FROM Status st WHERE st.service = s.idTT AND st.id = (SELECT MAX(st2.id) FROM Status st2 WHERE st2.service = s.idTT)) AS sts " +
+            "FROM ServiceBarang s " +
+            "WHERE s.taken = 'N' AND s.statusEnd LIKE %:statusEnd% " +
+            "ORDER BY s.tanggalAmbil DESC")
+    List<ServiceBarang> findServiceCancel(@Param("statusEnd") String statusEnd);
+
+    @Query("SELECT s FROM ServiceBarang s " +
+            "WHERE s.taken = 'N' AND s.statusEnd LIKE %:statusEnd% " +
+            "AND s.tanggalMasuk >= :awal AND s.tanggalMasuk <= :akhir")
+    List<ServiceBarang> findServiceCancelByDate(@Param("statusEnd") String statusEnd,
+                                                @Param("awal") Date awal,
+                                                @Param("akhir") Date akhir);
 }
