@@ -10,6 +10,7 @@ import java.util.Date;
 @Table(name = "service")
 public class ServiceBarang extends DateConfig {
 
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_tt")
@@ -21,9 +22,6 @@ public class ServiceBarang extends DateConfig {
 
     @Column(name = "checker", nullable = false, length = 255)
     private String checker;
-
-//    @Column(name = "customer_id", nullable = false)
-//    private Long customerId;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     @JoinColumn(name = "customer_id", nullable = false, updatable = false)
@@ -67,17 +65,17 @@ public class ServiceBarang extends DateConfig {
 
     @Column(name = "tgl_masuk", nullable = false)
     @Temporal(TemporalType.DATE)
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" , timezone = "Asia/Jakarta")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Jakarta")
     private Date tanggalMasuk;
 
     @Column(name = "tgl_jadi", nullable = false)
     @Temporal(TemporalType.DATE)
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" , timezone = "Asia/Jakarta")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Jakarta")
     private Date tanggalJadi;
 
     @Column(name = "tgl_ambil", nullable = false)
     @Temporal(TemporalType.DATE)
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" , timezone = "Asia/Jakarta")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Jakarta")
     private Date tanggalAmbil;
 
     @Column(name = "b_sparepart", nullable = false)
@@ -102,7 +100,7 @@ public class ServiceBarang extends DateConfig {
     private String statusEnd;
 
     @Column(name = "taken", nullable = false, length = 1, columnDefinition = "varchar(1) default 'N'")
-    private String taken ="N";
+    private String taken;
 
     @Lob
     @Column(name = "f_b", nullable = false, columnDefinition = "text")
@@ -114,7 +112,7 @@ public class ServiceBarang extends DateConfig {
 
     @Column(name = "timestamp", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" , timezone = "Asia/Jakarta")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Jakarta")
     private Date timestamp;
 
     public Long getIdTT() {

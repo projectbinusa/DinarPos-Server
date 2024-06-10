@@ -27,6 +27,8 @@ public interface PoinHistoryRepository extends JpaRepository<PoinHistory , Long>
 
     @Query(value = "SELECT * FROM poin_history WHERE ket = :id" , nativeQuery = true)
     Optional<PoinHistory> findByIdTT(String id);
+    @Query(value = "SELECT * FROM poin_history WHERE id_teknisi = :id" , nativeQuery = true)
+    List<PoinHistory> findByIdTeknisi(Long id);
 
     @Query("SELECT p FROM PoinHistory p WHERE p.teknisi = :idTeknisi AND FUNCTION('YEAR', p.tanggal) = FUNCTION('YEAR', CURRENT_DATE) AND FUNCTION('MONTH', p.tanggal) = :month")
     List<PoinHistory> findPoinByTeknisiForMonth(@Param("idTeknisi") Long idTeknisi, @Param("month") int month);

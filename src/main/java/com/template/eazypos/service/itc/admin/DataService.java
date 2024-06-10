@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import com.google.api.client.util.Base64;
 
+import javax.persistence.EntityManager;
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -70,6 +72,9 @@ public class DataService {
     @Autowired
     private PoinRepository poinRepository;
 
+    @Autowired
+    private EntityManager entityManager;
+
 
     private String convertToBase64Url(MultipartFile file) {
         String url = "";
@@ -87,6 +92,12 @@ public class DataService {
 
     public ServiceBarang addService(AddServiceDTO serviceDTO){
         ServiceBarang service = new ServiceBarang();
+        Long total_service = serviceRepository.countTotalService();
+        for (Long i = 1L; i > total_service; i++) {
+           if (!serviceRepository.existsByIdTT(i)){
+               service.setIdTT(i);
+           }
+        }
         service.setCustomer(customerRepository.findById(serviceDTO.getId_customer()).orElseThrow(() -> new NotFoundException("Id Customer tidak dinemukan")));
         service.setKet(serviceDTO.getKet());
         service.setProduk(serviceDTO.getJenis_produk());
@@ -553,20 +564,31 @@ public class DataService {
         double poinlama = poinHistory.getPoin();
         double totalPoinLama = poin.getPoin() - poinlama;
         double totalPoinBaru = totalPoinLama + editPoinDTO.getPoin();
+        double nominal = editPoinDTO.getPoin() * 90000;
         poin.setPoin(totalPoinBaru);
+        poinHistory.setNominal(Double.hashCode(nominal));
         poinRepository.save(poin);
         poinHistory.setPoin(editPoinDTO.getPoin());
         return poinHistoryRepository.save(poinHistory);
     }
 
+    @Transactional
     public ServiceBarang editTandaTerima(EditIdTtDTO editIdTtDTO, Long id) {
-        ServiceBarang serviceBarang = serviceRepository.findByIdTT(id)
+        ServiceBarang serviceBarang = serviceRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Id Not Found"));
-        if (serviceBarang.getIdTT().equals(editIdTtDTO.getId_tt())){
-            throw new  NotFoundException("Id Already Exists");
+
+        if (serviceRepository.existsByIdTT(editIdTtDTO.getId_tt())) {
+            throw new NotFoundException("Id Already Exists");
         }
+
+        // Detach the entity from the persistence context
+        entityManager.detach(serviceBarang);
+
+        // Change the ID
         serviceBarang.setIdTT(editIdTtDTO.getId_tt());
-        return serviceRepository.save(serviceBarang);
+
+        // Merge the entity back into the persistence context
+        return entityManager.merge(serviceBarang);
     }
 
     public ServiceBarang editStatusTandaTerima(EditStatusTtDTO editStatusTtDTO, Long id) {
