@@ -1,17 +1,22 @@
 package com.template.eazypos.controller;
 
+import com.template.eazypos.auditing.Pagination;
 import com.template.eazypos.dto.*;
 import com.template.eazypos.exception.CommonResponse;
+import com.template.eazypos.exception.PaginationResponse;
 import com.template.eazypos.exception.ResponseHelper;
 import com.template.eazypos.model.*;
 import com.template.eazypos.service.itc.admin.DataService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("api/service")
@@ -209,6 +214,33 @@ public class ServiceController {
     public CommonResponse<Take> aksiTakeOver(@RequestParam Long idTT, @RequestParam Long teknisiId,
                                 @RequestParam Long takeTeknisiId) {
         return ResponseHelper.ok(dataService.aksiTakeOver(idTT, teknisiId, takeTeknisiId));
+    }
+
+    @GetMapping(path = "/pagination/takenN")
+    public PaginationResponse<List<ServiceBarang>> getAll(
+            @RequestParam(defaultValue = Pagination.page, required = false) Long page,
+            @RequestParam(defaultValue = Pagination.limit, required = false) Long limit,
+            @RequestParam(defaultValue = Pagination.sort, required = false) String sort,
+            @RequestParam(required = false) String search
+    ) {
+        Page<ServiceBarang> servicePage;
+
+        if (search != null && !search.isEmpty()) {
+            servicePage = dataService.getAllWithPagination(page, limit, sort, search);
+        } else {
+            servicePage = dataService.getAllWithPagination(page, limit, sort, null);
+        }
+
+        List<ServiceBarang> serviceBarangs = servicePage.getContent();
+        long totalItems = servicePage.getTotalElements();
+        int totalPages = servicePage.getTotalPages();
+
+        Map<String, Long> pagination = new HashMap<>();
+        pagination.put("total", totalItems);
+        pagination.put("page", page);
+        pagination.put("total_page", (long) totalPages);
+
+        return ResponseHelper.okWithPagination(serviceBarangs, pagination);
     }
 
 }

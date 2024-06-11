@@ -3,6 +3,8 @@ package com.template.eazypos.repository;
 
 import com.template.eazypos.dto.ServiceDataDTO;
 import com.template.eazypos.model.ServiceBarang;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -128,4 +130,9 @@ public interface ServiceRepository extends JpaRepository<ServiceBarang, Long> {
 
     @Query("SELECT COUNT(s) FROM ServiceBarang s")
     long countAllServices();
+    @Query("SELECT s FROM ServiceBarang s WHERE LOWER(taken) LIKE LOWER(CONCAT('%', :keyword, '%')) AND taken = 'N'")
+    Page<ServiceBarang> findAllByKeywordAndTaken(@Param("keyword") String keyword, Pageable pageable);
+
+    @Query("SELECT s FROM ServiceBarang s WHERE s.taken = 'N'")
+    Page<ServiceBarang> findAllByTaken(Pageable pageable);
 }

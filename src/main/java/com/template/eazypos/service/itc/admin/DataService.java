@@ -6,6 +6,10 @@ import com.template.eazypos.exception.NotFoundException;
 import com.template.eazypos.model.*;
 import com.template.eazypos.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import com.google.api.client.util.Base64;
@@ -730,6 +734,20 @@ public class DataService {
 
         }
         throw new NotFoundException("Service Not Found");
+    }
+    public Page<ServiceBarang> getAllWithPagination(Long page, Long limit, String sort, String search) {
+        Sort.Direction direction = Sort.Direction.ASC;
+        if (sort.startsWith("-")) {
+            sort = sort.substring(1);
+            direction = Sort.Direction.DESC;
+        }
+
+        Pageable pageable = PageRequest.of(Math.toIntExact(page - 1), Math.toIntExact(limit), direction, sort);
+        if (search != null && !search.isEmpty()) {
+            return serviceRepository.findAllByKeywordAndTaken(search, pageable);
+        } else {
+            return serviceRepository.findAllByTaken(pageable);
+        }
     }
 
 }
