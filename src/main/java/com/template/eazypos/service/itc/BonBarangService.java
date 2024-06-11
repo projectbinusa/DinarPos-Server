@@ -1,6 +1,7 @@
 package com.template.eazypos.service.itc;
 
 import com.template.eazypos.dto.BonBarangDTO;
+import com.template.eazypos.dto.UpdateBonBarangDTO;
 import com.template.eazypos.exception.NotFoundException;
 import com.template.eazypos.model.BonBarang;
 import com.template.eazypos.repository.BarangRepository;
@@ -32,7 +33,7 @@ public class BonBarangService {
 
     public BonBarang add(BonBarangDTO bonBarangDTO){
         BonBarang bonBarang = new BonBarang();
-        bonBarang.setTgl_ambil(bonBarangDTO.getTanggal_kembali());
+        bonBarang.setTgl_ambil(bonBarangDTO.getTanggal_ambil());
         bonBarang.setTeknisi(teknisiRepository.findById(bonBarangDTO.getId_teknisi()).orElseThrow(() -> new NotFoundException("Id Teknisi Not Found")));
         bonBarang.setServiceBarang(serviceRepository.findByIdTT(bonBarangDTO.getId_tt()).orElseThrow(() -> new NotFoundException("Id Service Not Found")));
         bonBarang.setBarang(barangRepository.findByBarcode(bonBarangDTO.getBarcode_brg()));
@@ -42,12 +43,9 @@ public class BonBarangService {
         return bonBarangRepository.findById(id).orElseThrow(() -> new NotFoundException("Id Not Found"));
     }
 
-    public BonBarang edit(BonBarangDTO bonBarangDTO ,Long id){
+    public BonBarang edit(UpdateBonBarangDTO bonBarangDTO , Long id){
         BonBarang bonBarang = bonBarangRepository.findById(id).orElseThrow(() -> new NotFoundException("Id Not Found"));
-        bonBarang.setTgl_ambil(bonBarangDTO.getTanggal_kembali());
-        bonBarang.setTeknisi(teknisiRepository.findById(bonBarangDTO.getId_teknisi()).orElseThrow(() -> new NotFoundException("Id Teknisi Not Found")));
-        bonBarang.setServiceBarang(serviceRepository.findByIdTT(bonBarangDTO.getId_tt()).orElseThrow(() -> new NotFoundException("Id Service Not Found")));
-        bonBarang.setBarang(barangRepository.findByBarcode(bonBarangDTO.getBarcode_brg()));
+        bonBarang.setTgl_kembalikan(bonBarangDTO.getTgl_kembali());
         return bonBarangRepository.save(bonBarang);
     }
 

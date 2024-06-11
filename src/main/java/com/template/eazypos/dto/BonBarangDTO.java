@@ -9,7 +9,7 @@ public class BonBarangDTO {
 
     public String barcode_brg;
 
-    public Date tanggal_kembali;
+    public Date tanggal_ambil;
 
     public Long getId_teknisi() {
         return id_teknisi;
@@ -35,11 +35,11 @@ public class BonBarangDTO {
         this.barcode_brg = barcode_brg;
     }
 
-    public Date getTanggal_kembali() {
-        return tanggal_kembali;
+    public Date getTanggal_ambil() {
+        return tanggal_ambil;
     }
 
-    public void setTanggal_kembali(Date tanggal_kembali) {
-        this.tanggal_kembali = tanggal_kembali;
+    public void setTanggal_ambil(Date tanggal_ambil) {
+        this.tanggal_ambil = tanggal_ambil;
     }
 }

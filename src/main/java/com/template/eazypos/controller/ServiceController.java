@@ -173,5 +173,42 @@ public class ServiceController {
             @RequestParam("akhir") @DateTimeFormat(pattern = "yyyy-MM-dd") Date akhir) {
        return ResponseHelper.ok(dataService.getTglFilterServiceCancel(awal , akhir));
     }
+    @GetMapping("/my-service")
+    public CommonResponse<List<ServiceBarang>> getMyServices(@RequestParam Long teknisiId) {
+        return ResponseHelper.ok(dataService.getMyServices(teknisiId));
+    }
+
+    @GetMapping("/my-service-retur")
+    public CommonResponse<List<ServiceBarang>> getMyServicesRetur(@RequestParam Long teknisiId) {
+        return ResponseHelper.ok(dataService.getMyServicesRetur(teknisiId));
+    }
+
+    @GetMapping("/service-taken")
+    public CommonResponse<List<ServiceBarang>> getServiceTaken() {
+        return ResponseHelper.ok( dataService.getServiceTaken());
+    }
+
+    @GetMapping("/count")
+    public CommonResponse<Long> countAllServices() {
+        return ResponseHelper.ok(dataService.countAllServices());
+    }
+
+    @PutMapping("/status-new")
+    public CommonResponse<Status>aksiStatusNew(@RequestParam Long idTT, @RequestParam Long teknisiId,
+                                 @RequestParam String status, @RequestParam String solusi,
+                                 @RequestParam String ket, @RequestParam String validasi) {
+        return ResponseHelper.ok( dataService.aksiStatusNew(idTT, teknisiId, status, solusi, ket, validasi));
+    }
+    @PutMapping("/aksi-status-plus")
+    public CommonResponse<Status> aksiStatusPlus(@RequestParam Long idTT, @RequestParam Long teknisiId,
+                                  @RequestParam String status, @RequestParam String solusi,
+                                  @RequestParam String ket, @RequestParam String validasi) {
+        return ResponseHelper.ok(dataService.aksiStatusPlus(idTT, teknisiId, status, solusi, ket, validasi));
+    }
+    @PutMapping("/aksi-take-over")
+    public CommonResponse<Take> aksiTakeOver(@RequestParam Long idTT, @RequestParam Long teknisiId,
+                                @RequestParam Long takeTeknisiId) {
+        return ResponseHelper.ok(dataService.aksiTakeOver(idTT, teknisiId, takeTeknisiId));
+    }
 
 }

@@ -3,22 +3,13 @@ package com.template.eazypos.service.itc;
 import com.template.eazypos.dto.TeknisiDTO;
 import com.template.eazypos.exception.BadRequestException;
 import com.template.eazypos.exception.NotFoundException;
-import com.template.eazypos.model.Pengguna;
-import com.template.eazypos.model.Poin;
-import com.template.eazypos.model.Salesman;
-import com.template.eazypos.model.Teknisi;
-import com.template.eazypos.repository.PenggunaRepository;
-import com.template.eazypos.repository.PoinRepository;
-import com.template.eazypos.repository.TeknisiRepository;
-import com.template.eazypos.repository.UserRepository;
+import com.template.eazypos.model.*;
+import com.template.eazypos.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class TeknisiService {
@@ -31,7 +22,11 @@ public class TeknisiService {
 
     @Autowired
     private PoinRepository poinRepository;
+    @Autowired
+    private ServiceRepository serviceBarangRepository;
 
+    @Autowired
+    private StatusRepository statusRepository;
 
     public Teknisi add(TeknisiDTO teknisiDTO){
         Teknisi teknisi = new Teknisi();
@@ -92,6 +87,7 @@ public class TeknisiService {
 
         return teknisiRepository.save(update);
     }
+
     public Map<String, Boolean> delete(Long id ) {
         try {
             teknisiRepository.deleteById(id);

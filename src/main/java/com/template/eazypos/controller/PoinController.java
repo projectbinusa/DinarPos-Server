@@ -40,7 +40,7 @@ public class PoinController {
         return poinService.getPoinHistory(awal, akhir, idTeknisi);
     }
     @GetMapping("/teknisi")
-    public CommonResponse<List<PoinHistory>> getPoinByIdTeknisi(@RequestParam(name = "id_teknisi") Long idTeknisi) {
+    public CommonResponse<List<PoinHistory>> getPoinByIdTeknisi(@RequestParam(name = "id_teknisi") String idTeknisi) {
         return ResponseHelper.ok(poinService.getPoinHistoryByIdTeknisi(idTeknisi));
     }
 }

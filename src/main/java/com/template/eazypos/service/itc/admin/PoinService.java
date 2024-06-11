@@ -37,7 +37,7 @@ public class PoinService {
     public List<PoinHistory> getPoinHistory(Date tanggalAwal, Date tanggalAkhir, Long idTeknisi) {
         return poinHistoryRepository.findByDateRangeAndTeknisi(tanggalAwal, tanggalAkhir, idTeknisi);
     }
-    public List<PoinHistory> getPoinHistoryByIdTeknisi(Long id){
+    public List<PoinHistory> getPoinHistoryByIdTeknisi(String id){
         return poinHistoryRepository.findByIdTeknisi(id);
     }
 

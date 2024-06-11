@@ -664,5 +664,73 @@ public class DataService {
         return serviceRepository.findServiceCancelByDate("CANCEL", awal, akhir);
     }
 
+    public List<ServiceBarang> getMyServices(Long teknisiId) {
+        return serviceRepository.findMyServices(teknisiId);
+    }
+
+    public List<ServiceBarang> getMyServicesRetur(Long teknisiId) {
+        return serviceRepository.findMyServicesRetur(teknisiId);
+    }
+
+    public List<ServiceBarang> getServiceTaken() {
+        return serviceRepository.findServiceTaken();
+    }
+
+    public long countAllServices() {
+        return serviceRepository.countAllServices();
+    }
+
+    public Status aksiStatusNew(Long idTT, Long teknisiId, String status, String solusi, String ket, String validasi) {
+        Optional<ServiceBarang> serviceBarangOptional = serviceRepository.findById(idTT);
+        if (serviceBarangOptional.isPresent()) {
+            ServiceBarang serviceBarang = serviceBarangOptional.get();
+            serviceBarang.setStatusEnd("PROSES");
+            serviceBarang.setTeknisi(teknisiRepository.findById(teknisiId).orElseThrow(() -> new NotFoundException("Id Teknisi Not Found"))); // Assuming Teknisi entity has an appropriate constructor
+            serviceRepository.save(serviceBarang);
+
+            Status newStatus = new Status();
+            newStatus.setService(serviceRepository.findByIdTT(idTT).orElseThrow(() -> new NotFoundException("Id Service Not Found")));
+            newStatus.setTeknisi(teknisiRepository.findById(teknisiId).orElseThrow(() -> new NotFoundException("Id Teknisi Not Found")));
+            newStatus.setTanggal(new Date());
+            newStatus.setStatus(status);
+            newStatus.setSolusi(solusi);
+            newStatus.setKet(ket);
+            newStatus.setType(validasi);
+            newStatus.setValidasi("0");
+
+
+            return statusRepository.save(newStatus);
+        }
+       throw new NotFoundException("Service Not Found");
+    }
+    public Status aksiStatusPlus(Long idTT, Long teknisiId, String status, String solusi, String ket, String validasi) {
+        Status newStatus = new Status();
+        newStatus.setService(serviceRepository.findByIdTT(idTT).orElseThrow(() -> new NotFoundException("Id Service Not Found")));
+        newStatus.setTeknisi(teknisiRepository.findById(teknisiId).orElseThrow(() -> new NotFoundException("Id Teknisi Not Found")));
+        newStatus.setTanggal(new Date());
+        newStatus.setStatus(status);
+        newStatus.setSolusi(solusi);
+        newStatus.setKet(ket);
+        newStatus.setType(validasi);
+        newStatus.setValidasi("0");
+        return statusRepository.save(newStatus);
+    }
+    public Take aksiTakeOver(Long idTT, Long teknisiId, Long takeTeknisiId) {
+        Optional<ServiceBarang> serviceBarangOptional = serviceRepository.findById(idTT);
+        if (serviceBarangOptional.isPresent()) {
+            ServiceBarang serviceBarang = serviceBarangOptional.get();
+            serviceBarang.setTeknisi(teknisiRepository.findById(teknisiId).orElseThrow(() -> new NotFoundException("Id Teknisi Not Found")));
+            serviceRepository.save(serviceBarang);
+
+            Take takeOver = new Take();
+            takeOver.setService(serviceRepository.findByIdTT(idTT).orElseThrow(() -> new NotFoundException("Id Service Not Found")));
+            takeOver.setId_tekinisi(teknisiRepository.findById(teknisiId).orElseThrow(() -> new NotFoundException("Id Teknisi Not Found")));
+            takeOver.setId_take(teknisiRepository.findById(teknisiId).orElseThrow(() -> new NotFoundException("Id Teknisi Not Found")));
+            return takeRepository.save(takeOver);
+
+        }
+        throw new NotFoundException("Service Not Found");
+    }
+
 }
 

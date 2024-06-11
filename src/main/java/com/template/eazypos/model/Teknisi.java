@@ -31,6 +31,11 @@ public class Teknisi extends DateConfig {
     @Column(name = "status", nullable = false)
     private String status;
 
+
+    public Teknisi() {
+        super();
+    }
+
     public Long getId() {
         return id;
     }

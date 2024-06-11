@@ -116,4 +116,16 @@ public interface ServiceRepository extends JpaRepository<ServiceBarang, Long> {
     List<ServiceBarang> findServiceCancelByDate(@Param("statusEnd") String statusEnd,
                                                 @Param("awal") Date awal,
                                                 @Param("akhir") Date akhir);
+
+    @Query("SELECT s FROM ServiceBarang s WHERE s.teknisi.id = ?1 AND s.taken != 'Y' AND s.statusEnd NOT LIKE '%CANCEL%' ORDER BY CASE WHEN s.statusEnd = 'N_A' THEN 1 WHEN s.statusEnd LIKE '%PROSES%' THEN 2 WHEN s.statusEnd LIKE '%READY%' THEN 3 ELSE 4 END DESC")
+    List<ServiceBarang> findMyServices(Long teknisiId);
+
+    @Query("SELECT s FROM ServiceBarang s WHERE s.teknisi.id = ?1 AND s.taken = 'N' AND s.statusEnd LIKE '%CANCEL%'")
+    List<ServiceBarang> findMyServicesRetur(Long teknisiId);
+
+    @Query("SELECT s FROM ServiceBarang s WHERE s.taken = 'Y' ORDER BY s.tanggalAmbil DESC")
+    List<ServiceBarang> findServiceTaken();
+
+    @Query("SELECT COUNT(s) FROM ServiceBarang s")
+    long countAllServices();
 }
