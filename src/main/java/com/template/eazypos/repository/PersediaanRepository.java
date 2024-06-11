@@ -14,4 +14,7 @@ public interface PersediaanRepository extends JpaRepository<Persediaan, Long> {
 
     @Query("SELECT p FROM Persediaan p WHERE p.date < :date ORDER BY p.date DESC")
     List<Persediaan> findLastBeforeDate(@Param("date") Date date);
+
+    @Query(value = "SELECT * FROM persediaan WHERE del_flag = 1 ", nativeQuery = true)
+    List<Persediaan> findAllPersediaan();
 }
