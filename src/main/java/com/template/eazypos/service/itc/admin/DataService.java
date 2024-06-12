@@ -749,10 +749,12 @@ public class DataService {
         }
 
         if (id != null) {
+            // Jika search adalah nomor ID, cari berdasarkan ID
             Optional<ServiceBarang> result = serviceRepository.findByIdAndTaken(id);
             return result.map(serviceBarang -> new PageImpl<>(Collections.singletonList(serviceBarang), pageable, 1))
                     .orElseGet(() -> new PageImpl<>(Collections.emptyList(), pageable, 0));
         } else if (search != null && !search.isEmpty()) {
+            // Jika search adalah teks, cari berdasarkan teks
             return serviceRepository.findAllByKeywordAndTaken(search, pageable);
         } else {
             return serviceRepository.findAllByTaken(pageable);
