@@ -242,5 +242,16 @@ public class ServiceController {
 
         return ResponseHelper.okWithPagination(serviceBarangs, pagination);
     }
+    @GetMapping("/service-taken-pimpinan")
+    public List<ServiceBarang> getServiceTakenPimpinan() {
+        return dataService.getServiceTakenPimpinan();
+    }
+
+    @GetMapping("/service-taken-by-date")
+    public List<ServiceBarang> getServiceTakenByDateRange(
+            @RequestParam("awal") @DateTimeFormat(pattern = "yyyy-MM-dd") Date awal,
+            @RequestParam("akhir") @DateTimeFormat(pattern = "yyyy-MM-dd") Date akhir) {
+        return dataService.getServiceTakenByDateRange(awal, akhir);
+    }
 
 }
