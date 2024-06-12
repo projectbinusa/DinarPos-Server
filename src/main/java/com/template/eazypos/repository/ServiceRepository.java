@@ -130,7 +130,9 @@ public interface ServiceRepository extends JpaRepository<ServiceBarang, Long> {
 
     @Query("SELECT COUNT(s) FROM ServiceBarang s")
     long countAllServices();
-    @Query("SELECT s FROM ServiceBarang s WHERE LOWER(taken) LIKE LOWER(CONCAT('%', :keyword, '%')) AND taken = 'N'")
+
+
+    @Query("SELECT s FROM ServiceBarang s WHERE (LOWER(s.taken) LIKE LOWER(CONCAT('%', :keyword, '%')) OR LOWER(s.idTT) LIKE LOWER(CONCAT('%', :keyword, '%'))) AND s.taken = 'N'")
     Page<ServiceBarang> findAllByKeywordAndTaken(@Param("keyword") String keyword, Pageable pageable);
 
     @Query("SELECT s FROM ServiceBarang s WHERE s.taken = 'N'")

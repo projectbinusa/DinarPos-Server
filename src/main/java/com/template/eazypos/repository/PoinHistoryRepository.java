@@ -35,4 +35,7 @@ public interface PoinHistoryRepository extends JpaRepository<PoinHistory , Long>
 
     @Query(value = "SELECT * FROM poin_history  WHERE tgl BETWEEN :tanggalAwal AND :tanggalAkhir AND id_teknisi = :id" , nativeQuery = true)
     List<PoinHistory> findByDateRangeAndTeknisi( Date tanggalAwal, Date tanggalAkhir, Long id);
+
+    @Query(value = "SELECT * FROM poin_history WHERE ket = :keterangan", nativeQuery = true)
+    List<PoinHistory> findAllByKeterangan(@Param("keterangan") String keterangan);
 }

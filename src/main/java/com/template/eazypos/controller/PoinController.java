@@ -43,4 +43,9 @@ public class PoinController {
     public CommonResponse<List<PoinHistory>> getPoinByIdTeknisi(@RequestParam(name = "id_teknisi") String idTeknisi) {
         return ResponseHelper.ok(poinService.getPoinHistoryByIdTeknisi(idTeknisi));
     }
+
+    @GetMapping("/ket/{keterangan}")
+    public CommonResponse<List<PoinHistory>> getAllPoinByKeterangan(@PathVariable("keterangan") String keterangan) {
+        return ResponseHelper.ok(poinService.getAllByKeterangan(keterangan));
+    }
 }

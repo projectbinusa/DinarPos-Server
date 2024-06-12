@@ -13,6 +13,6 @@ public interface TeknisiRepository extends JpaRepository<Teknisi ,Long> {
     @Query(value = "SELECT * FROM teknisi WHERE nama = :username ", nativeQuery = true)
     Optional<Teknisi> findByNama(String username);
 
-    @Query(value = "SELECT * FROM teknisi WHERE LOWER(nama) LIKE LOWER(concat('%', :keyword, '%'))", nativeQuery = true)
-    Page<Teknisi> findAllByKeyword(@Param("keyword") String keyword, Pageable pageable);
+    @Query(value = "SELECT s FROM Teknisi s WHERE (LOWER(nama) LIKE LOWER(concat('%', :keyword, '%'))) OR (id = :id)")
+    Page<Teknisi> findAllByKeywordOrId(@Param("keyword") String keyword, @Param("id") Long id, Pageable pageable);
 }

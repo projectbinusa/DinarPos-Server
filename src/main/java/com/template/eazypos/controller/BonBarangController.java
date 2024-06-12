@@ -3,6 +3,7 @@ package com.template.eazypos.controller;
 import com.template.eazypos.dto.BonBarangDTO;
 import com.template.eazypos.dto.CustomerCPDTO;
 import com.template.eazypos.dto.UpdateBonBarangDTO;
+import com.template.eazypos.dto.UpdateDataBonBarangDTO;
 import com.template.eazypos.exception.CommonResponse;
 import com.template.eazypos.exception.ResponseHelper;
 import com.template.eazypos.model.BonBarang;
@@ -39,5 +40,10 @@ public class BonBarangController {
     @DeleteMapping("/{id}")
     public CommonResponse<?> delete(@PathVariable("id")  Long id ) {
         return ResponseHelper.ok( bonBarangService.delete(id));
+    }
+
+    @PutMapping("/update/{id}")
+    public CommonResponse<BonBarang> put(@PathVariable("id") Long id, @RequestBody UpdateDataBonBarangDTO dataBonBarangDTO) {
+        return ResponseHelper.ok(bonBarangService.updateBonBarang(dataBonBarangDTO, id));
     }
 }
