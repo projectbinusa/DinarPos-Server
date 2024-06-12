@@ -6,10 +6,7 @@ import com.template.eazypos.exception.NotFoundException;
 import com.template.eazypos.model.*;
 import com.template.eazypos.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import com.google.api.client.util.Base64;
@@ -735,6 +732,7 @@ public class DataService {
         }
         throw new NotFoundException("Service Not Found");
     }
+
     public Page<ServiceBarang> getAllWithPagination(Long page, Long limit, String sort, String search) {
         Sort.Direction direction = Sort.Direction.ASC;
         if (sort.startsWith("-")) {
@@ -743,7 +741,18 @@ public class DataService {
         }
 
         Pageable pageable = PageRequest.of(Math.toIntExact(page - 1), Math.toIntExact(limit), direction, sort);
-        if (search != null && !search.isEmpty()) {
+
+        Long id = null;
+        try {
+            id = Long.parseLong(search);
+        } catch (NumberFormatException e) {
+        }
+
+        if (id != null) {
+            Optional<ServiceBarang> result = serviceRepository.findByIdAndTaken(id);
+            return result.map(serviceBarang -> new PageImpl<>(Collections.singletonList(serviceBarang), pageable, 1))
+                    .orElseGet(() -> new PageImpl<>(Collections.emptyList(), pageable, 0));
+        } else if (search != null && !search.isEmpty()) {
             return serviceRepository.findAllByKeywordAndTaken(search, pageable);
         } else {
             return serviceRepository.findAllByTaken(pageable);
