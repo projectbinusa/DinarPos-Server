@@ -2,6 +2,7 @@ package com.template.eazypos.service.itc;
 
 import com.template.eazypos.dto.BonBarangDTO;
 import com.template.eazypos.dto.UpdateBonBarangDTO;
+import com.template.eazypos.dto.UpdateDataBonBarangDTO;
 import com.template.eazypos.exception.NotFoundException;
 import com.template.eazypos.model.BonBarang;
 import com.template.eazypos.repository.BarangRepository;
@@ -61,5 +62,11 @@ public class BonBarangService {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    public BonBarang updateBonBarang(UpdateDataBonBarangDTO dataBonBarangDTO, Long id) {
+        BonBarang bonBarang = bonBarangRepository.findById(id).orElseThrow(() -> new NotFoundException("Id Not Found"));
+        bonBarang.setTgl_ambil(dataBonBarangDTO.getTgl_ambil());
+        return bonBarangRepository.save(bonBarang);
     }
 }

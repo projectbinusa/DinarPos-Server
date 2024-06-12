@@ -111,8 +111,21 @@ public class TeknisiService {
         }
 
         Pageable pageable = PageRequest.of(Math.toIntExact(page - 1), Math.toIntExact(limit), direction, sort);
-        if (search != null && !search.isEmpty()) {
-            return teknisiRepository.findAllByKeyword(search, pageable);
+
+        // Cek apakah search adalah nomor ID
+        Long id = null;
+        try {
+            id = Long.parseLong(search);
+        } catch (NumberFormatException e) {
+            // Jika search bukan nomor, abaikan dan biarkan id null
+        }
+
+        if (id != null) {
+            // Jika search adalah nomor ID, cari berdasarkan ID
+            return teknisiRepository.findAllByKeywordOrId(null, id, pageable);
+        } else if (search != null && !search.isEmpty()) {
+            // Jika search adalah teks, cari berdasarkan teks
+            return teknisiRepository.findAllByKeywordOrId(search, null, pageable);
         } else {
             return teknisiRepository.findAll(pageable);
         }
