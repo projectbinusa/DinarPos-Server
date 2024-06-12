@@ -140,4 +140,13 @@ public interface ServiceRepository extends JpaRepository<ServiceBarang, Long> {
 
     @Query("SELECT s FROM ServiceBarang s WHERE s.idTT = :idTT AND s.taken = 'N'")
     Optional<ServiceBarang> findByIdAndTaken(@Param("idTT") Long id);
+
+    @Query("SELECT s, (SELECT st.status FROM Status st WHERE st.service = s.idTT AND st.id = (SELECT MAX(st2.id) FROM Status st2 WHERE st2.service = s.idTT)) AS sts " +
+            "FROM ServiceBarang s " +
+            "WHERE s.taken = 'Y' " +
+            "ORDER BY s.tanggalAmbil DESC")
+    List<ServiceBarang> findServiceTakenPimpinan();
+
+    @Query("SELECT s FROM ServiceBarang s WHERE s.taken = 'Y' AND s.tanggalMasuk >= :awal AND s.tanggalMasuk <= :akhir")
+    List<ServiceBarang> findServiceTakenByDateRange(@Param("awal") Date awal, @Param("akhir") Date akhir);
 }

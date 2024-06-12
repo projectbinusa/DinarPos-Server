@@ -758,6 +758,12 @@ public class DataService {
             return serviceRepository.findAllByTaken(pageable);
         }
     }
+    public List<ServiceBarang> getServiceTakenPimpinan() {
+        return serviceRepository.findServiceTaken();
+    }
+    public List<ServiceBarang> getServiceTakenByDateRange(Date awal, Date akhir) {
+        return serviceRepository.findServiceTakenByDateRange(awal, akhir);
+    }
 
 }
 
