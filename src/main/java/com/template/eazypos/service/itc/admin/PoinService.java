@@ -41,4 +41,8 @@ public class PoinService {
         return poinHistoryRepository.findByIdTeknisi(id);
     }
 
+    public List<PoinHistory> getAllByKeterangan(String keterangan) {
+        return poinHistoryRepository.findAllByKeterangan(keterangan);
+    }
+
 }
