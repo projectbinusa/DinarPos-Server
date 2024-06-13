@@ -12,7 +12,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-public interface PoinHistoryRepository extends JpaRepository<PoinHistory , Long> {
+public interface PoinHistoryRepository extends JpaRepository<PoinHistory, Long> {
     @Query("SELECT ph.teknisi.id AS teknisiId, ph.teknisi.nama AS teknisiNama, SUM(ph.poin) AS totalPoin, SUM(ph.nominal) AS totalNominal " +
             "FROM PoinHistory ph " +
             "JOIN ph.teknisi t " +

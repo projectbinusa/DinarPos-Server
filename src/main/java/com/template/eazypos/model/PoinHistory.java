@@ -33,7 +33,7 @@ public class PoinHistory extends DateConfig {
     @Column(name = "ket", nullable = false, columnDefinition = "text")
     private String keterangan;
 
-    @Column(name = "nominal")
+    @Column(name = "nominal", nullable = false)
     private int nominal;
 
 
