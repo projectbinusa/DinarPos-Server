@@ -1,11 +1,16 @@
 package com.template.eazypos.service.itc.admin;
 
+import com.template.eazypos.dto.PoinHistoryDTO;
+import com.template.eazypos.exception.NotFoundException;
 import com.template.eazypos.model.Poin;
 import com.template.eazypos.model.PoinHistory;
+import com.template.eazypos.model.Teknisi;
 import com.template.eazypos.repository.PoinHistoryRepository;
 import com.template.eazypos.repository.PoinRepository;
+import com.template.eazypos.repository.TeknisiRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.Date;
@@ -17,6 +22,7 @@ import java.util.Map;
 public class PoinService {
     @Autowired
     private PoinHistoryRepository poinHistoryRepository;
+    private TeknisiRepository teknisiRepository;
 
     @Autowired
     private PoinRepository poinRepository;
@@ -69,4 +75,34 @@ public class PoinService {
         Double totalPoin = poinHistoryRepository.findTotalPoinByMonthAndYear(idTeknisi, year, month);
         return totalPoin != null ? totalPoin : 0;
     }
+    @Transactional
+    public PoinHistory add(PoinHistoryDTO poinHistoryDTO) {
+        // Mencari teknisi berdasarkan id_teknisi
+        Teknisi teknisi = teknisiRepository.findById(poinHistoryDTO.getId_teknisi())
+                .orElseThrow(() -> new RuntimeException("Teknisi not found"));
+
+        // Membuat instance PoinHistory baru dan mengisi properti dari DTO
+        PoinHistory poinHistory = new PoinHistory();
+        poinHistory.setTeknisi(teknisi);
+        poinHistory.setPoin(poinHistoryDTO.getPoin());
+        poinHistory.setTanggal(poinHistoryDTO.getTanggal());
+        poinHistory.setKeterangan(poinHistoryDTO.getKeterangan());
+        poinHistory.setNominal(poinHistoryDTO.getNominal());
+
+        // Menyimpan PoinHistory ke database
+        poinHistory = poinHistoryRepository.save(poinHistory);
+
+        // Menambah data ke tabel Poin
+        Poin poin = new Poin();
+        poin.setTeknisi(teknisi);
+        poin.setPoin(poinHistoryDTO.getPoin());
+        poinRepository.save(poin);
+
+        return poinHistory;
+    }
+
+    public List<PoinHistory> getAllPoinHistory() {
+        return poinHistoryRepository.findAll();
+    }
+
 }

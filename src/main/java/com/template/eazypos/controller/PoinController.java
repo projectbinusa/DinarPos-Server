@@ -1,5 +1,6 @@
 package com.template.eazypos.controller;
 
+import com.template.eazypos.dto.PoinHistoryDTO;
 import com.template.eazypos.exception.CommonResponse;
 import com.template.eazypos.exception.ResponseHelper;
 import com.template.eazypos.model.Poin;
@@ -45,10 +46,11 @@ public class PoinController {
         return ResponseHelper.ok(poinService.getPoinHistoryByIdTeknisi(idTeknisi));
     }
 
-    @GetMapping("/ket/{keterangan}")
-    public CommonResponse<List<PoinHistory>> getAllPoinByKeterangan(@PathVariable("keterangan") String keterangan) {
+    @GetMapping("/keterangan")
+    public CommonResponse<List<PoinHistory>> getAllPoinByKeterangan(@RequestParam("keterangan") String keterangan) {
         return ResponseHelper.ok(poinService.getAllByKeterangan(keterangan));
     }
+
     @GetMapping("/pimpinan")
     public List<Poin> getPoin() {
         return poinService.getPoin();
@@ -73,5 +75,15 @@ public class PoinController {
                                              @RequestParam("year") int year,
                                              @RequestParam("month") int month) {
         return poinService.getTotalPoinByMonthAndYear(idTeknisi, year, month);
+    }
+
+    @PostMapping("/add")
+    public CommonResponse<PoinHistory> add(@RequestBody PoinHistoryDTO poinHistoryDTO){
+        return ResponseHelper.ok(poinService.add(poinHistoryDTO));
+    }
+
+    @GetMapping
+    public List<PoinHistory> getAllPoinHistory() {
+        return poinService.getAllPoinHistory();
     }
 }
