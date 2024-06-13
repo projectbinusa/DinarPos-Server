@@ -52,6 +52,11 @@ public class PoinController {
 
     @PostMapping("/add")
     public CommonResponse<PoinHistory> add(@RequestBody PoinHistoryDTO poinHistoryDTO){
-        return ResponseHelper.ok( poinService.add(poinHistoryDTO));
+        return ResponseHelper.ok(poinService.add(poinHistoryDTO));
+    }
+
+    @GetMapping
+    public List<PoinHistory> getAllPoinHistory() {
+        return poinService.getAllPoinHistory();
     }
 }

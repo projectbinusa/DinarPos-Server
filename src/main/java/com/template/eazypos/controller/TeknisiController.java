@@ -50,7 +50,7 @@ public class TeknisiController {
         return ResponseHelper.ok( teknisiService.delete(id));
     }
 
-    @GetMapping(path = "/pagination")
+    @GetMapping(path= "/pagination")
     public PaginationResponse<List<Teknisi>> getAll(
             @RequestParam(defaultValue = Pagination.page, required = false) Long page,
             @RequestParam(defaultValue = Pagination.limit, required = false) Long limit,
@@ -62,17 +62,17 @@ public class TeknisiController {
         if (search != null && !search.isEmpty()) {
             teknisiPage = teknisiService.getAllWithPagination(page, limit, sort, search);
         } else {
-            teknisiPage = teknisiService.getAllWithPagination(page, limit, sort, null);
+            teknisiPage = teknisiService.getAllWithPagination( page, limit, sort, null);
         }
 
         List<Teknisi> teknisis = teknisiPage.getContent();
         long totalItems = teknisiPage.getTotalElements();
         int totalPages = teknisiPage.getTotalPages();
 
-        Map<String, Long> pagination = new HashMap<>();
-        pagination.put("total", totalItems);
-        pagination.put("page", page);
-        pagination.put("total_page", (long) totalPages);
+        Map<String, Integer> pagination = new HashMap<>();
+        pagination.put("total", (int) totalItems);
+        pagination.put("page", Math.toIntExact(page));
+        pagination.put("total_page", totalPages);
 
         return ResponseHelper.okWithPagination(teknisis, pagination);
     }

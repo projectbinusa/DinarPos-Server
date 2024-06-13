@@ -103,7 +103,8 @@ public class TeknisiService {
         }
     }
 
-    public Page<Teknisi> getAllWithPagination(Long page, Long limit, String sort, String search) {
+   public Page<Teknisi> getAllWithPagination(Long page, Long limit, String sort, String search) {
+
         Sort.Direction direction = Sort.Direction.ASC;
         if (sort.startsWith("-")) {
             sort = sort.substring(1);
@@ -111,23 +112,10 @@ public class TeknisiService {
         }
 
         Pageable pageable = PageRequest.of(Math.toIntExact(page - 1), Math.toIntExact(limit), direction, sort);
-
-        // Cek apakah search adalah nomor ID
-        Long id = null;
-        try {
-            id = Long.parseLong(search);
-        } catch (NumberFormatException e) {
-            // Jika search bukan nomor, abaikan dan biarkan id null
-        }
-
-        if (id != null) {
-            // Jika search adalah nomor ID, cari berdasarkan ID
-            return teknisiRepository.findAllByKeywordOrId(null, id, pageable);
-        } else if (search != null && !search.isEmpty()) {
-            // Jika search adalah teks, cari berdasarkan teks
-            return teknisiRepository.findAllByKeywordOrId(search, null, pageable);
+        if (search != null && !search.isEmpty()) {
+            return teknisiRepository.findAllByKeyword(search, pageable);
         } else {
             return teknisiRepository.findAll(pageable);
         }
-    }
+   }
 }
