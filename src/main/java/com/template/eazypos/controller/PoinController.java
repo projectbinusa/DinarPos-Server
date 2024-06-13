@@ -1,5 +1,6 @@
 package com.template.eazypos.controller;
 
+import com.template.eazypos.dto.PoinHistoryDTO;
 import com.template.eazypos.exception.CommonResponse;
 import com.template.eazypos.exception.ResponseHelper;
 import com.template.eazypos.model.PoinHistory;
@@ -47,5 +48,10 @@ public class PoinController {
     @GetMapping("/keterangan")
     public CommonResponse<List<PoinHistory>> getAllPoinByKeterangan(@RequestParam("keterangan") String keterangan) {
         return ResponseHelper.ok(poinService.getAllByKeterangan(keterangan));
+    }
+
+    @PostMapping("/add")
+    public CommonResponse<PoinHistory> add(@RequestBody PoinHistoryDTO poinHistoryDTO){
+        return ResponseHelper.ok( poinService.add(poinHistoryDTO));
     }
 }

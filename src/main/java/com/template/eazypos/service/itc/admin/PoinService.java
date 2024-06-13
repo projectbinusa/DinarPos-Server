@@ -1,7 +1,10 @@
 package com.template.eazypos.service.itc.admin;
 
+import com.template.eazypos.dto.PoinHistoryDTO;
+import com.template.eazypos.exception.NotFoundException;
 import com.template.eazypos.model.PoinHistory;
 import com.template.eazypos.repository.PoinHistoryRepository;
+import com.template.eazypos.repository.TeknisiRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +18,9 @@ import java.util.Map;
 public class PoinService {
     @Autowired
     private PoinHistoryRepository poinHistoryRepository;
+
+    @Autowired
+    private TeknisiRepository teknisiRepository;
 
     public List<PoinHistory> getPoinByMonth(LocalDate month) {
         return poinHistoryRepository.findByMonth(month);
@@ -43,6 +49,16 @@ public class PoinService {
 
     public List<PoinHistory> getAllByKeterangan(String keterangan) {
         return poinHistoryRepository.findAllByKeterangan(keterangan);
+    }
+
+    public PoinHistory add(PoinHistoryDTO poinHistoryDTO){
+        PoinHistory poinHistory = new PoinHistory();
+        poinHistory.setTeknisi(teknisiRepository.findById(poinHistoryDTO.getId_teknisi()).orElseThrow(() -> new NotFoundException("Id Teknisi Not Found")));
+        poinHistory.setPoin(poinHistoryDTO.getPoin());
+        poinHistory.setTanggal(poinHistoryDTO.getTanggal());
+        poinHistory.setKeterangan(poinHistoryDTO.getKeterangan());
+        poinHistory.setNominal(poinHistoryDTO.getNominal());
+        return poinHistoryRepository.save(poinHistory);
     }
 
 }
