@@ -1,7 +1,9 @@
 package com.template.eazypos.service.itc.admin;
 
+import com.template.eazypos.model.Poin;
 import com.template.eazypos.model.PoinHistory;
 import com.template.eazypos.repository.PoinHistoryRepository;
+import com.template.eazypos.repository.PoinRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +17,9 @@ import java.util.Map;
 public class PoinService {
     @Autowired
     private PoinHistoryRepository poinHistoryRepository;
+
+    @Autowired
+    private PoinRepository poinRepository;
 
     public List<PoinHistory> getPoinByMonth(LocalDate month) {
         return poinHistoryRepository.findByMonth(month);
@@ -44,5 +49,24 @@ public class PoinService {
     public List<PoinHistory> getAllByKeterangan(String keterangan) {
         return poinHistoryRepository.findAllByKeterangan(keterangan);
     }
+    public List<Poin> getPoin() {
+        return poinRepository.findAllPoinWithTeknisiName();
+    }
 
+    public PoinHistory getTotalPoin() {
+        return poinHistoryRepository.findTotalPoin();
+    }
+
+    public PoinHistory getTotalPoinByMonth(String month) {
+        return poinHistoryRepository.findTotalPoinByMonth(month);
+    }
+
+    public List<PoinHistory> getPoinByMonth(String month) {
+        return poinHistoryRepository.findPoinByMonth(month);
+    }
+
+    public double getTotalPoinByMonthAndYear(Long idTeknisi, int year, int month) {
+        Double totalPoin = poinHistoryRepository.findTotalPoinByMonthAndYear(idTeknisi, year, month);
+        return totalPoin != null ? totalPoin : 0;
+    }
 }

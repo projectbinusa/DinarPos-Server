@@ -38,4 +38,20 @@ public interface PoinHistoryRepository extends JpaRepository<PoinHistory , Long>
 
     @Query(value = "SELECT * FROM poin_history WHERE ket = :keterangan", nativeQuery = true)
     List<PoinHistory> findAllByKeterangan(@Param("keterangan") String keterangan);
+
+    @Query("SELECT SUM(ph.poin) AS jumlahPoin, SUM(ph.nominal) AS nominal FROM PoinHistory ph JOIN ph.teknisi t WHERE t.status = 'Y'")
+    PoinHistory findTotalPoin();
+
+    @Query("SELECT SUM(ph.poin) AS jumlahPoin, SUM(ph.nominal) AS nominal FROM PoinHistory ph JOIN ph.teknisi t WHERE FUNCTION('DATE_FORMAT', ph.tanggal, '%Y-%m') = :month AND t.status = 'Y'")
+    PoinHistory findTotalPoinByMonth(@Param("month") String month);
+
+    @Query("SELECT t.nama, SUM(ph.poin) AS poin, SUM(ph.nominal) AS nominal " +
+            "FROM PoinHistory ph JOIN ph.teknisi t " +
+            "WHERE FUNCTION('DATE_FORMAT', ph.tanggal, '%Y-%m') = :month " +
+            "GROUP BY t.nama " +
+            "ORDER BY poin DESC")
+    List<PoinHistory> findPoinByMonth(@Param("month") String month);
+
+    @Query("SELECT SUM(ph.poin) FROM PoinHistory ph WHERE ph.teknisi.id = :idTeknisi AND YEAR(ph.tanggal) = :year AND MONTH(ph.tanggal) = :month")
+    Double findTotalPoinByMonthAndYear(@Param("idTeknisi") Long idTeknisi, @Param("year") int year, @Param("month") int month);
 }

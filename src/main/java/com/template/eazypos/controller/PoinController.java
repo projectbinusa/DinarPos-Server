@@ -2,6 +2,7 @@ package com.template.eazypos.controller;
 
 import com.template.eazypos.exception.CommonResponse;
 import com.template.eazypos.exception.ResponseHelper;
+import com.template.eazypos.model.Poin;
 import com.template.eazypos.model.PoinHistory;
 import com.template.eazypos.model.Transaksi;
 import com.template.eazypos.service.itc.admin.PoinService;
@@ -47,5 +48,30 @@ public class PoinController {
     @GetMapping("/ket/{keterangan}")
     public CommonResponse<List<PoinHistory>> getAllPoinByKeterangan(@PathVariable("keterangan") String keterangan) {
         return ResponseHelper.ok(poinService.getAllByKeterangan(keterangan));
+    }
+    @GetMapping("/pimpinan")
+    public List<Poin> getPoin() {
+        return poinService.getPoin();
+    }
+
+    @GetMapping("/pimpinan/total")
+    public PoinHistory getTotalPoin() {
+        return poinService.getTotalPoin();
+    }
+
+    @GetMapping("/pimpinan/total-by-month")
+    public PoinHistory getTotalPoinByMonth(@RequestParam("month") String month) {
+        return poinService.getTotalPoinByMonth(month);
+    }
+
+    @GetMapping("/pimpinan/by-month")
+    public List<PoinHistory> getPoinByMonth(@RequestParam("month") String month) {
+        return poinService.getPoinByMonth(month);
+    }
+    @GetMapping("/pimpinan/total-by-month-year")
+    public double getTotalPoinByMonthAndYear(@RequestParam("idTeknisi") Long idTeknisi,
+                                             @RequestParam("year") int year,
+                                             @RequestParam("month") int month) {
+        return poinService.getTotalPoinByMonthAndYear(idTeknisi, year, month);
     }
 }
