@@ -30,5 +30,9 @@ public interface BarangTransaksiRepository extends JpaRepository<BarangTransaksi
     @Query(value = "SELECT * FROM tabel_barang_transaksi WHERE id_transaksi = :idTransaksi AND del_flag = 0", nativeQuery = true)
     List<BarangTransaksi> findBarangTransaksiReturnByIdTransaksi(@Param("idTransaksi") Long idTransaksi);
 
+    @Query("SELECT bt FROM BarangTransaksi bt WHERE bt.transaksi = :idTransaksi")
+    List<BarangTransaksi> findBarangTransaksiByIdTransaksi(@Param("idTransaksi") Long idTransaksi);
+
 
 }
+

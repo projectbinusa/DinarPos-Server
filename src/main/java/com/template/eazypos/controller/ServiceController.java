@@ -253,5 +253,54 @@ public class ServiceController {
             @RequestParam("akhir") @DateTimeFormat(pattern = "yyyy-MM-dd") Date akhir) {
         return dataService.getServiceTakenByDateRange(awal, akhir);
     }
+    @GetMapping("/get-service-barang")
+    public List<Object[]> getServiceBarang() {
+        return
+        dataService.getServiceBarang();
+    }
+
+    @GetMapping("/get-service-barang-taken")
+    public List<Object[]> getServiceBarangTaken() {
+        return
+        dataService.getServiceBarangTaken();
+    }
+
+    @GetMapping("/filter-service-barang")
+    public List<ServiceBarang> filterServiceBarang(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date awal,
+                                                   @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date akhir,
+                                                   @RequestParam(required = false) String status) {
+        if (status != null) {
+            return
+            dataService.getServiceBarangByDateRangeAndStatus(awal, akhir, status);
+        } else {
+            return
+            dataService.getServiceBarangByDateRange(awal, akhir);
+        }
+    }
+
+    @GetMapping("/filter-service-barang-status")
+    public List<ServiceBarang> filterServiceBarangStatus(@RequestParam String status) {
+        return
+        dataService.getServiceBarangByStatus(status);
+    }
+
+    @GetMapping("/filter-service-barang-date")
+    public List<ServiceBarang> filterServiceBarangDate(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date awal,
+                                                       @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date akhir) {
+        return
+        dataService.getServiceBarangByDateRange(awal, akhir);
+    }
+
+    @GetMapping("/get-status-by-id-tt/{idTt}")
+    public List<Status> getStatusByIdTt(@PathVariable Long idTt) {
+        return
+        dataService.getStatusByIdTt(idTt);
+    }
+
+    @GetMapping("/get-tgl-konfimasi-by-id-tt/{idTt}")
+    public List<TglKonf> getTglKonfimasiByIdTt(@PathVariable Long idTt) {
+        return
+        dataService.getTglKonfimasiByIdTt(idTt);
+    }
 
 }

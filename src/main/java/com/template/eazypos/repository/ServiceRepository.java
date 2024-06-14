@@ -149,4 +149,38 @@ public interface ServiceRepository extends JpaRepository<ServiceBarang, Long> {
 
     @Query("SELECT s FROM ServiceBarang s WHERE s.taken = 'Y' AND s.tanggalMasuk >= :awal AND s.tanggalMasuk <= :akhir")
     List<ServiceBarang> findServiceTakenByDateRange(@Param("awal") Date awal, @Param("akhir") Date akhir);
+
+
+    @Query("SELECT sb, " +
+            "(SELECT st.status FROM Status st WHERE st.service = sb AND st.id = " +
+            "(SELECT MAX(st2.id) FROM Status st2 WHERE st2.service = sb)) AS sts " +
+            "FROM ServiceBarang sb WHERE sb.taken = 'Y' ORDER BY sb.tanggalAmbil DESC")
+    List<Object[]> findServiceBarangTaken();
+
+    @Query("SELECT sb FROM ServiceBarang sb WHERE sb.taken = 'Y' AND sb.tanggalMasuk BETWEEN :awal AND :akhir")
+    List<ServiceBarang> findServiceBarangTakenBetweenDates(@Param("awal") Date awal, @Param("akhir") Date akhir);
+
+    @Query("SELECT sb FROM ServiceBarang sb WHERE " +
+            "((sb.statusEnd = 'READY_S' OR sb.statusEnd = 'READY_T') OR sb.statusEnd = :status) " +
+            "AND sb.tanggalMasuk BETWEEN :awal AND :akhir")
+    List<ServiceBarang> findByStatusEndAndTanggalMasukBetween(@Param("status") String status, @Param("awal") Date awal, @Param("akhir") Date akhir);
+
+    @Query("SELECT sb FROM ServiceBarang sb WHERE (sb.statusEnd = 'READY_S' OR sb.statusEnd = 'READY_T') OR sb.statusEnd = :status")
+    List<ServiceBarang> findByStatusEnd(@Param("status") String status);
+
+    List<ServiceBarang> findByTanggalMasukBetween(Date awal, Date akhir);
+
+    @Query("SELECT sb, " +
+            "(SELECT st.status FROM Status st WHERE st.service = sb AND st.id = " +
+            "(SELECT MAX(st2.id) FROM Status st2 WHERE st2.service = sb)) AS sts " +
+            "FROM ServiceBarang sb WHERE sb.taken != 'Y' " +
+            "ORDER BY CASE " +
+            "WHEN sb.statusEnd LIKE '%READY%' THEN 1 " +
+            "WHEN sb.statusEnd LIKE '%PROSES%' THEN 2 " +
+            "WHEN sb.statusEnd = 'N_A' THEN 3 " +
+            "WHEN sb.statusEnd LIKE '%CANCEL%' THEN 4 " +
+            "ELSE 5 END DESC")
+    List<Object[]> findServiceBarang();
+
 }
+

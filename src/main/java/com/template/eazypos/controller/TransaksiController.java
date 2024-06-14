@@ -100,6 +100,13 @@ public class TransaksiController {
         return transaksiPenjualanService.getLastNotaByMonthAndYear(bulan, tahun);
     }
 
+    @GetMapping("/get-transaksi-by-id-tt/{idTt}")
+    public List<Transaksi> getTransaksiByIdTt(@PathVariable Long idTt) {
+        return transaksiPenjualanService.getTransaksiByIdTt(idTt);
+    }
 
-
+    @GetMapping("/get-barang-transaksi-by-id-transaksi/{idTransaksi}")
+    public List<BarangTransaksi> getBarangTransaksiByIdTransaksi(@PathVariable Long idTransaksi) {
+        return transaksiPenjualanService.getBarangTransaksiByIdTransaksi(idTransaksi);
+    }
 }

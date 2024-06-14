@@ -766,6 +766,36 @@ public class DataService {
     public List<ServiceBarang> getServiceTakenByDateRange(Date awal, Date akhir) {
         return serviceRepository.findServiceTakenByDateRange(awal, akhir);
     }
+    public List<Object[]> getServiceBarang() {
+        return serviceRepository.findServiceBarang();
+    }
+
+    public List<Object[]> getServiceBarangTaken() {
+        return serviceRepository.findServiceBarangTaken();
+    }
+
+    public List<ServiceBarang> getServiceBarangTakenBetweenDates(Date awal, Date akhir) {
+        return serviceRepository.findServiceBarangTakenBetweenDates(awal, akhir);
+    }
+
+    public List<ServiceBarang> getServiceBarangByDateRangeAndStatus(Date awal, Date akhir, String status) {
+        return serviceRepository.findByStatusEndAndTanggalMasukBetween(status, awal, akhir);
+    }
+
+    public List<ServiceBarang> getServiceBarangByStatus(String status) {
+        return serviceRepository.findByStatusEnd(status);
+    }
+
+    public List<ServiceBarang> getServiceBarangByDateRange(Date awal, Date akhir) {
+        return serviceRepository.findByTanggalMasukBetween(awal, akhir);
+    }
+    public List<Status> getStatusByIdTt(Long idTt) {
+        return statusRepository.findStatusByIdTt(idTt);
+    }
+
+    public List<TglKonf> getTglKonfimasiByIdTt(Long idTt) {
+        return tglKonfRepository.findTglKonfimasiByIdTt(idTt);
+    }
 
 }
 

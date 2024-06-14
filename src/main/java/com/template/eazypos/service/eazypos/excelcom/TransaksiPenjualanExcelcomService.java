@@ -314,5 +314,12 @@ public class TransaksiPenjualanExcelcomService {
     public String getLastNotaByMonthAndYear(int bulan, int tahun) {
         return transaksiRepository.findLastNotaByMonthAndYear(bulan, tahun);
     }
+    public List<Transaksi> getTransaksiByIdTt(Long idTt) {
+        return transaksiRepository.findTransaksiByIdTt(idTt);
+    }
+
+    public List<BarangTransaksi> getBarangTransaksiByIdTransaksi(Long idTransaksi) {
+        return barangTransaksiRepository.findBarangTransaksiByIdTransaksi(idTransaksi);
+    }
 }
 
