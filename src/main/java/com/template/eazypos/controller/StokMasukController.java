@@ -14,27 +14,37 @@ import java.util.List;
 @RequestMapping("api/stok_masuk")
 @CrossOrigin(origins = "*")
 public class StokMasukController {
+
     @Autowired
     private StokMasukService stokMasukService;
 
+    // Endpoint untuk menambahkan data stok masuk
     @PostMapping("/add")
-    public CommonResponse<StokMasuk> add(@RequestBody StokMasukDTO stokMasukDTO){
-        return ResponseHelper.ok( stokMasukService.add(stokMasukDTO));
+    public CommonResponse<StokMasuk> add(@RequestBody StokMasukDTO stokMasukDTO) {
+        return ResponseHelper.ok(stokMasukService.add(stokMasukDTO));
     }
+
+    // Endpoint untuk mendapatkan data stok masuk berdasarkan ID
     @GetMapping("/{id}")
-    public CommonResponse <StokMasuk> get(@PathVariable("id") Long id){
-        return ResponseHelper.ok( stokMasukService.get(id));
+    public CommonResponse<StokMasuk> get(@PathVariable("id") Long id) {
+        return ResponseHelper.ok(stokMasukService.get(id));
     }
+
+    // Endpoint untuk mendapatkan semua data stok masuk
     @GetMapping
-    public CommonResponse<List<StokMasuk>> getAll(){
-        return ResponseHelper.ok( stokMasukService.getAll());
+    public CommonResponse<List<StokMasuk>> getAll() {
+        return ResponseHelper.ok(stokMasukService.getAll());
     }
+
+    // Endpoint untuk mengedit data stok masuk berdasarkan ID
     @PutMapping("/{id}")
-    public CommonResponse<StokMasuk> put(@PathVariable("id") Long id , @RequestBody StokMasukDTO stokMasukDTO){
-        return ResponseHelper.ok( stokMasukService.edit(stokMasukDTO , id));
+    public CommonResponse<StokMasuk> put(@PathVariable("id") Long id, @RequestBody StokMasukDTO stokMasukDTO) {
+        return ResponseHelper.ok(stokMasukService.edit(stokMasukDTO, id));
     }
+
+    // Endpoint untuk menghapus data stok masuk berdasarkan ID
     @DeleteMapping("/{id}")
-    public CommonResponse<?> delete(@PathVariable("id")  Long id ) {
-        return ResponseHelper.ok( stokMasukService.delete(id));
+    public CommonResponse<?> delete(@PathVariable("id") Long id) {
+        return ResponseHelper.ok(stokMasukService.delete(id));
     }
 }

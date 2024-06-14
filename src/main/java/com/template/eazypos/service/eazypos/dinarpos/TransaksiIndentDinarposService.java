@@ -25,11 +25,13 @@ public class TransaksiIndentDinarposService {
     @Autowired
     private CustomerRepository customerRepository;
 
+
     @Autowired
     private SalesmanRepository markettingRepository;
     @Autowired
     private BarangRepository barangRepository;
 
+    //  Menambahkan transaksi indent baru berdasarkan data DTO transaksi penjualan
     public TransaksiIndent addTransaksi(TransaksiPenjualanDTO transaksiDTO) {
         Date now = new Date();
         String not = getNoNotaTransaksi() ; // method generateNotaNumber() menghasilkan nomor nota baru
@@ -119,6 +121,8 @@ public class TransaksiIndentDinarposService {
         }
         return savedTransaksi;
     }
+
+    // Menghasilkan nomor nota transaksi baru berdasarkan waktu
     public String getNoNotaTransaksi() {
         try {
             String kd = "";
@@ -151,6 +155,8 @@ public class TransaksiIndentDinarposService {
             return nota;
         }
     }
+
+    // Mengambil daftar transaksi indent yang tercatat dalam sistem dinarpos
     public List<TransaksiIndent> getTransaksiIndentDinarpos(){
         return transaksiRepository.findTransaksiDinarpos();
     }

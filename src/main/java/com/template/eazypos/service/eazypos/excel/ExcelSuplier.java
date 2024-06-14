@@ -11,7 +11,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 @Service
@@ -21,10 +20,12 @@ public class ExcelSuplier {
     static String[] HEADERsTemplate = {"NO", "KODE SUPLIER", "NAMA SUPLIER", "ALAMAT SUPLIER", "NO TELEPON", "KETERANGAN"};
     static String SHEET = "Sheet1";
 
+    // Method untuk memeriksa apakah file memiliki format Excel yang sesuai
     public static boolean hasExcelFormat(MultipartFile file) {
         return TYPE.equals(file.getContentType());
     }
 
+    // Method untuk mengkonversi daftar Suplier menjadi format Excel
     public static ByteArrayInputStream suplierToExcel(List<Suplier> supliers) throws IOException {
         try (Workbook workbook = new XSSFWorkbook(); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
             Sheet sheet = workbook.createSheet(SHEET);
@@ -52,6 +53,7 @@ public class ExcelSuplier {
         }
     }
 
+    // Method untuk menghasilkan template Excel untuk data Suplier
     public static ByteArrayInputStream templateToExcel() throws IOException {
         try (Workbook workbook = new XSSFWorkbook(); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
             Sheet sheet = workbook.createSheet(SHEET);
@@ -72,7 +74,7 @@ public class ExcelSuplier {
         }
     }
 
-
+    // Method untuk mengkonversi data Excel menjadi daftar Suplier
     public static List<Suplier> excelToSuplier(InputStream is) {
         try {
             Workbook workbook = new XSSFWorkbook(is);

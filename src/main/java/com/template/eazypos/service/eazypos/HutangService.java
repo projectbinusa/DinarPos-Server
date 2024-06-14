@@ -20,7 +20,7 @@ public class HutangService {
     @Autowired
     private TransaksiBeliRepository transaksiBeliRepository;
 
-
+    // Melakukan pelunasan hutang untuk transaksi pembelian
     public Hutang pelunasan(PelunasanDTO pelunasanDTO) {
         TransaksiBeli transaksiBeli = transaksiBeliRepository.findById(pelunasanDTO.getId_transaksi()).orElseThrow((() -> new NotFoundException("Id Not Found")));
      int kekurangan = Integer.parseInt(transaksiBeli.getKekurangan());
@@ -36,10 +36,13 @@ public class HutangService {
      hutang.setDate(new Date());
        return hutangRepository.save(hutang);
     }
+
+    // Mendapatkan semua transaksi pembelian yang memiliki hutang
     public List<TransaksiBeli> getAll(){
         return transaksiBeliRepository.findAllHutang();
     }
 
+    // Mendapatkan entitas Hutang berdasarkan ID
     public Hutang getById(Long id){
         return hutangRepository.findById(id).orElseThrow(() -> new NotFoundException("Id Not Found"));
     }

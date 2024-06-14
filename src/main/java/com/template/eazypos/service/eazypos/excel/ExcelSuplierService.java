@@ -15,15 +15,18 @@ public class ExcelSuplierService {
     @Autowired
     private SuplierRepository suplierRepository;
 
+    // Method untuk mengambil data dari repository dan mengonversi ke format Excel
     public ByteArrayInputStream loadSuplier() throws IOException {
         List<Suplier> supliers = suplierRepository.findAllSuplier();
         return ExcelSuplier.suplierToExcel(supliers);
     }
 
+    // Method untuk menghasilkan template Excel kosong untuk data Suplier
     public ByteArrayInputStream templateSuplier() throws IOException {
         return ExcelSuplier.templateToExcel();
     }
 
+    // Method untuk menyimpan data Suplier yang diunggah dari file Excel
     public void saveSuplier(MultipartFile file) {
         try {
             List<Suplier> supliersList = ExcelSuplier.excelToSuplier(file.getInputStream());
@@ -32,5 +35,4 @@ public class ExcelSuplierService {
             throw new RuntimeException("fail to store excel data: " + e.getMessage());
         }
     }
-
 }

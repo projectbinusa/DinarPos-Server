@@ -33,18 +33,19 @@ public class GaransiService {
         return garansiRepository.save(garansi);
     }
 
+    // Mengupdate tanggal menjadi Garansi berdasarkan TglJadiGaransiDTO
     public Garansi updateTglJadi(TglJadiGaransiDTO tglJadiGaransiDTO , Long id){
         Garansi garansi = garansiRepository.findById(id).orElseThrow(() -> new NotFoundException( "Id Not Found"));
         garansi.setTanggalJadi(tglJadiGaransiDTO.getTgl_jadi());
         return garansiRepository.save(garansi);
     }
 
-    // get By Id
+    // Mengambil data Garansi berdasarkan id
     public Garansi getById(Long id){
         return garansiRepository.findById(id).orElseThrow(() -> new NotFoundException("Id Not Found"));
     }
 
-    // update input data
+    // Mengedit data Garansi berdasarkan GaransiDTO
     public Garansi edit(GaransiDTO garansiDTO , Long id){
         Garansi garansi = garansiRepository.findById(id).orElseThrow(() -> new NotFoundException("Id Not Found"));
         garansi.setServiceBarang(serviceRepository.findByIdTT(garansiDTO.getId_tt()).orElseThrow(() -> new NotFoundException("Id Service Not Found")));
@@ -56,12 +57,12 @@ public class GaransiService {
         return garansiRepository.save(garansi);
     }
 
-    // getAll data
+    // Mengambil semua data Garansi yang tersimpan
     public List<Garansi> getAll(){
         return garansiRepository.findAll();
     }
 
-    // delete input data
+    // Menghapus data Garansi berdasarkan ID
     public Map<String, Boolean> delete(Long id){
         try {
             garansiRepository.deleteById(id);

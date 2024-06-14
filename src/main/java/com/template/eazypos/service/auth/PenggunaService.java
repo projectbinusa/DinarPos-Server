@@ -32,6 +32,7 @@ public class PenggunaService {
     @Autowired
     private JwtUtils jwtUtils;
 
+    // Melakukan proses login pengguna berdasarkan username dan password yang diberikan
     public Map<Object, Object> login(LoginRequest loginRequest) {
         Optional<Pengguna> userOptional = penggunaRepository.findByUsername(loginRequest.getUsername());
         Pengguna user = userOptional.orElseThrow(() -> new NotFoundException("Username not found"));
@@ -55,7 +56,7 @@ public class PenggunaService {
         throw new NotFoundException("Password not found");
     }
 
-
+    // Menambahkan pengguna baru ke dalam sistem berdasarkan data DTO pengguna
     public Pengguna addPengguna(PenggunaDTO user) {
         Pengguna pengguna = new Pengguna();
         if (penggunaRepository.findByUsername(user.getUsernamePengguna()).isPresent()){
@@ -75,9 +76,12 @@ public class PenggunaService {
         return penggunaRepository.save(pengguna);
     }
 
+    // Mengambil data pengguna berdasarkan ID pengguna
     public Pengguna get(Long id) {
             return penggunaRepository.findById(id).orElseThrow(() -> new NotFoundException("Id tidak dinemukan"));
     }
+
+    // Mengambil data pengguna berdasarkan nama pengguna
     public Pengguna getByNama(String nama) {
         List<Pengguna> penggunaList = penggunaRepository.findByNama(nama);
 
@@ -88,10 +92,12 @@ public class PenggunaService {
         }
     }
 
+    // Mengambil daftar semua pengguna yang terdaftar dalam sistem
     public List<Pengguna> getAll() {
             return penggunaRepository.findAll();
     }
 
+    // Mengedit data pengguna berdasarkan ID pengguna
     public Pengguna edit(Long id , Pengguna user) {
         Pengguna update = penggunaRepository.findById(id).orElseThrow(() -> new NotFoundException("Id tidak ditemukan"));
         String encodedPassword = encoder.encode(user.getPasswordPengguna());
@@ -101,6 +107,8 @@ public class PenggunaService {
         update.setPasswordPengguna(encodedPassword);
         return penggunaRepository.save(update);
     }
+
+    // Menghapus data pengguna berdasarkan ID pengguna
     public Map<String, Boolean> delete(Long id ) {
             try {
                 penggunaRepository.deleteById(id);
@@ -111,6 +119,4 @@ public class PenggunaService {
                 return null;
             }
     }
-
-
 }

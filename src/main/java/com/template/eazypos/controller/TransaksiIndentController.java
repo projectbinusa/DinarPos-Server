@@ -19,37 +19,52 @@ import java.util.List;
 @RequestMapping("api/transaksi_indent")
 @CrossOrigin(origins = "*")
 public class TransaksiIndentController {
+
     @Autowired
     private TransaksiIndentExcelcomService transaksiIndentExcelcomService;
+
     @Autowired
     private TransaksiIndentDinarposService transaksiIndentDinarposService;
 
+    // Endpoint untuk menambahkan transaksi indent dari Excelcom
     @PostMapping("/excelcom")
-    public CommonResponse<TransaksiIndent> addExcelcom(@RequestBody TransaksiPenjualanDTO transaksiPenjualanDTO){
-        return ResponseHelper.ok( transaksiIndentExcelcomService.addTransaksi(transaksiPenjualanDTO));
+    public CommonResponse<TransaksiIndent> addExcelcom(@RequestBody TransaksiPenjualanDTO transaksiPenjualanDTO) {
+        return ResponseHelper.ok(transaksiIndentExcelcomService.addTransaksi(transaksiPenjualanDTO));
     }
+
+    // Endpoint untuk menambahkan transaksi indent dari Dinarpos
     @PostMapping("/dinarpos")
-    public CommonResponse<TransaksiIndent> addDinarpos(@RequestBody TransaksiPenjualanDTO transaksiPenjualanDTO){
-        return ResponseHelper.ok( transaksiIndentDinarposService.addTransaksi(transaksiPenjualanDTO));
+    public CommonResponse<TransaksiIndent> addDinarpos(@RequestBody TransaksiPenjualanDTO transaksiPenjualanDTO) {
+        return ResponseHelper.ok(transaksiIndentDinarposService.addTransaksi(transaksiPenjualanDTO));
     }
+
+    // Endpoint untuk checklist transaksi indent dari Excelcom berdasarkan ID
     @PostMapping("/checklist/{id}")
-    public CommonResponse<Transaksi> checklist(@PathVariable("id") Long id , @RequestBody PembayaranDTO pembayaranDTO){
-        return ResponseHelper.ok( transaksiIndentExcelcomService.checklist(id , pembayaranDTO));
+    public CommonResponse<Transaksi> checklist(@PathVariable("id") Long id, @RequestBody PembayaranDTO pembayaranDTO) {
+        return ResponseHelper.ok(transaksiIndentExcelcomService.checklist(id, pembayaranDTO));
     }
+
+    // Endpoint untuk mendapatkan semua transaksi indent dari Excelcom
     @GetMapping("/excelcom")
-    public CommonResponse <List<TransaksiIndent>> getExcelcom(){
-        return ResponseHelper.ok( transaksiIndentExcelcomService.getTransaksiIndentExcelcom());
+    public CommonResponse<List<TransaksiIndent>> getExcelcom() {
+        return ResponseHelper.ok(transaksiIndentExcelcomService.getTransaksiIndentExcelcom());
     }
+
+    // Endpoint untuk mendapatkan transaksi indent dari Excelcom berdasarkan ID
     @GetMapping("/{id}")
-    public CommonResponse <TransaksiIndent> getById(@PathVariable("id") Long id){
-        return ResponseHelper.ok( transaksiIndentExcelcomService.getById(id));
+    public CommonResponse<TransaksiIndent> getById(@PathVariable("id") Long id) {
+        return ResponseHelper.ok(transaksiIndentExcelcomService.getById(id));
     }
+
+    // Endpoint untuk mendapatkan semua transaksi indent dari Dinarpos
     @GetMapping("/dinarpos")
-    public CommonResponse <List<TransaksiIndent>> getDinarpos(){
-        return ResponseHelper.ok( transaksiIndentDinarposService.getTransaksiIndentDinarpos());
+    public CommonResponse<List<TransaksiIndent>> getDinarpos() {
+        return ResponseHelper.ok(transaksiIndentDinarposService.getTransaksiIndentDinarpos());
     }
+
+    // Endpoint untuk mendapatkan daftar barang transaksi indent dari Excelcom berdasarkan ID
     @GetMapping("/barang")
-    public CommonResponse <List<BarangTransaksiIndent>> getBarangById(@RequestParam Long id){
-        return ResponseHelper.ok( transaksiIndentExcelcomService.getBarangTransaksiIndent(id));
+    public CommonResponse<List<BarangTransaksiIndent>> getBarangById(@RequestParam Long id) {
+        return ResponseHelper.ok(transaksiIndentExcelcomService.getBarangTransaksiIndent(id));
     }
 }

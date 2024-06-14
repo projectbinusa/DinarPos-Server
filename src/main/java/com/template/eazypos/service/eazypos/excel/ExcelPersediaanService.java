@@ -16,15 +16,18 @@ public class ExcelPersediaanService {
     @Autowired
     private PersediaanRepository persediaanRepository;
 
+    // Method untuk mengambil data persediaan dari repository dan mengkonversinya ke format Excel
     public ByteArrayInputStream loadPersediaan() throws IOException {
         List<Persediaan> persediaans = persediaanRepository.findAll();
         return ExcelPersediaan.persediaanToExcel(persediaans);
     }
 
+    // Method untuk menghasilkan template Excel untuk data persediaan
     public ByteArrayInputStream templatePersediaan() throws IOException {
         return ExcelPersediaan.templateToExcel();
     }
 
+    // Method untuk menyimpan data persediaan dari file Excel yang diunggah ke repository
     public void savePersediaan(MultipartFile file) {
         try {
             List<Persediaan> persediaanList = ExcelPersediaan.excelToPersediaan(file.getInputStream());

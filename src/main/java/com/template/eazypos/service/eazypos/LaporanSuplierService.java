@@ -1,9 +1,7 @@
 package com.template.eazypos.service.eazypos;
 
 import com.template.eazypos.exception.NotFoundException;
-import com.template.eazypos.model.BarangTransaksi;
 import com.template.eazypos.model.BarangTransaksiBeli;
-import com.template.eazypos.model.Transaksi;
 import com.template.eazypos.model.TransaksiBeli;
 import com.template.eazypos.repository.BarangTransaksiBeliRepository;
 import com.template.eazypos.repository.TransaksiBeliRepository;
@@ -23,22 +21,27 @@ public class LaporanSuplierService {
     @Autowired
     private TransaksiBeliRepository transaksiBeliRepository;
 
+    // Mengambil semua barang transaksi beli dari kategori Excelcom untuk periode bulan dan tahun saat ini
     public List<BarangTransaksiBeli> getAllExcelcom() {
         int tahun = new Date().getYear() + 1900; // Tambahkan 1900 untuk mendapatkan tahun yang benar
         int bulan = new Date().getMonth() + 1; // Tambahkan 1 untuk mendapatkan bulan yang benar
-        return barangTransaksiBeliRepository.findBarangTransaksiExcelcomByPeriode(bulan ,tahun);
+        return barangTransaksiBeliRepository.findBarangTransaksiExcelcomByPeriode(bulan, tahun);
     }
+
+    // Mengambil semua barang transaksi beli dari kategori Dinarpos untuk periode bulan dan tahun saat ini
     public List<BarangTransaksiBeli> getAllDinarpos() {
         int tahun = new Date().getYear() + 1900; // Tambahkan 1900 untuk mendapatkan tahun yang benar
         int bulan = new Date().getMonth() + 1; // Tambahkan 1 untuk mendapatkan bulan yang benar
         return barangTransaksiBeliRepository.findBarangTransaksiDinarposByPeriode(bulan, tahun);
     }
 
+    // Mendapatkan entitas BarangTransaksiBeli berdasarkan ID
     public BarangTransaksiBeli get(Long id) {
-        return barangTransaksiBeliRepository.findById(id).orElseThrow(() -> new NotFoundException("Id tidak dinemukan"));
+        return barangTransaksiBeliRepository.findById(id).orElseThrow(() -> new NotFoundException("Id tidak ditemukan"));
     }
 
-    public Map<String, Boolean> delete(Long id ) {
+    // Menghapus entitas BarangTransaksiBeli berdasarkan ID
+    public Map<String, Boolean> delete(Long id) {
         try {
             barangTransaksiBeliRepository.deleteById(id);
             Map<String, Boolean> res = new HashMap<>();
@@ -48,12 +51,16 @@ public class LaporanSuplierService {
             return null;
         }
     }
-    public List<TransaksiBeli> getByTanggalExcelcom(Date tanggalAwal , Date tanggalAkhir , Long suplierId){
-        String  status = "excelcom";
-        return transaksiBeliRepository.findByTanggal(tanggalAwal , tanggalAkhir , suplierId , status);
+
+    // Mengambil daftar transaksi beli dari kategori Excelcom berdasarkan rentang tanggal dan ID suplier
+    public List<TransaksiBeli> getByTanggalExcelcom(Date tanggalAwal, Date tanggalAkhir, Long suplierId) {
+        String status = "excelcom";
+        return transaksiBeliRepository.findByTanggal(tanggalAwal, tanggalAkhir, suplierId, status);
     }
-    public List<TransaksiBeli> getByTanggalDinarpos(Date tanggalAwal , Date tanggalAkhir , Long suplierId){
-        String  status = "dinarpos";
-        return transaksiBeliRepository.findByTanggal(tanggalAwal , tanggalAkhir , suplierId , status);
+
+    // Mengambil daftar transaksi beli dari kategori Dinarpos berdasarkan rentang tanggal dan ID suplier
+    public List<TransaksiBeli> getByTanggalDinarpos(Date tanggalAwal, Date tanggalAkhir, Long suplierId) {
+        String status = "dinarpos";
+        return transaksiBeliRepository.findByTanggal(tanggalAwal, tanggalAkhir, suplierId, status);
     }
 }

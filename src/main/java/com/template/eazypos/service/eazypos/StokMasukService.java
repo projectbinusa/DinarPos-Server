@@ -1,10 +1,8 @@
 package com.template.eazypos.service.eazypos;
 
-import com.template.eazypos.dto.CustomerDTO;
 import com.template.eazypos.dto.StokMasukDTO;
 import com.template.eazypos.exception.NotFoundException;
 import com.template.eazypos.model.Barang;
-import com.template.eazypos.model.Customer;
 import com.template.eazypos.model.StokMasuk;
 import com.template.eazypos.repository.BarangRepository;
 import com.template.eazypos.repository.StokMasukRepository;
@@ -28,6 +26,7 @@ public class StokMasukService {
     @Autowired
     private BarangRepository barangRepository;
 
+    // Menambahkan data stok masuk baru
     public StokMasuk add(StokMasukDTO stokMasukDTO){
         Barang barang = barangRepository.findById(stokMasukDTO.getId_barang()).get();
         int jmlsebelum = barang.getJumlahStok();
@@ -46,12 +45,18 @@ public class StokMasukService {
         barangRepository.save(barang);
         return stokMasukRepository.save(add);
     }
+
+    // Mengambil data stok masuk berdasarkan ID
     public StokMasuk get(Long id) {
-        return stokMasukRepository.findById(id).orElseThrow(() -> new NotFoundException("Id tidak dinemukan"));
+        return stokMasukRepository.findById(id).orElseThrow(() -> new NotFoundException("Id tidak ditemukan"));
     }
+
+    // Mengambil semua data stok masuk
     public List<StokMasuk> getAll(){
         return stokMasukRepository.findAll();
     }
+
+    // Mengedit data stok masuk berdasarkan ID
     public StokMasuk edit(StokMasukDTO stokMasukDTO , Long id){
         StokMasuk update = stokMasukRepository.findById(id).orElseThrow(() -> new NotFoundException("Id tidak dinemukan"));
         Barang barang = barangRepository.findById(stokMasukDTO.getId_barang()).get();
@@ -66,6 +71,8 @@ public class StokMasukService {
         barangRepository.save(barang);
         return stokMasukRepository.save(update);
     }
+
+    // Menghapus data stok masuk berdasarkan ID
     public Map<String, Boolean> delete(Long id ) {
         try {
             stokMasukRepository.deleteById(id);

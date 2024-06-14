@@ -57,6 +57,7 @@ public class TransaksiIndentExcelcomService {
     @Autowired
     private PersediaanRepository persediaanRepository;
 
+    // Menambahkan transaksi indent baru berdasarkan data dari DTO
     public TransaksiIndent addTransaksi(TransaksiPenjualanDTO transaksiDTO) {
         Date now = new Date();
         String not = getNoNotaTransaksi() ; // method generateNotaNumber() menghasilkan nomor nota baru
@@ -146,6 +147,8 @@ public class TransaksiIndentExcelcomService {
         }
         return savedTransaksi;
     }
+
+    // Menghasilkan nomor nota transaksi baru berdasarkan waktu sekarang
     public String getNoNotaTransaksi() {
         try {
             String kd = "";
@@ -402,6 +405,7 @@ public class TransaksiIndentExcelcomService {
         }
     }
 
+    // Mengonversi nilai persediaan akhir menjadi nilai awal berdasarkan tanggal tertentu
     public int persediaanAkhirToAwal(Date date) {
         List<Persediaan> persediaanList = persediaanRepository.findLastBeforeDate(date);
 
@@ -414,14 +418,17 @@ public class TransaksiIndentExcelcomService {
         }
     }
 
-
-
+    // Mengambil daftar transaksi indent yang berasal dari excelcom
     public List<TransaksiIndent> getTransaksiIndentExcelcom(){
         return transaksiIndentRepository.findTransaksiExcelcom();
     }
+
+    // Mengambil daftar barang transaksi indent berdasarkan ID transaksi indent
     public List<BarangTransaksiIndent> getBarangTransaksiIndent(Long id){
         return barangTransaksiIndentRepository.findByTransaksiIndentId(id);
     }
+
+    // Mengambil transaksi indent berdasarkan ID
     public TransaksiIndent getById(Long id){
         return transaksiIndentRepository.findById(id).orElseThrow(() -> new NotFoundException("Id Not Found"));
     }

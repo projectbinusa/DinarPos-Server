@@ -15,16 +15,21 @@ public class ExcelBarangService {
     @Autowired
     private BarangRepository barangRepository;
 
+    // Mengambil daftar barang dari repository dan mengonversinya menjadi file Excel
     public ByteArrayInputStream loadBarang() throws IOException {
         List<Barang> barangs = barangRepository.findAllBarang();
         ByteArrayInputStream in = ExcelBarang.barangToExcel(barangs);
         return in;
     }
+
+    // Menghasilkan template Excel untuk barang berdasarkan data dari repository
     public ByteArrayInputStream templateBarang() throws IOException {
         List<Barang> barangs = barangRepository.findAllBarang();
         ByteArrayInputStream in = ExcelBarang.templateToExcel(barangs);
         return in;
     }
+
+    // Menerima file Excel dan menyimpan data barang yang terkandung di dalamnya ke dalam repository
     public void saveBarang(MultipartFile file) {
         try {
             List<Barang> barangList = ExcelBarang.excelToBarang(file.getInputStream());
@@ -33,6 +38,4 @@ public class ExcelBarangService {
             throw new RuntimeException("fail to store excel data: " + e.getMessage());
         }
     }
-
-
 }
