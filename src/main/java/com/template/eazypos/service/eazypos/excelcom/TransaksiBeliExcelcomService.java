@@ -44,6 +44,7 @@ public class TransaksiBeliExcelcomService {
     @Autowired
     private PersediaanRepository persediaanRepository;
 
+    // Menambahkan transaksi beli baru
     public TransaksiBeli addTransaksi(TransaksiBeliDTO transaksiDTO) {
         Date now = new Date();
         String not = getNoNotaTransaksi(); // method generateNotaNumber() menghasilkan nomor nota baru
@@ -132,6 +133,7 @@ public class TransaksiBeliExcelcomService {
         return savedTransaksi;
     }
 
+    // Mengupdate tabel persediaan penjualan
     private void updatePenjualanTabelPersediaan(Date date) {
 
         // Retrieve the persediaan entry for the given date
@@ -175,7 +177,7 @@ public class TransaksiBeliExcelcomService {
         }
     }
 
-
+    // Mengambil persediaan akhir sebagai persediaan awal untuk tanggal tertentu
     public int persediaanAkhirToAwal(Date date) {
         List<Persediaan> persediaanList = persediaanRepository.findLastBeforeDate(date);
 
@@ -187,6 +189,7 @@ public class TransaksiBeliExcelcomService {
             return 0;
         }
     }
+
     public String getNoNotaTransaksi() {
         try {
             String kd = "";
@@ -220,19 +223,19 @@ public class TransaksiBeliExcelcomService {
         }
     }
 
+    // Mengambil transaksi beli berdasarkan ID
     public TransaksiBeli getById (Long id){
         return transaksiBeliRepository.findById(id).orElseThrow(() -> new NotFoundException("Id tidak dinemukan"));
     }
-    public List<BarangTransaksiBeli> getByIdTransaksi (Long idTransaksi){
+
+    // Mengambil daftar barang transaksi beli berdasarkan ID transaksi
+    public List<BarangTransaksiBeli> getByIdTransaksi(Long idTransaksi) {
         String status = "excelcom";
-        return barangTransaksiBeliRepository.findBarangTransaksiDinarposByIdTransaksi(status , idTransaksi);
-    }
-    public List<TransaksiBeli> getExcelcomBYMonthAndYear(int bulan , int tahun){
-        return transaksiBeliRepository.findTransaksiByMonthAndYear(bulan,tahun , "excelcom");
+        return barangTransaksiBeliRepository.findBarangTransaksiDinarposByIdTransaksi(status, idTransaksi);
     }
 
-
-
-
-
+    // Mengambil daftar transaksi beli berdasarkan bulan dan tahun
+    public List<TransaksiBeli> getExcelcomBYMonthAndYear(int bulan, int tahun) {
+        return transaksiBeliRepository.findTransaksiByMonthAndYear(bulan, tahun, "excelcom");
+    }
 }

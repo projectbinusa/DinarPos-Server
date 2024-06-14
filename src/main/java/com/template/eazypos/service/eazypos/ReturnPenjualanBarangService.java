@@ -28,18 +28,22 @@ public class ReturnPenjualanBarangService {
     @Autowired
     private BarangRepository barangRepository;
 
+    // Mengambil daftar barang transaksi penjualan untuk produk Excelcom
     public List<BarangTransaksi> getAllExcelcom() {
         return barangTransaksiRepository.findBarangTransaksiExcelcom();
     }
+
+    // Mengambil daftar barang transaksi penjualan untuk produk Dinarpos
     public List<BarangTransaksi> getAllDinarpos() {
         return barangTransaksiRepository.findBarangTransaksiDinarpos();
     }
 
+    // Mengambil barang transaksi penjualan berdasarkan ID
     public BarangTransaksi get(Long id) {
-        return barangTransaksiRepository.findById(id).orElseThrow(() -> new NotFoundException("Id tidak dinemukan"));
+        return barangTransaksiRepository.findById(id).orElseThrow(() -> new NotFoundException("Id tidak ditemukan"));
     }
 
-
+    // Memproses pengembalian barang dari transaksi penjualan
     public BarangTransaksi retur(Long id){
         Optional<BarangTransaksi> barangTransaksiOptional = barangTransaksiRepository.findById(id);
         if (barangTransaksiOptional.isPresent()) {
@@ -73,9 +77,13 @@ public class ReturnPenjualanBarangService {
             throw new NotFoundException("Barang transaksi tidak ditemukan");
         }
     }
+
+    // Mengambil daftar barang yang telah diretur berdasarkan ID transaksi
     public List<BarangTransaksi> getAllBarangReturn(Long idTransaksi) {
         return barangTransaksiRepository.findBarangTransaksiReturnByIdTransaksi(idTransaksi);
     }
+
+    // Menghapus barang transaksi penjualan berdasarkan ID
     public Map<String, Boolean> delete(Long id ) {
         try {
             barangTransaksiRepository.deleteById(id);

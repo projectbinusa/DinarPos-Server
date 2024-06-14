@@ -30,28 +30,38 @@ import java.util.Map;
 @RequestMapping("api/barang")
 @CrossOrigin(origins = "*")
 public class BarangController {
+
     @Autowired
     private BarangService barangService;
 
     @Autowired
     private ExcelBarangService excelBarang;
 
+    // Menambahkan Barang Baru
     @PostMapping("/add")
     public CommonResponse<Barang> add(@RequestBody Barang barang){
         return ResponseHelper.ok( barangService.add(barang));
     }
+
+    // Mendapatkan Barang Berdasarkan ID
     @GetMapping("/{id}")
     public CommonResponse <Barang> get(@PathVariable("id") Long id){
         return ResponseHelper.ok( barangService.get(id));
     }
+
+    // Mendapatkan Barang Berdasarkan Barcode
     @GetMapping("/barcode")
     public CommonResponse <Barang> getByBarcode(@RequestParam("barcode") String  barcode){
         return ResponseHelper.ok( barangService.getByBarcode(barcode));
     }
+
+    // Mendapatkan Semua Barang
     @GetMapping
     public CommonResponse<List<Barang>> getAll(){
         return ResponseHelper.ok( barangService.getAll());
     }
+
+    // Mendapatkan Barang Dengan Pagination
     @GetMapping(path = "/pagination")
     public PaginationResponse<List<Barang>> getAll(
             @RequestParam(defaultValue = Pagination.page, required = false) Long page,
@@ -80,14 +90,19 @@ public class BarangController {
         return ResponseHelper.okWithPagination(barangs, pagination);
     }
 
+    // Mengedit Barang Berdasarkan ID
     @PutMapping("/{id}")
     public CommonResponse<Barang> put(@PathVariable("id") Long id , @RequestBody Barang barang){
         return ResponseHelper.ok( barangService.edit(barang , id));
     }
+
+    // Menghapus Barang Berdasarkan ID
     @DeleteMapping("/{id}")
     public CommonResponse<?> delete(@PathVariable("id")  Long id ) {
         return ResponseHelper.ok( barangService.delete(id));
     }
+
+    // Mengimpor Data Barang Dari File Excel
     @PostMapping(path = "/import")
     public ResponseEntity<ResponseMessage> uploadFile(@RequestPart("file") MultipartFile file) {
         String message = "";
@@ -107,6 +122,7 @@ public class BarangController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseMessage(message));
     }
 
+    // Mengekspor Data Barang Ke File Excel
     @GetMapping("/export")
     public ResponseEntity<Resource> exportBarangsToExcel() throws IOException {
         String filename = "Data Barang.xlsx";
@@ -118,6 +134,8 @@ public class BarangController {
                 .body(file);
 
     }
+
+    // Mendapatkan Template File Excel Untuk Data Barang
     @GetMapping("/template")
     public ResponseEntity<Resource> templateBarangsToExcel() throws IOException {
         String filename = "Template Data Barang.xlsx";

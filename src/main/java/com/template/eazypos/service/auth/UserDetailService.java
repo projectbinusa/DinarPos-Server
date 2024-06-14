@@ -3,9 +3,7 @@ package com.template.eazypos.service.auth;
 
 import com.template.eazypos.exception.NotFoundException;
 import com.template.eazypos.model.Pengguna;
-import com.template.eazypos.model.User;
 import com.template.eazypos.repository.PenggunaRepository;
-import com.template.eazypos.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -18,6 +16,7 @@ public class UserDetailService implements UserDetailsService {
     @Autowired
     PenggunaRepository penggunaRepository;
 
+    // Metode untuk memuat detail pengguna berdasarkan username/email dari repository Pengguna
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) {
@@ -29,5 +28,4 @@ public class UserDetailService implements UserDetailsService {
         }
         return UserDetail.buildUser(user);
     }
-
 }

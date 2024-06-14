@@ -31,7 +31,7 @@ public class BonBarangService {
     @Autowired
     BarangRepository barangRepository;
 
-
+    // Menambahkan data BonBarang baru berdasarkan BonBarangDTO
     public BonBarang add(BonBarangDTO bonBarangDTO){
         BonBarang bonBarang = new BonBarang();
         bonBarang.setTgl_ambil(bonBarangDTO.getTanggal_ambil());
@@ -40,16 +40,20 @@ public class BonBarangService {
         bonBarang.setBarang(barangRepository.findByBarcode(bonBarangDTO.getBarcode_brg()));
         return bonBarangRepository.save(bonBarang);
     }
+
+    // Mengambil data BonBarang berdasarkan ID
     public BonBarang getById(Long id){
         return bonBarangRepository.findById(id).orElseThrow(() -> new NotFoundException("Id Not Found"));
     }
 
+    // Mengedit data BonBarang berdasarkan UpdateBonBarangDTO
     public BonBarang edit(UpdateBonBarangDTO bonBarangDTO , Long id){
         BonBarang bonBarang = bonBarangRepository.findById(id).orElseThrow(() -> new NotFoundException("Id Not Found"));
         bonBarang.setTgl_kembalikan(bonBarangDTO.getTgl_kembali());
         return bonBarangRepository.save(bonBarang);
     }
 
+    // Mengambil semua data BonBarang yang tersimpan
     public List<BonBarang> getAll(){
         return bonBarangRepository.findAll();
     }
@@ -64,6 +68,7 @@ public class BonBarangService {
         }
     }
 
+    // Mengupdate data BonBarang berdasarkan UpdateDataBonBarangDTO
     public BonBarang updateBonBarang(UpdateDataBonBarangDTO dataBonBarangDTO, Long id) {
         BonBarang bonBarang = bonBarangRepository.findById(id).orElseThrow(() -> new NotFoundException("Id Not Found"));
         bonBarang.setTgl_ambil(dataBonBarangDTO.getTgl_ambil());

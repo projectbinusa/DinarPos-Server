@@ -18,6 +18,7 @@ public class PersediaanController {
     @Autowired
     private ExcelPersediaanService excelPersediaan;
 
+    // Endpoint Untuk Mengekspor Data Persediaan Ke Excel
     @GetMapping("/export")
     public ResponseEntity<Resource> exportPersediaanToExcel() throws IOException {
         String filename = "Data_Persediaan.xlsx";

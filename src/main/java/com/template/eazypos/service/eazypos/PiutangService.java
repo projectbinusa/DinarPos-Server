@@ -22,6 +22,7 @@ public class PiutangService {
     @Autowired
     private TransaksiRepository transaksiRepository;
 
+    // Melakukan pelunasan piutang pada transaksi yang diberikan
     public Piutang pelunasan(PelunasanDTO pelunasanDTO) {
         Transaksi transaksi = transaksiRepository.findById(pelunasanDTO.getId_transaksi()).orElseThrow((() -> new NotFoundException("Id Not Found")));
         int kekurangan = Integer.parseInt(transaksi.getKekurangan());
@@ -37,9 +38,13 @@ public class PiutangService {
         piutang.setDate(new Date());
         return piutangRepository.save(piutang);
     }
+
+    // Mengambil daftar semua transaksi yang memiliki piutang
     public List<Transaksi> getAll() {
         return transaksiRepository.findAllPiutang();
     }
+
+    // Mengambil data piutang berdasarkan ID
     public Piutang getById(Long id){
         return piutangRepository.findById(id).orElseThrow(() -> new NotFoundException("Id Not found"));
     }

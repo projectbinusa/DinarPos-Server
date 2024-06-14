@@ -22,200 +22,272 @@ import java.util.Map;
 @RequestMapping("api/service")
 @CrossOrigin(origins = "*")
 public class ServiceController {
+
     @Autowired
     private DataService dataService;
 
+    // Endpoint untuk menambah layanan barang
     @PostMapping("/add")
     public CommonResponse<ServiceBarang> add(@RequestBody AddServiceDTO addServiceDTO) {
         return ResponseHelper.ok(dataService.addService(addServiceDTO));
     }
+
+    // Endpoint untuk mendapatkan data "take" berdasarkan ID TT
     @GetMapping("take/{id}")
-    public CommonResponse<List<Take>> getTakeByIdTT(@PathVariable("id") Long id){
+    public CommonResponse<List<Take>> getTakeByIdTT(@PathVariable("id") Long id) {
         return ResponseHelper.ok(dataService.getTakeByIdTT(id));
     }
+
+    // Endpoint untuk mendapatkan data "status" berdasarkan ID TT
     @GetMapping("status/{id}")
-    public CommonResponse<List<Status>> getStatusByIdTT(@PathVariable("id") Long id){
+    public CommonResponse<List<Status>> getStatusByIdTT(@PathVariable("id") Long id) {
         return ResponseHelper.ok(dataService.getStatusByIdTT(id));
     }
+
+    // Endpoint untuk proses layanan berdasarkan ID
     @PostMapping("/proses/{id}")
-    public CommonResponse<Status> proses(@RequestBody TakenServiceDTO takenServiceDTO , @PathVariable("id") Long id) {
-        return ResponseHelper.ok(dataService.prosesService(takenServiceDTO , id));
+    public CommonResponse<Status> proses(@RequestBody TakenServiceDTO takenServiceDTO, @PathVariable("id") Long id) {
+        return ResponseHelper.ok(dataService.prosesService(takenServiceDTO, id));
     }
+
+    // Endpoint untuk tambah status layanan
     @PostMapping("/tambah_status")
-    public CommonResponse<Status> tambahStatus( @RequestParam(name = "id") Long id,@RequestBody TakenServiceDTO takenServiceDTO) {
-        return ResponseHelper.ok(dataService.prosesServiceTeknisi(takenServiceDTO , id));
+    public CommonResponse<Status> tambahStatus(@RequestParam(name = "id") Long id, @RequestBody TakenServiceDTO takenServiceDTO) {
+        return ResponseHelper.ok(dataService.prosesServiceTeknisi(takenServiceDTO, id));
     }
-    @PutMapping(path = "/foto_before/{id}" , consumes = "multipart/form-data")
-    public CommonResponse<ServiceBarang> fotoBefore(@RequestPart("file") MultipartFile multipartFile , Long id) {
-        return ResponseHelper.ok(dataService.fotoBefore(multipartFile ,id));
+
+    // Endpoint untuk mengunggah foto sebelum layanan
+    @PutMapping(path = "/foto_before/{id}", consumes = "multipart/form-data")
+    public CommonResponse<ServiceBarang> fotoBefore(@RequestPart("file") MultipartFile multipartFile, @PathVariable Long id) {
+        return ResponseHelper.ok(dataService.fotoBefore(multipartFile, id));
     }
-    @PutMapping(path = "/foto_after/{id}" , consumes = "multipart/form-data")
-    public CommonResponse<ServiceBarang> fotoAfter(@RequestPart("file") MultipartFile multipartFile , Long id) {
-        return ResponseHelper.ok(dataService.fotoAfter(multipartFile , id));
+
+    // Endpoint untuk mengunggah foto setelah layanan
+    @PutMapping(path = "/foto_after/{id}", consumes = "multipart/form-data")
+    public CommonResponse<ServiceBarang> fotoAfter(@RequestPart("file") MultipartFile multipartFile, @PathVariable Long id) {
+        return ResponseHelper.ok(dataService.fotoAfter(multipartFile, id));
     }
+
+    // Endpoint untuk konfirmasi tanggal
     @PostMapping("/konfirm")
     public CommonResponse<TglKonf> konfirm(@RequestBody KonfirmDTO konfirmDTO) {
         return ResponseHelper.ok(dataService.konfirm(konfirmDTO));
     }
+
+    // Endpoint untuk admin layanan
     @PutMapping("/service_admin/{id}")
-    public CommonResponse<ServiceBarang> serviceAdmin(@RequestBody ServiceAdminDTO serviceAdminDTO , @PathVariable("id") Long id) {
-        return ResponseHelper.ok(dataService.serviceAdmin(serviceAdminDTO , id));
+    public CommonResponse<ServiceBarang> serviceAdmin(@RequestBody ServiceAdminDTO serviceAdminDTO, @PathVariable Long id) {
+        return ResponseHelper.ok(dataService.serviceAdmin(serviceAdminDTO, id));
     }
+
+    // Endpoint untuk update catatan
     @PutMapping("/update_note/{id}")
-    public CommonResponse<ServiceBarang> updateNote(@RequestBody NoteDTO noteDTO , @PathVariable("id") Long id) {
-        return ResponseHelper.ok(dataService.updateNote(noteDTO , id));
+    public CommonResponse<ServiceBarang> updateNote(@RequestBody NoteDTO noteDTO, @PathVariable Long id) {
+        return ResponseHelper.ok(dataService.updateNote(noteDTO, id));
     }
+
+    // Endpoint untuk update pelanggan
     @PutMapping("/update_customer/{id}")
-    public CommonResponse<ServiceBarang> updateCustomer(@RequestBody UpdateCustomerDTO updateCustomerDTO , @PathVariable("id") Long id) {
-        return ResponseHelper.ok(dataService.updateCustomer(updateCustomerDTO , id));
+    public CommonResponse<ServiceBarang> updateCustomer(@RequestBody UpdateCustomerDTO updateCustomerDTO, @PathVariable Long id) {
+        return ResponseHelper.ok(dataService.updateCustomer(updateCustomerDTO, id));
     }
+
+    // Endpoint untuk layanan yang diambil oleh pelanggan
     @PutMapping("/taken_service/{id}")
-    public CommonResponse<Transaksi> takenService(@RequestBody TransaksiPenjualanDTO transaksiPenjualanDTO , @PathVariable("id") Long id) {
-        return ResponseHelper.ok(dataService.takenServiceCustomer(transaksiPenjualanDTO , id));
+    public CommonResponse<Transaksi> takenService(@RequestBody TransaksiPenjualanDTO transaksiPenjualanDTO, @PathVariable Long id) {
+        return ResponseHelper.ok(dataService.takenServiceCustomer(transaksiPenjualanDTO, id));
     }
+
+    // Endpoint untuk mendapatkan data layanan berdasarkan ID
     @GetMapping("/{id}")
-    public CommonResponse<ServiceBarang> getById(@PathVariable("id") Long id) {
+    public CommonResponse<ServiceBarang> getById(@PathVariable Long id) {
         return ResponseHelper.ok(dataService.getById(id));
     }
+
+    // Endpoint untuk take over layanan
     @PostMapping("/take_over")
     public CommonResponse<ServiceBarang> add(@RequestBody TakeOverDTO takeOverDTO) {
         return ResponseHelper.ok(dataService.takeOver(takeOverDTO));
     }
+
+    // Endpoint untuk mendapatkan semua layanan barang
     @GetMapping
     public CommonResponse<List<ServiceBarang>> getAll() {
         return ResponseHelper.ok(dataService.getAll());
     }
+
+    // Endpoint untuk mendapatkan semua layanan yang telah diambil
     @GetMapping("/taken")
     public CommonResponse<List<ServiceBarang>> getAllByTaken() {
         return ResponseHelper.ok(dataService.getByTaken());
     }
+
+    // Endpoint untuk mendapatkan semua layanan yang belum diambil
     @GetMapping("/taken/N")
     public CommonResponse<List<ServiceBarang>> getAllByTakenN() {
         return ResponseHelper.ok(dataService.getTakenN());
     }
+
+    // Endpoint untuk mendapatkan semua tanggal konfirmasi
     @GetMapping("/tgl_konfirm")
-    public CommonResponse<List<TglKonf>> getAllByTglKonfirm(Long id) {
+    public CommonResponse<List<TglKonf>> getAllByTglKonfirm(@RequestParam Long id) {
         return ResponseHelper.ok(dataService.getAllKonfirm(id));
     }
+
+    // Endpoint untuk menghapus layanan berdasarkan ID
     @DeleteMapping("/{id}")
-    public CommonResponse<?> delete(@PathVariable("id") Long id) {
+    public CommonResponse<?> delete(@PathVariable Long id) {
         return ResponseHelper.ok(dataService.delete(id));
     }
+
+    // Endpoint untuk menghapus tanggal konfirmasi berdasarkan ID
     @DeleteMapping("/tgl_konfirm/{id}")
-    public CommonResponse<?> deleteTglKonf(@PathVariable("id") Long id) {
+    public CommonResponse<?> deleteTglKonf(@PathVariable Long id) {
         return ResponseHelper.ok(dataService.deleteTglKonf(id));
     }
+
+    // Endpoint untuk mendapatkan layanan berdasarkan tanggal dan status
     @GetMapping("/tanggal")
-    public CommonResponse<List<ServiceBarang>> getAllByTanggalAndStatus(@RequestParam(name = "tanggal_awal") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggalAwal, @RequestParam(name = "tanggal_akhir") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggalAkhir , @RequestParam("status") String status) {
-        return ResponseHelper.ok(dataService.getByTanggalAndStatus(tanggalAwal,tanggalAkhir,status));
+    public CommonResponse<List<ServiceBarang>> getAllByTanggalAndStatus(
+            @RequestParam(name = "tanggal_awal") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggalAwal,
+            @RequestParam(name = "tanggal_akhir") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggalAkhir,
+            @RequestParam String status) {
+        return ResponseHelper.ok(dataService.getByTanggalAndStatus(tanggalAwal, tanggalAkhir, status));
     }
 
+    // Endpoint untuk mendapatkan data layanan berdasarkan bulan
     @GetMapping("/data-service")
-    public CommonResponse<List<ServiceDataDTO>> getDataService(@RequestParam("months") @DateTimeFormat(pattern = "yyyy-MM") Date months) {
+    public CommonResponse<List<ServiceDataDTO>> getDataService(@RequestParam @DateTimeFormat(pattern = "yyyy-MM") Date months) {
         return ResponseHelper.ok(dataService.findDataService(months));
     }
 
+    // Endpoint Untuk Mendapatkan Total Layanan Elektronik
     @GetMapping("/total-service-elektro")
-    public CommonResponse<Integer> getTotalServiceElektro(@RequestParam("months") @DateTimeFormat(pattern = "yyyy-MM") Date months) {
+    public CommonResponse<Integer> getTotalServiceElektro(@RequestParam @DateTimeFormat(pattern = "yyyy-MM") Date months) {
         return ResponseHelper.ok(dataService.getTotalServiceElektro(months));
     }
 
+    // Endpoint Untuk Mendapatkan Total Layanan CPU
     @GetMapping("/total-service-cpu")
-    public CommonResponse<Integer> getTotalServiceCPU(@RequestParam("months") @DateTimeFormat(pattern = "yyyy-MM") Date months) {
-        return ResponseHelper.ok( dataService.getTotalServiceCPU(months));
+    public CommonResponse<Integer> getTotalServiceCPU(@RequestParam @DateTimeFormat(pattern = "yyyy-MM") Date months) {
+        return ResponseHelper.ok(dataService.getTotalServiceCPU(months));
     }
 
+    // Endpoint Untuk Mendapatkan Total Layanan Sukses Elektronik
     @GetMapping("/total-service-success-elektro")
-    public CommonResponse<Integer> getTotalServiceSuccessElektro(@RequestParam("months") @DateTimeFormat(pattern = "yyyy-MM") Date months) {
-        return ResponseHelper.ok( dataService.getTotalServiceSuccessElektro(months));
+    public CommonResponse<Integer> getTotalServiceSuccessElektro(@RequestParam @DateTimeFormat(pattern = "yyyy-MM") Date months) {
+        return ResponseHelper.ok(dataService.getTotalServiceSuccessElektro(months));
     }
 
+    // Endpoint Untuk Mendapatkan Total Layanan Tidak Elektronik
     @GetMapping("/total-service-not-elektro")
-    public CommonResponse<Integer> getTotalServiceNotElektro(@RequestParam("months") @DateTimeFormat(pattern = "yyyy-MM") Date months) {
-        return ResponseHelper.ok( dataService.getTotalServiceNotElektro(months));
+    public CommonResponse<Integer> getTotalServiceNotElektro(@RequestParam @DateTimeFormat(pattern = "yyyy-MM") Date months) {
+        return ResponseHelper.ok(dataService.getTotalServiceNotElektro(months));
     }
 
+    // Endpoint Untuk Mendapatkan Total Layanan Tidak CPU
     @GetMapping("/total-service-not-cpu")
-    public CommonResponse<Integer> getTotalServiceNotCPU(@RequestParam("months") @DateTimeFormat(pattern = "yyyy-MM") Date months) {
-        return ResponseHelper.ok( dataService.getTotalServiceNotCPU(months));
+    public CommonResponse<Integer> getTotalServiceNotCPU(@RequestParam @DateTimeFormat(pattern = "yyyy-MM") Date months) {
+        return ResponseHelper.ok(dataService.getTotalServiceNotCPU(months));
     }
 
+    // Endpoint Untuk Mendapatkan Total Layanan Sukses CPU
     @GetMapping("/total-service-success-cpu")
-    public CommonResponse<Integer> getTotalServiceSuccessCPU(@RequestParam("months") @DateTimeFormat(pattern = "yyyy-MM") Date months) {
-        return ResponseHelper.ok( dataService.getTotalServiceSuccessCPU(months));
+    public CommonResponse<Integer> getTotalServiceSuccessCPU(@RequestParam @DateTimeFormat(pattern = "yyyy-MM") Date months) {
+        return ResponseHelper.ok(dataService.getTotalServiceSuccessCPU(months));
     }
+
+    // Endpoint Untuk Mendapatkan Layanan Oleh Teknisi
     @GetMapping("/dashboard/teknisi")
     public CommonResponse<List<ServiceBarang>> getService() {
-        return ResponseHelper.ok( dataService.getService());
+        return ResponseHelper.ok(dataService.getService());
     }
+
+    // Endpoint untuk filter layanan berdasarkan tanggal awal, tanggal akhir, dan status
     @GetMapping("/dashboard/teknisi/filter")
     public CommonResponse<List<ServiceBarang>> filterService(
             @RequestParam("awal") @DateTimeFormat(pattern = "yyyy-MM-dd") Date awal,
             @RequestParam("akhir") @DateTimeFormat(pattern = "yyyy-MM-dd") Date akhir,
             @RequestParam(value = "status", required = false) String status) {
-        return ResponseHelper.ok( dataService.filterServiceByDateAndStatus(awal, akhir, status));
+        return ResponseHelper.ok(dataService.filterServiceByDateAndStatus(awal, akhir, status));
     }
 
+    // Endpoint untuk filter layanan berdasarkan status
     @GetMapping("/dashboard/teknisi/filter/status")
     public CommonResponse<List<ServiceBarang>> filterServiceByStatus(@RequestParam("status") String status) {
-        return ResponseHelper.ok( dataService.filterServiceByStatus(status));
+        return ResponseHelper.ok(dataService.filterServiceByStatus(status));
     }
 
+    // Endpoint untuk filter layanan berdasarkan tanggal awal dan tanggal akhir
     @GetMapping("/dashboard/teknisi/filter/tanggal")
-    public CommonResponse<List<ServiceBarang>> filterServiceByDateRange(@RequestParam("awal") @DateTimeFormat(pattern="yyyy-MM-dd") Date awal,
-                                                        @RequestParam("akhir") @DateTimeFormat(pattern="yyyy-MM-dd") Date akhir) {
-        return ResponseHelper.ok( dataService.filterServiceByDateRange(awal, akhir));
+    public CommonResponse<List<ServiceBarang>> filterServiceByDateRange(
+            @RequestParam("awal") @DateTimeFormat(pattern = "yyyy-MM-dd") Date awal,
+            @RequestParam("akhir") @DateTimeFormat(pattern = "yyyy-MM-dd") Date akhir) {
+        return ResponseHelper.ok(dataService.filterServiceByDateRange(awal, akhir));
     }
 
+    // Endpoint untuk mendapatkan layanan yang dibatalkan
     @GetMapping("/cancel")
     public CommonResponse<List<ServiceBarang>> getServiceCancel() {
-      return ResponseHelper.ok(dataService.getServiceCancel());
+        return ResponseHelper.ok(dataService.getServiceCancel());
     }
 
+    // Endpoint untuk filter layanan yang dibatalkan berdasarkan tanggal awal dan tanggal akhir
     @GetMapping("/cancel/filter")
     public CommonResponse<List<ServiceBarang>> getTglFilterServiceCancel(
             @RequestParam("awal") @DateTimeFormat(pattern = "yyyy-MM-dd") Date awal,
             @RequestParam("akhir") @DateTimeFormat(pattern = "yyyy-MM-dd") Date akhir) {
-       return ResponseHelper.ok(dataService.getTglFilterServiceCancel(awal , akhir));
+        return ResponseHelper.ok(dataService.getTglFilterServiceCancel(awal, akhir));
     }
+
+    // Endpoint untuk mendapatkan layanan berdasarkan ID teknisi
     @GetMapping("/my-service")
     public CommonResponse<List<ServiceBarang>> getMyServices(@RequestParam Long teknisiId) {
         return ResponseHelper.ok(dataService.getMyServices(teknisiId));
     }
 
+    // Endpoint untuk mendapatkan layanan retur berdasarkan ID teknisi
     @GetMapping("/my-service-retur")
     public CommonResponse<List<ServiceBarang>> getMyServicesRetur(@RequestParam Long teknisiId) {
         return ResponseHelper.ok(dataService.getMyServicesRetur(teknisiId));
     }
 
+    // Endpoint untuk mendapatkan layanan yang telah diambil
     @GetMapping("/service-taken")
     public CommonResponse<List<ServiceBarang>> getServiceTaken() {
-        return ResponseHelper.ok( dataService.getServiceTaken());
+        return ResponseHelper.ok(dataService.getServiceTaken());
     }
 
+    // Endpoint untuk menghitung jumlah total layanan
     @GetMapping("/count")
     public CommonResponse<Long> countAllServices() {
         return ResponseHelper.ok(dataService.countAllServices());
     }
 
+    // Endpoint untuk mengubah status layanan menjadi baru
     @PutMapping("/status-new")
-    public CommonResponse<Status>aksiStatusNew(@RequestParam Long idTT, @RequestParam Long teknisiId,
-                                 @RequestParam String status, @RequestParam String solusi,
-                                 @RequestParam String ket, @RequestParam String validasi) {
-        return ResponseHelper.ok( dataService.aksiStatusNew(idTT, teknisiId, status, solusi, ket, validasi));
+    public CommonResponse<Status> aksiStatusNew(@RequestParam Long idTT, @RequestParam Long teknisiId,
+                                                @RequestParam String status, @RequestParam String solusi,
+                                                @RequestParam String ket, @RequestParam String validasi) {
+        return ResponseHelper.ok(dataService.aksiStatusNew(idTT, teknisiId, status, solusi, ket, validasi));
     }
+
+    // Endpoint untuk menambahkan status layanan
     @PutMapping("/aksi-status-plus")
     public CommonResponse<Status> aksiStatusPlus(@RequestParam Long idTT, @RequestParam Long teknisiId,
-                                  @RequestParam String status, @RequestParam String solusi,
-                                  @RequestParam String ket, @RequestParam String validasi) {
+                                                 @RequestParam String status, @RequestParam String solusi,
+                                                 @RequestParam String ket, @RequestParam String validasi) {
         return ResponseHelper.ok(dataService.aksiStatusPlus(idTT, teknisiId, status, solusi, ket, validasi));
     }
+
+    // Endpoint untuk melakukan take over layanan
     @PutMapping("/aksi-take-over")
     public CommonResponse<Take> aksiTakeOver(@RequestParam Long idTT, @RequestParam Long teknisiId,
-                                @RequestParam Long takeTeknisiId) {
+                                             @RequestParam Long takeTeknisiId) {
         return ResponseHelper.ok(dataService.aksiTakeOver(idTT, teknisiId, takeTeknisiId));
     }
 
+    // Endpoint untuk mendapatkan data layanan dengan pagination
     @GetMapping(path = "/pagination/takenN")
     public PaginationResponse<List<ServiceBarang>> getAll(
             @RequestParam(defaultValue = Pagination.page, required = false) Long page,
@@ -242,11 +314,14 @@ public class ServiceController {
 
         return ResponseHelper.okWithPagination(serviceBarangs, pagination);
     }
+
+    // Endpoint untuk mendapatkan layanan yang diambil oleh pimpinan
     @GetMapping("/service-taken-pimpinan")
     public List<ServiceBarang> getServiceTakenPimpinan() {
         return dataService.getServiceTakenPimpinan();
     }
 
+    // Endpoint untuk mendapatkan layanan berdasarkan tanggal awal dan tanggal akhir yang diambil
     @GetMapping("/service-taken-by-date")
     public List<ServiceBarang> getServiceTakenByDateRange(
             @RequestParam("awal") @DateTimeFormat(pattern = "yyyy-MM-dd") Date awal,

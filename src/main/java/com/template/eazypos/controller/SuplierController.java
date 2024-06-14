@@ -34,18 +34,25 @@ public class SuplierController {
     @Autowired
     private ExcelSuplierService excelSuplier;
 
+    // Endpoint untuk menambahkan data supplier baru
     @PostMapping("/add")
     public CommonResponse<Suplier> add(@RequestBody Suplier suplier){
         return ResponseHelper.ok( service.add(suplier));
     }
+
+    // Endpoint untuk mendapatkan data supplier berdasarkan ID
     @GetMapping("/{id}")
     public CommonResponse <Suplier> get(@PathVariable("id") Long id){
         return ResponseHelper.ok( service.get(id));
     }
+
+    // Endpoint untuk mendapatkan semua data supplier
     @GetMapping
     public CommonResponse<List<Suplier>> getAll(){
         return ResponseHelper.ok( service.getAll());
     }
+
+    // Endpoint untuk mendapatkan data supplier dengan pagination
     @GetMapping(path = "/pagination")
     public PaginationResponse<List<Suplier>> getAll(
             @RequestParam(defaultValue = Pagination.page, required = false) Long page,
@@ -73,15 +80,20 @@ public class SuplierController {
 
         return ResponseHelper.okWithPagination(supliers, pagination);
     }
+
+    // Endpoint untuk mengedit data supplier berdasarkan ID
     @PutMapping("/{id}")
     public CommonResponse<Suplier> put(@PathVariable("id") Long id , @RequestBody Suplier suplier){
         return ResponseHelper.ok( service.edit(suplier , id));
     }
+
+    // Endpoint untuk menghapus data supplier berdasarkan ID
     @DeleteMapping("/{id}")
     public CommonResponse<?> delete(@PathVariable("id")  Long id ) {
         return ResponseHelper.ok( service.delete(id));
     }
 
+    // Endpoint untuk mengunggah file excel data supplier
     @PostMapping(path = "/import")
     public ResponseEntity<ResponseMessage> uploadFile(@RequestPart("file") MultipartFile file) {
         String message = "";
@@ -101,7 +113,7 @@ public class SuplierController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseMessage(message));
     }
 
-
+    // Endpoint untuk mengekspor data supplier ke file excel
     @GetMapping("/export")
     public ResponseEntity<Resource> exportSupliersToExcel() throws IOException {
         String filename = "Data_Suplier.xlsx";
@@ -113,6 +125,7 @@ public class SuplierController {
                 .body(file);
     }
 
+    // Endpoint untuk mendownload template file excel data supplier
     @GetMapping("/template")
     public ResponseEntity<Resource> templateSupliersToExcel() throws IOException {
         String filename = "Template_Data_Suplier.xlsx";
@@ -123,5 +136,4 @@ public class SuplierController {
                 .contentType(MediaType.parseMediaType("application/vnd.ms-excel"))
                 .body(file);
     }
-
 }

@@ -26,6 +26,7 @@ public class CustomerService {
     @Autowired
     private SalesmanRepository salesmanRepository;
 
+    // Menambahkan customer baru
     public Customer add(CustomerDTO customerDTO){
        if (customerRepository.findByEmailOrTelp(customerDTO.getEmail(), customerDTO.getNot_telp()).isPresent()){
            throw new BadRequestException("Customer sudah ada");
@@ -40,12 +41,18 @@ public class CustomerService {
        add.setJenis(customerDTO.getJenis());
        return customerRepository.save(add);
     }
+
+    // Mendapatkan customer berdasarkan ID
     public Customer get(Long id) {
         return customerRepository.findById(id).orElseThrow(() -> new NotFoundException("Id tidak dinemukan"));
     }
+
+    // Mendapatkan semua customer
     public List<Customer> getAll(){
         return customerRepository.findAll();
     }
+
+    // Mengedit customer berdasarkan ID
     public Customer edit(CustomerDTO customerDTO , Long id){
         Customer update = customerRepository.findById(id).orElseThrow(() -> new NotFoundException("Id tidak dinemukan"));
         update.setAlamat(customerDTO.getAlamat());
@@ -55,6 +62,8 @@ public class CustomerService {
         update.setJenis(customerDTO.getJenis());
         return customerRepository.save(update);
     }
+
+    // Menghapus customer berdasarkan ID
     public Map<String, Boolean> delete(Long id ) {
         try {
             customerRepository.deleteById(id);
@@ -65,6 +74,8 @@ public class CustomerService {
             return null;
         }
     }
+
+    // Mendapatkan semua customer dengan pagination
     public Page<Customer> getAllWithPagination(Long page, Long limit, String sort, String search) {
 
         Sort.Direction direction = Sort.Direction.ASC;

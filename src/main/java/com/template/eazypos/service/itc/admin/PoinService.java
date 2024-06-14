@@ -1,7 +1,6 @@
 package com.template.eazypos.service.itc.admin;
 
 import com.template.eazypos.dto.PoinHistoryDTO;
-import com.template.eazypos.exception.NotFoundException;
 import com.template.eazypos.model.Poin;
 import com.template.eazypos.model.PoinHistory;
 import com.template.eazypos.model.Teknisi;
@@ -27,12 +26,17 @@ public class PoinService {
     @Autowired
     private PoinRepository poinRepository;
 
+    // Mengambil riwayat poin berdasarkan bulan
     public List<PoinHistory> getPoinByMonth(LocalDate month) {
         return poinHistoryRepository.findByMonth(month);
     }
+
+    // Mengambil riwayat poin berdasarkan rentang tanggal dan ID teknisi
     public List<PoinHistory> getByTanggal(Date tanggalAwal , Date tanggalAkhir){
         return poinHistoryRepository.findByTanggal(tanggalAwal , tanggalAkhir);
     }
+
+    // Menghitung total poin untuk teknisi pada bulan tertentu
     public Map<Object, Object> getPoinForMonth(Long idTeknisi, int month) {
         List<PoinHistory> poinHistories = poinHistoryRepository.findPoinByTeknisiForMonth(idTeknisi, month);
 
@@ -45,36 +49,48 @@ public class PoinService {
         return response;
     }
 
+    // Mengambil riwayat poin berdasarkan rentang tanggal dan ID teknisi
     public List<PoinHistory> getPoinHistory(Date tanggalAwal, Date tanggalAkhir, Long idTeknisi) {
         return poinHistoryRepository.findByDateRangeAndTeknisi(tanggalAwal, tanggalAkhir, idTeknisi);
     }
+
+    // Mengambil riwayat poin berdasarkan ID teknisi
     public List<PoinHistory> getPoinHistoryByIdTeknisi(String id){
         return poinHistoryRepository.findByIdTeknisi(id);
     }
 
+    // Mengambil semua riwayat poin dengan keterangan tertentu
     public List<PoinHistory> getAllByKeterangan(String keterangan) {
         return poinHistoryRepository.findAllByKeterangan(keterangan);
     }
+
+    // Mengambil semua poin dengan nama teknisi
     public List<Poin> getPoin() {
         return poinRepository.findAllPoinWithTeknisiName();
     }
 
+    // Mengambil total poin dari semua riwayat poin
     public PoinHistory getTotalPoin() {
         return poinHistoryRepository.findTotalPoin();
     }
 
+    // Mengambil total poin berdasarkan bulan
     public PoinHistory getTotalPoinByMonth(String month) {
         return poinHistoryRepository.findTotalPoinByMonth(month);
     }
 
+    // Mengambil riwayat poin berdasarkan bulan
     public List<PoinHistory> getPoinByMonth(String month) {
         return poinHistoryRepository.findPoinByMonth(month);
     }
 
+    // Menghitung total poin untuk seorang teknisi pada bulan dan tahun tertentu
     public double getTotalPoinByMonthAndYear(Long idTeknisi, int year, int month) {
         Double totalPoin = poinHistoryRepository.findTotalPoinByMonthAndYear(idTeknisi, year, month);
         return totalPoin != null ? totalPoin : 0;
     }
+
+    // Menambahkan entri baru ke riwayat poin_history dan juga ke tabel Poin
     @Transactional
     public PoinHistory add(PoinHistoryDTO poinHistoryDTO) {
         // Mencari teknisi berdasarkan id_teknisi
@@ -101,8 +117,8 @@ public class PoinService {
         return poinHistory;
     }
 
+    // Mengambil semua riwayat poin
     public List<PoinHistory> getAllPoinHistory() {
         return poinHistoryRepository.findAll();
     }
-
 }
