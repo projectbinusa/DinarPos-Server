@@ -32,6 +32,7 @@ public class TeknisiService {
     @Autowired
     private StatusRepository statusRepository;
 
+    // Menambahkan data Teknisi baru berdasarkan TeknisiDTO
     public Teknisi add(TeknisiDTO teknisiDTO){
         Teknisi teknisi = new Teknisi();
         teknisi.setTotalPoin(0);
@@ -52,7 +53,7 @@ public class TeknisiService {
         }
         pengguna.setUsernamePengguna(teknisi.getNama());
         pengguna.setNamaPengguna(teknisi.getNama());
-        pengguna.setLevelPengguna("Tekinisi");
+        pengguna.setLevelPengguna("Teknisi");
         pengguna.setDelFlag(1);
         String userPass = teknisiDTO.getPassword().trim();
         boolean PasswordIsNotValid = !userPass.matches("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{8,20}");
@@ -65,15 +66,23 @@ public class TeknisiService {
         penggunaRepository.save(pengguna);
         return saveTeknisi;
     }
+
+    // Mengambil semua data Teknisi
     public List<Teknisi> getAll(){
         return teknisiRepository.findAll();
     }
+
+    // Mengambil data Teknisi berdasarkan ID
     public Teknisi getById(Long id){
         return teknisiRepository.findById(id).orElseThrow(() -> new NotFoundException("Id  tidak dinemukan"));
     }
+
+    // Mengambil data Teknisi berdasarkan nama
     public Teknisi getByNama(String username) {
         return teknisiRepository.findByNama(username).orElseThrow(() -> new NotFoundException("Username Not Found"));
     }
+
+    // Mengedit data Teknisi berdasarkan TeknisiDTO
     public Teknisi put(TeknisiDTO teknisi , Long id){
         Teknisi update = teknisiRepository.findById(id).orElseThrow(() -> new NotFoundException("Id Teknisi tidak dinemukan"));
         Pengguna pengguna = penggunaRepository.findByUsername(update.getNama()).orElseThrow(() -> new NotFoundException("Username Pengguna tidak dinemukan"));
@@ -92,6 +101,7 @@ public class TeknisiService {
         return teknisiRepository.save(update);
     }
 
+    // Menghapus data Teknisi berdasarkan ID
     public Map<String, Boolean> delete(Long id ) {
         try {
             teknisiRepository.deleteById(id);
@@ -103,6 +113,7 @@ public class TeknisiService {
         }
     }
 
+    //  Mengambil halaman data Teknisi dengan pagination, sorting, dan pencarian
    public Page<Teknisi> getAllWithPagination(Long page, Long limit, String sort, String search) {
 
         Sort.Direction direction = Sort.Direction.ASC;

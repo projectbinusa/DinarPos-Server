@@ -1,12 +1,8 @@
 package com.template.eazypos.service.eazypos.excel;
 
-import com.template.eazypos.model.Hutang;
 import com.template.eazypos.model.Piutang;
 import com.template.eazypos.model.Transaksi;
-import com.template.eazypos.model.TransaksiBeli;
-import com.template.eazypos.repository.HutangRepository;
 import com.template.eazypos.repository.PiutangRepository;
-import com.template.eazypos.repository.TransaksiBeliRepository;
 import com.template.eazypos.repository.TransaksiRepository;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
@@ -17,10 +13,6 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.Period;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -34,6 +26,7 @@ public class ExcelPiutangService {
     @Autowired
     private TransaksiRepository transaksiBeliRepository;
 
+    // Method untuk membuat laporan buku piutang dalam format Excel
     public void excelBukuPiutang(Date tglAwal, Date tglAkhir, HttpServletResponse response) throws IOException {
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("BukuPiutang");
@@ -169,6 +162,7 @@ public class ExcelPiutangService {
         workbook.close();
     }
 
+    // Method untuk membuat laporan rekap piutang dalam format Excel
     public void excelRekapPiutang(HttpServletResponse response) throws IOException {
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("RekapPiutang");

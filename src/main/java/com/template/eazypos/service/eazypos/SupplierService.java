@@ -2,7 +2,6 @@ package com.template.eazypos.service.eazypos;
 
 import com.template.eazypos.exception.BadRequestException;
 import com.template.eazypos.exception.NotFoundException;
-import com.template.eazypos.model.Customer;
 import com.template.eazypos.model.Suplier;
 import com.template.eazypos.repository.SuplierRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +20,7 @@ public class SupplierService {
     @Autowired
     private SuplierRepository suplierRepository;
 
+    // Menambahkan supplier baru
     public Suplier add(Suplier supplier){
         if (suplierRepository.findByCode(supplier.getKodeSuplier()).isPresent()){
             throw new BadRequestException("Code telah digunakan");
@@ -28,12 +28,18 @@ public class SupplierService {
         supplier.setDelFlag(1);
         return suplierRepository.save(supplier);
     }
+
+    // Mengambil supplier berdasarkan ID
     public Suplier get(Long id) {
-        return suplierRepository.findById(id).orElseThrow(() -> new NotFoundException("Id tidak dinemukan"));
+        return suplierRepository.findById(id).orElseThrow(() -> new NotFoundException("ID supplier tidak ditemukan"));
     }
+
+    // Mengambil semua supplier yang tersimpan dalam database
     public List<Suplier> getAll(){
         return suplierRepository.findAllSuplier();
     }
+
+    // Mengedit data supplier berdasarkan ID
     public Suplier edit(Suplier suplier , Long id){
         Suplier update = suplierRepository.findById(id).orElseThrow(() -> new NotFoundException("Id tidak dinemukan"));
         update.setKodeSuplier(suplier.getKodeSuplier());
@@ -43,6 +49,8 @@ public class SupplierService {
         update.setNoTelpSuplier(suplier.getNoTelpSuplier());
         return suplierRepository.save(update);
     }
+
+    // Menghapus supplier berdasarkan ID
     public Map<String, Boolean> delete(Long id ) {
         try {
             suplierRepository.deleteById(id);
@@ -53,6 +61,8 @@ public class SupplierService {
             return null;
         }
     }
+
+    // Mengambil daftar supplier dengan paginasi dan sorting
     public Page<Suplier> getAllWithPagination(Long page, Long limit, String sort, String search) {
         Sort.Direction direction = Sort.Direction.ASC;
         if (sort.startsWith("-")) {

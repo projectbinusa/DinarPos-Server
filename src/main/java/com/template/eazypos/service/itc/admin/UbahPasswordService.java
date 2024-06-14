@@ -15,10 +15,10 @@ public class UbahPasswordService {
     @Autowired
     private PenggunaRepository penggunaRepository;
 
-
     @Autowired
     PasswordEncoder encoder;
 
+    // Mengubah password pengguna (non-admin) berdasarkan ID pengguna
     public Pengguna ubahPass(PasswordDTO passwordDTO , Long id){
         Pengguna update = penggunaRepository.findById(id).orElseThrow(() -> new NotFoundException("Id Not Found"));
         boolean conPassword = encoder.matches(passwordDTO.getOld_password(), update.getPasswordPengguna());
@@ -37,6 +37,8 @@ public class UbahPasswordService {
             throw new NotFoundException("Password lama tidak sesuai");
         }
     }
+
+    // Mengubah password administrator berdasarkan ID pengguna admin
     public Pengguna ubahPassAdmin(PasswordAdminDTO passwordDTO , Long id){
         Pengguna update = penggunaRepository.findById(id).orElseThrow(() -> new NotFoundException("Id Not Found"));
             if (passwordDTO.getNew_password().equals(passwordDTO.getConfirm_new_password())) {

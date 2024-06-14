@@ -29,74 +29,105 @@ public class TransaksiController {
     @Autowired
     private TransaksiBeliDinarposService transaksiBeliDinarposService;
 
+    // Endpoint untuk menambahkan transaksi penjualan dari Excelcom
     @PostMapping("/penjualan/excelcom")
     public CommonResponse<Transaksi> addExcelcom(@RequestBody TransaksiPenjualanDTO transaksiPenjualanDTO){
         return ResponseHelper.ok( transaksiPenjualanService.addTransaksi(transaksiPenjualanDTO));
     }
+
+    // Endpoint untuk menambahkan transaksi penjualan dari Dinarpos
     @PostMapping("/penjualan/dinarpos")
     public CommonResponse<Transaksi> addDinarpos(@RequestBody TransaksiPenjualanDTO transaksiPenjualanDTO){
         return ResponseHelper.ok( transaksiPenjualanDinarposService.addTransaksi(transaksiPenjualanDTO));
     }
+
+    // Endpoint untuk menambahkan transaksi pembelian dari Excelcom
     @PostMapping("/pembelian/excelcom")
     public CommonResponse<TransaksiBeli> addExcelcom(@RequestBody TransaksiBeliDTO transaksiBeliDTO){
         return ResponseHelper.ok( transaksiBeliExcelcomService.addTransaksi(transaksiBeliDTO));
     }
+
+    // Endpoint untuk menambahkan transaksi pembelian dari Dinarpos
     @PostMapping("/pembelian/dinarpos")
     public CommonResponse<TransaksiBeli> addDinarpos(@RequestBody TransaksiBeliDTO transaksiBeliDTO){
         return ResponseHelper.ok( transaksiBeliDinarposService.addTransaksi(transaksiBeliDTO));
     }
+
+    // Endpoint untuk mendapatkan transaksi pembelian berdasarkan ID
     @GetMapping("/pembelian/{id}")
     public CommonResponse <TransaksiBeli> get(@PathVariable("id") Long id){
         return ResponseHelper.ok( transaksiBeliDinarposService.getById(id));
     }
+
+    // Endpoint untuk mendapatkan transaksi penjualan berdasarkan ID
     @GetMapping("/penjualan/{id}")
     public CommonResponse <Transaksi> getPenjualan(@PathVariable("id") Long id){
         return ResponseHelper.ok( transaksiPenjualanService.getById(id));
     }
-    @GetMapping("barang/pembelian/dinarpos")
-    public CommonResponse <List<BarangTransaksiBeli>> getByIdTransaksiDinarpos(@RequestParam("id_transaksi") Long  idTransaksi){
-        return ResponseHelper.ok( transaksiBeliDinarposService.getByIdTransaksi(idTransaksi));
+
+    // Endpoint untuk mendapatkan daftar barang transaksi pembelian dari Dinarpos
+    @GetMapping("/barang/pembelian/dinarpos")
+    public CommonResponse<List<BarangTransaksiBeli>> getByIdTransaksiDinarpos(@RequestParam("id_transaksi") Long idTransaksi) {
+        return ResponseHelper.ok(transaksiBeliDinarposService.getByIdTransaksi(idTransaksi));
     }
-    @GetMapping("barang/penjualan/excelcom")
-    public CommonResponse <List<BarangTransaksi>> getBarangByIdTransaksiExcelcom(@RequestParam("id_transaksi") Long  idTransaksi){
-        return ResponseHelper.ok( transaksiPenjualanService.getExcelcomByIdTransaksi(idTransaksi));
+
+    // Endpoint untuk mendapatkan daftar barang transaksi penjualan dari Excelcom
+    @GetMapping("/barang/penjualan/excelcom")
+    public CommonResponse<List<BarangTransaksi>> getBarangByIdTransaksiExcelcom(@RequestParam("id_transaksi") Long idTransaksi) {
+        return ResponseHelper.ok(transaksiPenjualanService.getExcelcomByIdTransaksi(idTransaksi));
     }
-    @GetMapping("barang/penjualan/dinarpos")
-    public CommonResponse <List<BarangTransaksi>> getBarangByIdTransaksiDinarpos(@RequestParam("id_transaksi") Long  idTransaksi){
-        return ResponseHelper.ok( transaksiPenjualanDinarposService.getDinarposByIdTransaksi(idTransaksi));
+
+    // Endpoint untuk mendapatkan daftar barang transaksi penjualan dari Dinarpos
+    @GetMapping("/barang/penjualan/dinarpos")
+    public CommonResponse<List<BarangTransaksi>> getBarangByIdTransaksiDinarpos(@RequestParam("id_transaksi") Long idTransaksi) {
+        return ResponseHelper.ok(transaksiPenjualanDinarposService.getDinarposByIdTransaksi(idTransaksi));
     }
-    @GetMapping("barang/pembelian/excelcom")
-    public CommonResponse <List<BarangTransaksiBeli>> getByIdTransaksiExcelcom(@RequestParam("id_transaksi") Long  idTransaksi){
-        return ResponseHelper.ok( transaksiBeliExcelcomService.getByIdTransaksi(idTransaksi));
+
+    // Endpoint untuk mendapatkan daftar barang transaksi pembelian dari Excelcom
+    @GetMapping("/barang/pembelian/excelcom")
+    public CommonResponse<List<BarangTransaksiBeli>> getByIdTransaksiExcelcom(@RequestParam("id_transaksi") Long idTransaksi) {
+        return ResponseHelper.ok(transaksiBeliExcelcomService.getByIdTransaksi(idTransaksi));
     }
+
+    // Endpoint untuk mendapatkan semua transaksi penjualan dari Dinarpos
     @GetMapping("/penjualan/all")
-    public CommonResponse <List<Transaksi>> getAllPenjualan(){
-        return ResponseHelper.ok( transaksiPenjualanDinarposService.getAll());
+    public CommonResponse<List<Transaksi>> getAllPenjualan() {
+        return ResponseHelper.ok(transaksiPenjualanDinarposService.getAll());
     }
+
+    // Endpoint untuk mendapatkan semua transaksi pembelian dari Dinarpos
     @GetMapping("/pembelian/all")
-    public CommonResponse <List<TransaksiBeli>> getAllPembelian(){
-        return ResponseHelper.ok( transaksiBeliDinarposService.getAll());
+    public CommonResponse<List<TransaksiBeli>> getAllPembelian() {
+        return ResponseHelper.ok(transaksiBeliDinarposService.getAll());
     }
+
+    // Endpoint untuk mendapatkan semua transaksi pembelian dari Excelcom berdasarkan bulan dan tahun
     @GetMapping("/pembelian/excelcom/bulan")
-    public CommonResponse <List<TransaksiBeli>> getAllPembelianBYMonthAndYearExcelcom(int bulan , int tahun){
-        return ResponseHelper.ok( transaksiBeliExcelcomService.getExcelcomBYMonthAndYear(bulan, tahun));
+    public CommonResponse<List<TransaksiBeli>> getAllPembelianBYMonthAndYearExcelcom(@RequestParam int bulan, @RequestParam int tahun) {
+        return ResponseHelper.ok(transaksiBeliExcelcomService.getExcelcomBYMonthAndYear(bulan, tahun));
     }
+
+    // Endpoint untuk mendapatkan semua transaksi pembelian dari Dinarpos berdasarkan bulan dan tahun
     @GetMapping("/pembelian/dinarpos/bulan")
-    public CommonResponse <List<TransaksiBeli>> getAllPembelianBYMonthAndYearDinapos(int bulan , int tahun){
-        return ResponseHelper.ok( transaksiBeliDinarposService.getDinarposBYMonthAndYear(bulan, tahun));
+    public CommonResponse<List<TransaksiBeli>> getAllPembelianBYMonthAndYearDinapos(@RequestParam int bulan, @RequestParam int tahun) {
+        return ResponseHelper.ok(transaksiBeliDinarposService.getDinarposBYMonthAndYear(bulan, tahun));
     }
+
+    // Endpoint untuk mendapatkan semua transaksi penjualan dari Dinarpos berdasarkan bulan dan tahun
     @GetMapping("/penjualan/dinarpos/bulan")
-    public CommonResponse <List<Transaksi>> getAllPenjualanBYMonthAndYearDinapos(int bulan , int tahun){
-        return ResponseHelper.ok( transaksiPenjualanDinarposService.getDinarposBYMonthAndYear(bulan, tahun));
+    public CommonResponse<List<Transaksi>> getAllPenjualanBYMonthAndYearDinapos(@RequestParam int bulan, @RequestParam int tahun) {
+        return ResponseHelper.ok(transaksiPenjualanDinarposService.getDinarposBYMonthAndYear(bulan, tahun));
     }
+
+    // Endpoint untuk mendapatkan semua transaksi penjualan dari Excelcom berdasarkan bulan dan tahun
     @GetMapping("/penjualan/excelcom/bulan")
-    public CommonResponse <List<Transaksi>> getAllPenjualanBYMonthAndYearExcelcom(int bulan , int tahun){
-        return ResponseHelper.ok( transaksiPenjualanService.getExcelcomBYMonthAndYear(bulan, tahun));
+    public CommonResponse<List<Transaksi>> getAllPenjualanBYMonthAndYearExcelcom(@RequestParam int bulan, @RequestParam int tahun) {
+        return ResponseHelper.ok(transaksiPenjualanService.getExcelcomBYMonthAndYear(bulan, tahun));
     }
+
+    // Endpoint untuk mendapatkan nomor nota terakhir berdasarkan bulan dan tahun dari transaksi penjualan
     @GetMapping("/last-nota")
-    public String getLastNotaByMonthAndYear(
-            @RequestParam int bulan,
-            @RequestParam int tahun) {
+    public String getLastNotaByMonthAndYear(@RequestParam int bulan, @RequestParam int tahun) {
         return transaksiPenjualanService.getLastNotaByMonthAndYear(bulan, tahun);
     }
 
@@ -109,4 +140,5 @@ public class TransaksiController {
     public List<BarangTransaksi> getBarangTransaksiByIdTransaksi(@PathVariable Long idTransaksi) {
         return transaksiPenjualanService.getBarangTransaksiByIdTransaksi(idTransaksi);
     }
+
 }

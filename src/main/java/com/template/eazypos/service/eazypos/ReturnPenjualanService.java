@@ -9,7 +9,6 @@ import com.template.eazypos.repository.BarangRepository;
 import com.template.eazypos.repository.BarangTransaksiRepository;
 import com.template.eazypos.repository.StokMasukRepository;
 import com.template.eazypos.repository.TransaksiRepository;
-import org.apache.juli.logging.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,16 +29,22 @@ public class ReturnPenjualanService {
     @Autowired
     private StokMasukRepository stokMasukRepository;
 
+    // Mengambil daftar transaksi penjualan untuk produk Excelcom
     public List<Transaksi> getAllExcelcom() {
         return transaksiRepository.findTransaksiExcelcom();
     }
+
+    // Mengambil daftar transaksi penjualan untuk produk Dinarpos
     public List<Transaksi> getAllDinarpos() {
         return transaksiRepository.findTransaksiDinarpos();
     }
 
+    // Mengambil transaksi penjualan berdasarkan ID
     public Transaksi get(Long id) {
-        return transaksiRepository.findById(id).orElseThrow(() -> new NotFoundException("Id tidak dinemukan"));
+        return transaksiRepository.findById(id).orElseThrow(() -> new NotFoundException("Id tidak ditemukan"));
     }
+
+    // Memproses pengembalian transaksi penjualan
     public Transaksi put(Long id) {
         Transaksi transaksi = transaksiRepository.findById(id).orElseThrow(() -> new NotFoundException("Id transaksi not found"));
         transaksi.setDelFlag(0);
@@ -66,6 +71,7 @@ public class ReturnPenjualanService {
         return transaksiRepository.save(transaksi);
     }
 
+    // Menghapus transaksi penjualan berdasarkan ID
     public Map<String, Boolean> delete(Long id ) {
         try {
             transaksiRepository.deleteById(id);

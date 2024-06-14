@@ -15,15 +15,19 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("api/ubah_password")
 @CrossOrigin(origins = "*")
 public class UbahPasswordController {
+
     @Autowired
     private UbahPasswordService ubahPasswordService;
 
+    // Endpoint untuk mengubah password pengguna
     @PutMapping("/{id}")
-    public CommonResponse<Pengguna> put(@PathVariable("id") Long id , @RequestBody PasswordDTO passwordDTO){
-        return ResponseHelper.ok( ubahPasswordService.ubahPass(passwordDTO , id));
+    public CommonResponse<Pengguna> put(@PathVariable("id") Long id, @RequestBody PasswordDTO passwordDTO) {
+        return ResponseHelper.ok(ubahPasswordService.ubahPass(passwordDTO, id));
     }
-    @PutMapping("admin/{id}")
-    public CommonResponse<Pengguna> putAdmin(@PathVariable("id") Long id , @RequestBody PasswordAdminDTO passwordDTO){
-        return ResponseHelper.ok( ubahPasswordService.ubahPassAdmin(passwordDTO , id));
+
+    // Endpoint untuk mengubah password admin
+    @PutMapping("/admin/{id}")
+    public CommonResponse<Pengguna> putAdmin(@PathVariable("id") Long id, @RequestBody PasswordAdminDTO passwordDTO) {
+        return ResponseHelper.ok(ubahPasswordService.ubahPassAdmin(passwordDTO, id));
     }
 }

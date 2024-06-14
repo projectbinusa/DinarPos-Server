@@ -17,28 +17,33 @@ public class EditDataController {
     @Autowired
     private DataService dataService;
 
+    // Mengedit Biaya Service Berdasarkan ID
     @PutMapping("/update_biaya_service/{id}")
-    public CommonResponse<ServiceBarang> editBiayaService(@RequestBody EditBiayaServiceDTO editBiayaServiceDTO , @PathVariable("id") Long id) {
-        return ResponseHelper.ok(dataService.editBiayaService(editBiayaServiceDTO , id));
+    public CommonResponse<ServiceBarang> editBiayaService(@RequestBody EditBiayaServiceDTO editBiayaServiceDTO, @PathVariable("id") Long id) {
+        return ResponseHelper.ok(dataService.editBiayaService(editBiayaServiceDTO, id));
     }
 
+    // Mengedit Poin History Berdasarkan ID
     @PutMapping("/update_poin_history/{id}")
-    public CommonResponse<PoinHistory> editPoinHistory(@RequestBody EditPoinDTO editPoinDTO , @PathVariable("id") String id) {
-        return ResponseHelper.ok(dataService.editPoinHistory(editPoinDTO , id));
+    public CommonResponse<PoinHistory> editPoinHistory(@RequestBody EditPoinDTO editPoinDTO, @PathVariable("id") String id) {
+        return ResponseHelper.ok(dataService.editPoinHistory(editPoinDTO, id));
     }
 
+    // Mengedit Tanda Terima Service Berdasarkan ID
     @PutMapping("/update_tt_service/{id}")
     public CommonResponse<ServiceBarang> editTandaTerima(@RequestBody EditIdTtDTO editIdTtDTO, @PathVariable("id") Long id) {
         return ResponseHelper.ok(dataService.editTandaTerima(editIdTtDTO, id));
     }
 
+    // Mengedit Status Tanda Terima Service Berdasarkan ID
     @PutMapping("/update_status_tt_service/{id}")
     public CommonResponse<ServiceBarang> editStatusTandaTerima(@RequestBody EditStatusTtDTO editStatusTtDTO, @PathVariable("id") Long id) {
         return ResponseHelper.ok(dataService.editStatusTandaTerima(editStatusTtDTO, id));
     }
 
+    // Menghapus Status Berdasarkan ID
     @DeleteMapping("/delete/{id}")
-    private CommonResponse<?> deleteStatus(@PathVariable("id") Long id) {
+    public CommonResponse<?> deleteStatus(@PathVariable("id") Long id) {
         return ResponseHelper.ok(dataService.deleteStatus(id));
     }
 }

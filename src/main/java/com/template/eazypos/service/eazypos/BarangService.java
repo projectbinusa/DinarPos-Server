@@ -22,6 +22,7 @@ public class BarangService {
     @Autowired
     private BarangRepository barangRepository;
 
+    // Menambahkan barang baru ke dalam database
     public Barang add(Barang barang){
         if(barangRepository.findByBarcodeBarang(barang.getBarcodeBarang()).isPresent()){
             throw new BadRequestException("Barcode sudah digunakan");
@@ -31,15 +32,23 @@ public class BarangService {
         barang.setJumlahStok(0);
         return barangRepository.save(barang);
     }
+
+    // Mengambil barang berdasarkan barcode
     public  Barang getByBarcode(String barcode) {
         return barangRepository.findByBarcode(barcode);
     }
+
+    // Mengambil barang berdasarkan ID
     public Barang get(Long id) {
         return barangRepository.findById(id).orElseThrow(() -> new NotFoundException("Id tidak dinemukan"));
     }
+
+    // Mengambil semua barang yang ada
     public List<Barang> getAll(){
         return barangRepository.findAllBarang();
     }
+
+    // Mengedit data barang berdasarkan ID
     public Barang edit(Barang barang , Long id){
         Barang update = barangRepository.findById(id).orElseThrow(() -> new NotFoundException("Id tidak dinemukan"));
         update.setBarcodeBarang(barang.getBarcodeBarang());
@@ -49,6 +58,8 @@ public class BarangService {
         update.setNamaBarang(barang.getNamaBarang());
         return barangRepository.save(update);
     }
+
+    // Menghapus barang berdasarkan ID
     public Map<String, Boolean> delete(Long id ) {
         try {
             barangRepository.deleteById(id);
@@ -59,6 +70,8 @@ public class BarangService {
             return null;
         }
     }
+
+    // Mengambil daftar barang dengan pagination, sorting, dan pencarian
     public Page<Barang> getAllWithPagination(Long page, Long limit, String sort, String search) {
 
         Sort.Direction direction = Sort.Direction.ASC;

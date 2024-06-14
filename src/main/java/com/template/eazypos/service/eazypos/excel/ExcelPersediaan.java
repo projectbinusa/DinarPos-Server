@@ -20,10 +20,12 @@ public class ExcelPersediaan {
     static String[] HEADERsTemplate = {"NO", "BARANG SIAP JUAL", "PENJUALAN", "PEMBELIAN", "PERSEDIAAN AWAL", "PERSEDIAAN AKHIR", "TANGGAL"};
     static String SHEET = "Sheet1";
 
+    // Method untuk memeriksa apakah file memiliki format Excel
     public static boolean hasExcelFormat(MultipartFile file) {
         return TYPE.equals(file.getContentType());
     }
 
+    // Method untuk mengkonversi list Persediaan menjadi format Excel (XLSX)
     public static ByteArrayInputStream persediaanToExcel(List<Persediaan> persediaans) throws IOException {
         try (Workbook workbook = new XSSFWorkbook(); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
             Sheet sheet = workbook.createSheet(SHEET);
@@ -58,6 +60,7 @@ public class ExcelPersediaan {
         }
     }
 
+    // Method untuk membuat template Excel untuk Persediaan
     public static ByteArrayInputStream templateToExcel() throws IOException {
         try (Workbook workbook = new XSSFWorkbook(); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
             Sheet sheet = workbook.createSheet(SHEET);

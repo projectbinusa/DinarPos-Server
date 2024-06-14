@@ -9,7 +9,6 @@ import com.template.eazypos.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
@@ -51,6 +50,7 @@ public class TransaksiPenjualanExcelcomService {
     @Autowired
     private PersediaanRepository persediaanRepository;
 
+    // Menambahkan transaksi penjualan baru berdasarkan DTO yang diterima
     public Transaksi addTransaksi(TransaksiPenjualanDTO transaksiDTO) {
         Date now = new Date();
         String not = getNoNotaTransaksi(); // method generateNotaNumber() menghasilkan nomor nota baru
@@ -255,7 +255,7 @@ public class TransaksiPenjualanExcelcomService {
         }
     }
 
-
+    // Mengubah nilai persediaan akhir menjadi nilai persediaan awal berdasarkan tanggal tertentu
     public int persediaanAkhirToAwal(Date date) {
         List<Persediaan> persediaanList = persediaanRepository.findLastBeforeDate(date);
 
@@ -268,7 +268,7 @@ public class TransaksiPenjualanExcelcomService {
         }
     }
 
-
+    // Menghasilkan nomor nota transaksi baru berdasarkan waktu
     public String getNoNotaTransaksi() {
         try {
             String kd = "";
@@ -301,16 +301,24 @@ public class TransaksiPenjualanExcelcomService {
             return nota;
         }
     }
+
+    // Mengambil daftar transaksi berdasarkan bulan dan tahun untuk tipe "excelcom"
     public List<Transaksi> getExcelcomBYMonthAndYear(int bulan , int tahun){
         return transaksiRepository.findTransaksiByMonthAndYear(bulan,tahun , "excelcom");
     }
+
+    // Mengambil daftar barang transaksi berdasarkan ID transaksi dan status "excelcom"
     public List<BarangTransaksi> getExcelcomByIdTransaksi(Long idTransaksi){
         String status = "excelcom";
         return barangTransaksiRepository.findBarangTransaksiByIdTransaksi(idTransaksi , status);
     }
+
+    // Mengambil transaksi berdasarkan ID
     public Transaksi getById(Long id){
         return transaksiRepository.findById(id).orElseThrow(() -> new NotFoundException("Id tidak dinemukan"));
     }
+
+    // Mengambil nomor nota terakhir berdasarkan bulan dan tahun dari repository transaksi
     public String getLastNotaByMonthAndYear(int bulan, int tahun) {
         return transaksiRepository.findLastNotaByMonthAndYear(bulan, tahun);
     }
@@ -322,4 +330,3 @@ public class TransaksiPenjualanExcelcomService {
         return barangTransaksiRepository.findBarangTransaksiByIdTransaksi(idTransaksi);
     }
 }
-

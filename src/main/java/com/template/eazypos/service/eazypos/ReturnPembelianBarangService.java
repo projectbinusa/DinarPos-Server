@@ -24,41 +24,47 @@ public class ReturnPembelianBarangService {
     @Autowired
     private BarangRepository barangRepository;
 
-
+    // Mengambil daftar barang transaksi pembelian Excelcom
     public List<BarangTransaksiBeli> getAllExcelcom() {
         return barangTransaksiBeliRepository.findBarangTransaksiBeliExcelcom();
     }
+
+    // Mengambil daftar barang yang diretur berdasarkan ID transaksi
     public List<BarangTransaksiBeli> getAllBarangReturn(Long idTransaksi) {
         return barangTransaksiBeliRepository.findBarangTransaksiReturnByIdTransaksi(idTransaksi);
     }
+
+    // Mengambil daftar barang transaksi pembelian Dinarpos
     public List<BarangTransaksiBeli> getAllDinarpos() {
         return barangTransaksiBeliRepository.findBarangTransaksiBeliDinarpos();
     }
 
-
+    // Mengambil barang transaksi pembelian berdasarkan ID
     public BarangTransaksiBeli get(Long id) {
-        return barangTransaksiBeliRepository.findById(id).orElseThrow(() -> new NotFoundException("Id tidak dinemukan"));
+        return barangTransaksiBeliRepository.findById(id).orElseThrow(() -> new NotFoundException("Id tidak ditemukan"));
     }
-    public BarangTransaksiBeli retur(Long id){
+
+    // Melakukan proses retur barang dari transaksi pembelian
+    public BarangTransaksiBeli retur(Long id) {
         Optional<BarangTransaksiBeli> barangTransaksiOptional = barangTransaksiBeliRepository.findById(id);
         if (barangTransaksiOptional.isPresent()) {
             BarangTransaksiBeli barangTransaksi = barangTransaksiOptional.get();
+
+            // Mengambil transaksi pembelian terkait
             TransaksiBeli transaksi = transaksiBeliRepository.findById(barangTransaksi.getTransaksiBeli().getIdTransaksiBeli())
                     .orElseThrow(() -> new NotFoundException("Transaksi tidak ditemukan"));
 
-            // Mengembalikan stok barang
-            // Ambil jumlah barang yang diretur
+            // Mengurangi stok barang yang diretur dari jumlah stok saat ini
             int jumlahRetur = barangTransaksi.getQty();
             Barang barang = barangRepository.findByBarcode(barangTransaksi.getBarcodeBarang());
             barang.setJumlahStok(barang.getJumlahStok() - jumlahRetur);
-            // Simpan perubahan stok barang
             barangRepository.save(barang);
 
-            // Menghapus barang transaksi
+            // Menghapus barang transaksi dari daftar pembelian
             barangTransaksi.setDelFlag(0);
             barangTransaksi = barangTransaksiBeliRepository.save(barangTransaksi);
 
-            // Periksa apakah semua barang dalam transaksi telah diretur
+            // Memeriksa apakah semua barang dalam transaksi telah diretur
             List<BarangTransaksiBeli> allBarangTransaksiBeli = barangTransaksiBeliRepository.findBarangTransaksiByIdTransaksi(transaksi.getIdTransaksiBeli());
             boolean allBarangRetur = allBarangTransaksiBeli.stream().allMatch(bt -> bt.getDelFlag() == 0);
             if (allBarangRetur) {
@@ -73,7 +79,8 @@ public class ReturnPembelianBarangService {
         }
     }
 
-    public Map<String, Boolean> delete(Long id ) {
+    // Menghapus barang transaksi pembelian berdasarkan ID
+    public Map<String, Boolean> delete(Long id) {
         try {
             barangTransaksiBeliRepository.deleteById(id);
             Map<String, Boolean> res = new HashMap<>();

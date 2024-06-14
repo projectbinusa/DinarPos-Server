@@ -11,10 +11,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class TransaksiBeliDinarposService {
@@ -43,6 +41,7 @@ public class TransaksiBeliDinarposService {
     @Autowired
     private PersediaanRepository persediaanRepository;
 
+    // Method untuk menambahkan transaksi beli baru
     public TransaksiBeli addTransaksi(TransaksiBeliDTO transaksiDTO) {
         Date now = new Date();
         String not = getNoNotaTransaksi(); // method generateNotaNumber() menghasilkan nomor nota baru
@@ -131,8 +130,8 @@ public class TransaksiBeliDinarposService {
         return savedTransaksi;
     }
 
+    // Method untuk mengupdate tabel persediaan berdasarkan penjualan pada tanggal tertentu
     private void updatePenjualanTabelPersediaan(Date date) {
-
         // Retrieve the persediaan entry for the given date
         List<Persediaan> persediaanOpt = persediaanRepository.findByDate(date);
 
@@ -174,7 +173,7 @@ public class TransaksiBeliDinarposService {
         }
     }
 
-
+    // Method untuk menghitung nilai persediaan akhir pada tanggal sebelumnya
     public int persediaanAkhirToAwal(Date date) {
         List<Persediaan> persediaanList = persediaanRepository.findLastBeforeDate(date);
 
@@ -186,6 +185,8 @@ public class TransaksiBeliDinarposService {
             return 0;
         }
     }
+
+    // Method untuk menghasilkan nomor nota transaksi baru
     public String getNoNotaTransaksi() {
         try {
             String kd = "";
@@ -219,17 +220,23 @@ public class TransaksiBeliDinarposService {
         }
     }
 
+    // Mengembalikan transaksi beli berdasarkan ID
     public TransaksiBeli getById(Long id){
         return transaksiBeliRepository.findById(id).orElseThrow(() -> new NotFoundException("Id tidak dinemukan"));
     }
+
+    // Mengembalikan daftar barang transaksi beli berdasarkan ID transaksi
     public List<BarangTransaksiBeli> getByIdTransaksi (Long idTransaksi){
         String status = "dinarpos";
         return barangTransaksiBeliRepository.findBarangTransaksiDinarposByIdTransaksi(status , idTransaksi);
     }
+
+    // Method untuk mendapatkan semua transaksi beli
     public  List<TransaksiBeli> getAll(){
         return transaksiBeliRepository.findAll();
     }
 
+    // Method untuk mendapatkan transaksi beli berdasarkan bulan dan tahun
     public List<TransaksiBeli> getDinarposBYMonthAndYear(int bulan , int tahun){
         return transaksiBeliRepository.findTransaksiByMonthAndYear(bulan,tahun , "dinarpos");
     }

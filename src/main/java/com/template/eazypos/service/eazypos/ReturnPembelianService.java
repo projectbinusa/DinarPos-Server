@@ -4,7 +4,6 @@ import com.template.eazypos.exception.NotFoundException;
 import com.template.eazypos.model.*;
 import com.template.eazypos.repository.BarangRepository;
 import com.template.eazypos.repository.BarangTransaksiBeliRepository;
-import com.template.eazypos.repository.StokMasukRepository;
 import com.template.eazypos.repository.TransaksiBeliRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,25 +24,28 @@ public class ReturnPembelianService {
     @Autowired
     private BarangRepository barangRepository;
 
-
+    // Mengambil daftar transaksi pembelian untuk produk Excelcom
     public List<TransaksiBeli> getAllExcelcom() {
         return transaksiBeliRepository.findTransaksiBeliExcelcom();
     }
+
+    // Mengambil daftar transaksi pembelian untuk produk Dinarpos
     public List<TransaksiBeli> getAllDinarpos() {
         return transaksiBeliRepository.findTransaksiBeliDinarpos();
     }
 
+    // Mengambil transaksi pembelian berdasarkan ID
     public TransaksiBeli get(Long id) {
-        return transaksiBeliRepository.findById(id).orElseThrow(() -> new NotFoundException("Id tidak dinemukan"));
+        return transaksiBeliRepository.findById(id).orElseThrow(() -> new NotFoundException("Id tidak ditemukan"));
     }
-    public TransaksiBeli put(Long id) {
-        TransaksiBeli transaksi = transaksiBeliRepository.findById(id).orElseThrow(() -> new NotFoundException("Id transaksi not found"));
-        transaksi.setDelFlag(0);
 
+    // Memproses pengembalian barang dari transaksi pembelian
+    public TransaksiBeli put(Long id) {
+        TransaksiBeli transaksi = transaksiBeliRepository.findById(id).orElseThrow(() -> new NotFoundException("Id transaksi tidak ditemukan"));
+        transaksi.setDelFlag(0);
 
         List<BarangTransaksiBeli> barangTransaksiList = barangTransaksiBeliRepository.findBarangTransaksiByIdTransaksi(id);
 
-        // Perbarui stok barang kembali ke nilai semula
         for (BarangTransaksiBeli barangTransaksi : barangTransaksiList) {
             Barang barang = barangRepository.findByBarcode(barangTransaksi.getBarcodeBarang());
             barang.setJumlahStok(barang.getJumlahStok() - barangTransaksi.getQty());
@@ -55,7 +57,8 @@ public class ReturnPembelianService {
         return transaksiBeliRepository.save(transaksi);
     }
 
-    public Map<String, Boolean> delete(Long id ) {
+    // Menghapus transaksi pembelian berdasarkan ID
+    public Map<String, Boolean> delete(Long id) {
         try {
             transaksiBeliRepository.deleteById(id);
             Map<String, Boolean> res = new HashMap<>();

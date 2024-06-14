@@ -27,6 +27,7 @@ public class CustomerCPService {
     @Autowired
     private SalesmanRepository salesmanRepository;
 
+    // Menambahkan contact person baru untuk customer
     public CustomerCP add(CustomerCPDTO customerCPDTO){
         if (customerCPRepository.findByEmailOrTelp(customerCPDTO.getEmail(), customerCPDTO.getNo_telp()).isPresent()){
             throw new BadRequestException("Email atau no hp sudah digunakan");
@@ -40,12 +41,18 @@ public class CustomerCPService {
         add.setNo_hp(customerCPDTO.getNo_telp());
         return customerCPRepository.save(add);
     }
+
+    // Mendapatkan contact person berdasarkan ID
     public CustomerCP get(Long id) {
         return customerCPRepository.findById(id).orElseThrow(() -> new NotFoundException("Id tidak dinemukan"));
     }
+
+    // Mendapatkan semua contact person
     public List<CustomerCP> getAll(){
         return customerCPRepository.findAll();
     }
+
+    // Mengedit contact person berdasarkan ID
     public CustomerCP edit(CustomerCPDTO customerCPDTO , Long id){
         CustomerCP update = customerCPRepository.findById(id).orElseThrow(() -> new NotFoundException("Id tidak dinemukan"));
         update.setEmail(customerCPDTO.getEmail());
@@ -54,6 +61,8 @@ public class CustomerCPService {
         update.setNo_hp(customerCPDTO.getNo_telp());
         return customerCPRepository.save(update);
     }
+
+    // Menghapus contact person berdasarkan ID
     public Map<String, Boolean> delete(Long id ) {
         try {
             customerCPRepository.deleteById(id);

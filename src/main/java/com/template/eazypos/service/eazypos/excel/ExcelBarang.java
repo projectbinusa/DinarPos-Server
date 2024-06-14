@@ -1,15 +1,10 @@
 package com.template.eazypos.service.eazypos.excel;
 
 import com.template.eazypos.model.Barang;
-import com.template.eazypos.model.Suplier;
-import com.template.eazypos.repository.BarangRepository;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.transaction.Transactional;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -17,8 +12,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-
 public class ExcelBarang {
     public static String TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
     static String[] HEADERsBarang = {"NO", "BARCODE BARANG", "NAMA BARANG", " UNIT BARANG", "HARGA BELI", "HARGA JUAL", "JUMLAH STOK"};
@@ -26,6 +19,7 @@ public class ExcelBarang {
 
     static String SHEET = "Sheet1";
 
+    // Memeriksa apakah file memiliki format Excel yang valid
     public static boolean hasExcelFormat(MultipartFile file) {
         if (!TYPE.equals(file.getContentType())) {
             return false;
@@ -33,7 +27,7 @@ public class ExcelBarang {
         return true;
     }
 
-
+    // Mengonversi daftar barang menjadi file Excel dan mengembalikannya sebagai ByteArrayInputStream
     public static ByteArrayInputStream barangToExcel(List<Barang> barangs) throws IOException {
         try (Workbook workbook = new XSSFWorkbook(); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
             Sheet sheet = workbook.createSheet(SHEET);
@@ -66,7 +60,7 @@ public class ExcelBarang {
         }
     }
 
-
+    // Mengonversi template Excel untuk daftar barang
     public static ByteArrayInputStream templateToExcel(List<Barang> barangs) throws IOException {
         try (Workbook workbook = new XSSFWorkbook(); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
             Sheet sheet = workbook.createSheet(SHEET);
@@ -82,6 +76,7 @@ public class ExcelBarang {
         }
     }
 
+    // Mengonversi InputStream dari file Excel menjadi daftar barang
     public static List<Barang> excelToBarang(InputStream is) {
 
         try {

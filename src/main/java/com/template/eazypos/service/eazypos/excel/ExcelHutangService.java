@@ -13,10 +13,6 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.Period;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -30,6 +26,7 @@ public class ExcelHutangService {
     @Autowired
     private TransaksiBeliRepository transaksiBeliRepository;
 
+    // Method untuk menghasilkan Excel Buku Hutang berdasarkan rentang tanggal
     public void excelBukuHutang(Date tglAwal, Date tglAkhir, HttpServletResponse response) throws IOException {
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("BukuHutang");
@@ -165,6 +162,7 @@ public class ExcelHutangService {
         workbook.close();
     }
 
+    // Method untuk menghasilkan Excel Rekap Hutang
     public void excelRekapHutang(HttpServletResponse response) throws IOException {
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("RekapHutang");

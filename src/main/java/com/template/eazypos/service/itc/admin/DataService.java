@@ -76,7 +76,7 @@ public class DataService {
     @Autowired
     private EntityManager entityManager;
 
-
+    // Method untuk mengonversi file menjadi URL dengan format Base64
     private String convertToBase64Url(MultipartFile file) {
         String url = "";
         try {
@@ -91,6 +91,7 @@ public class DataService {
 
     }
 
+    // Method untuk menambahkan layanan baru berdasarkan DTO yang diterima
     public ServiceBarang addService(AddServiceDTO serviceDTO){
         ServiceBarang service = new ServiceBarang();
         Long total_service = serviceRepository.countTotalService();
@@ -118,6 +119,8 @@ public class DataService {
         service.setNama(serviceDTO.getNama());
         return serviceRepository.save(service);
     }
+
+    // Method untuk memproses layanan yang telah diambil berdasarkan DTO yang diterima
     public Status prosesService(TakenServiceDTO takenServiceDTO , Long id){
         ServiceBarang serviceBarang = serviceRepository.findByIdTT(id).orElseThrow(() -> new NotFoundException("Id Service Not Found"));
         serviceBarang.setStatusEnd("PROSES");
@@ -134,6 +137,8 @@ public class DataService {
         serviceRepository.save(serviceBarang);
         return statusRepository.save(status);
     }
+
+    // Method untuk memproses layanan oleh teknisi
     public Status prosesServiceTeknisi(TakenServiceDTO takenServiceDTO , Long id){
         ServiceBarang serviceBarang = serviceRepository.findByIdTT(id).orElseThrow(() -> new NotFoundException("Id Service Not Found"));
         Status status = new Status();
@@ -148,16 +153,21 @@ public class DataService {
         return statusRepository.save(status);
     }
 
+    // Method untuk menyimpan foto "before" dari layanan
     public ServiceBarang fotoBefore(MultipartFile multipartFile , Long id){
         ServiceBarang serviceBarang = serviceRepository.findByIdTT(id).orElseThrow(() -> new NotFoundException("Id Not Found"));
         serviceBarang.setFb(convertToBase64Url(multipartFile));
         return serviceRepository.save(serviceBarang);
     }
+
+    // Method untuk menyimpan foto "after" dari layanan
     public ServiceBarang fotoAfter(MultipartFile multipartFile , Long id){
         ServiceBarang serviceBarang = serviceRepository.findByIdTT(id).orElseThrow(() -> new NotFoundException("Id Not Found"));
         serviceBarang.setFa(convertToBase64Url(multipartFile));
         return serviceRepository.save(serviceBarang);
     }
+
+    // Method untuk menangani pengambilan alih layanan oleh teknisi
     public ServiceBarang takeOver(TakeOverDTO takeOverDTO) {
         ServiceBarang teknisi = serviceRepository.findByIdTT(takeOverDTO.getId_service()).orElseThrow(() -> new NotFoundException("Id Service Not Found"));
         teknisi.setTeknisi(teknisiRepository.findById(takeOverDTO.getId_teknisi()).orElseThrow(() -> new NotFoundException("Id Teknisi Not Found")));
@@ -169,6 +179,7 @@ public class DataService {
         return serviceRepository.save(teknisi);
     }
 
+    // Method untuk menangani administrasi layanan oleh admin
     public ServiceBarang serviceAdmin(ServiceAdminDTO serviceAdminDTO , Long id){
         ServiceBarang serviceBarang = serviceRepository.findByIdTT(id).orElseThrow(() -> new NotFoundException("Id Service Not Found"));
         serviceBarang.setTanggalJadi(new Date());
@@ -179,6 +190,8 @@ public class DataService {
         serviceBarang.setStatusEnd(serviceAdminDTO.getStatus());
        return serviceRepository.save(serviceBarang);
     }
+
+    // Method untuk mengkonfirmasi tanggal tertentu terkait layanan
     public TglKonf konfirm(KonfirmDTO konfirmDTO){
         TglKonf tglKonf = new TglKonf();
 
@@ -186,12 +199,15 @@ public class DataService {
         tglKonf.setTglKonf(konfirmDTO.getDate());
         return tglKonfRepository.save(tglKonf);
     }
+
+    // Metode untuk memperbarui catatan
     public ServiceBarang updateNote(NoteDTO noteDTO , Long id){
         ServiceBarang serviceBarang = serviceRepository.findByIdTT(id).orElseThrow(() -> new NotFoundException("Id Service Not Found"));
         serviceBarang.setCatatan(noteDTO.getNote());
         return serviceRepository.save(serviceBarang);
     }
 
+    // Metode untuk memperbarui data pelanggan
     public ServiceBarang updateCustomer(UpdateCustomerDTO customerDTO , Long id){
         ServiceBarang serviceBarang = serviceRepository.findByIdTT( id).orElseThrow(() -> new NotFoundException("Id Service Not Found"));
         serviceBarang.setNama(customerDTO.getNama());
@@ -207,9 +223,12 @@ public class DataService {
         return serviceRepository.save(serviceBarang);
     }
 
+    // Metode untuk mendapatkan daftar Take berdasarkan id
     public List<Take> getTakeByIdTT(Long id) {
         return takeRepository.findByIdTT(id);
     }
+
+    // Metode untuk mendapatkan daftar Status berdasarkan id
     public List<Status> getStatusByIdTT(Long id) {
         return statusRepository.findByIdTT(id);
     }
@@ -467,6 +486,7 @@ public class DataService {
         }
     }
 
+    // Mengambil persediaan terakhir sebelum tanggal tertentu dan mengembalikan nilai persediaan akhir sebagai integer
     public int persediaanAkhirToAwal(Date date) {
         List<Persediaan> persediaanList = persediaanRepository.findLastBeforeDate(date);
 
@@ -479,9 +499,7 @@ public class DataService {
         }
     }
 
-
-
-
+    // Menghasilkan nomor nota transaksi berdasarkan bulan dan tahun saat ini
     public String getNoNotaTransaksi() {
         try {
             String kd = "";
@@ -514,12 +532,18 @@ public class DataService {
             return nota;
         }
     }
+
+    // Mengambil semua data dari repository service
     public List<ServiceBarang> getAll(){
         return serviceRepository.findAll();
     }
+
+    // Mengambil semua data konfirmasi berdasarkan ID tertentu
     public List<TglKonf> getAllKonfirm(Long id){
         return tglKonfRepository.findByIdTT(id);
     }
+
+    // Menghapus data konfirmasi berdasarkan ID dan mengembalikan status penghapusan
     public Map<String , Boolean> deleteTglKonf(Long id){
         try {
             tglKonfRepository.deleteById(id);
@@ -530,9 +554,13 @@ public class DataService {
             return null;
         }
     }
+
+    // Mengambil data layanan berdasarkan ID
     public ServiceBarang getById(Long id){
         return serviceRepository.findByIdTT(id).orElseThrow(() -> new NotFoundException("Id tidak dinemukan"));
     }
+
+    // Menghapus data layanan berdasarkan ID dan mengembalikan status penghapusan
     public Map<String, Boolean> delete(Long id ) {
         try {
             serviceRepository.deleteById(id);
@@ -543,13 +571,18 @@ public class DataService {
             return null;
         }
     }
+
+    // Mengambil daftar layanan berdasarkan rentang tanggal dan status
     public List<ServiceBarang> getByTanggalAndStatus(Date tanggalAwal , Date tanggalAkhir , String status){
         return serviceRepository.findByTanggalAndStatus(tanggalAwal , tanggalAkhir , status);
     }
+
+    // Mengambil daftar layanan yang telah diambil
     public List<ServiceBarang> getByTaken(){
         return serviceRepository.findByTaken();
     }
 
+    // Mengedit biaya layanan berdasarkan DTO editDataDTO
     public ServiceBarang editBiayaService(EditBiayaServiceDTO editDataDTO, Long id) {
         ServiceBarang serviceBarang = serviceRepository.findByIdTT(id).orElseThrow(() -> new NotFoundException("Id Not Found"));
         serviceBarang.setBiayaService(editDataDTO.getBiaya_service());
@@ -558,6 +591,7 @@ public class DataService {
         return serviceRepository.save(serviceBarang);
     }
 
+    // Mengedit riwayat poin berdasarkan DTO serta menghitung kembali total poin teknisi
     public PoinHistory editPoinHistory(EditPoinDTO editPoinDTO , String id) {
         PoinHistory poinHistory = poinHistoryRepository.findByIdTT(id).orElseThrow(() -> new NotFoundException("Id Service Not Found"));
         ServiceBarang serviceBarang = serviceRepository.findByIdTT(Long.valueOf(id)).orElseThrow(() -> new NotFoundException("Id Not Found"));
@@ -573,6 +607,7 @@ public class DataService {
         return poinHistoryRepository.save(poinHistory);
     }
 
+    // Mengedit ID TT pada layanan berdasarkan ID
     @Transactional
     public ServiceBarang editTandaTerima(EditIdTtDTO editIdTtDTO, Long id) {
         ServiceBarang serviceBarang = serviceRepository.findById(id)
@@ -592,6 +627,7 @@ public class DataService {
         return entityManager.merge(serviceBarang);
     }
 
+    // Mengedit status Tanda Terima pada layanan berdasarkan ID
     public ServiceBarang editStatusTandaTerima(EditStatusTtDTO editStatusTtDTO, Long id) {
         ServiceBarang serviceBarang = serviceRepository.findByIdTT(id)
                 .orElseThrow(() -> new NotFoundException("Id Not Found"));
@@ -599,6 +635,7 @@ public class DataService {
         return serviceRepository.save(serviceBarang);
     }
 
+    // Menghapus status berdasarkan ID dan mengembalikan status penghapusan
     public Map<String , Boolean> deleteStatus(Long id) {
         try {
             statusRepository.deleteById(id);
@@ -609,6 +646,8 @@ public class DataService {
             return null;
         }
     }
+
+    // Mengambil data layanan dalam bentuk DTO berdasarkan bulan
     public List<ServiceDataDTO> findDataService(Date months) {
         List<ServiceDataDTO> data = serviceRepository.findDataService(months);
         return data.stream()
@@ -616,71 +655,92 @@ public class DataService {
                 .collect(Collectors.toList());
     }
 
+    // Menghitung total layanan kategori Elektro berdasarkan bulan
     public int getTotalServiceElektro(Date months) {
         return serviceRepository.countTotalServiceElektro(months);
     }
 
+    // Menghitung total layanan kategori CPU berdasarkan bulan
     public int getTotalServiceCPU(Date months) {
         return serviceRepository.countTotalServiceCPU(months);
     }
 
+    // Menghitung total layanan kategori Elektro yang sukses berdasarkan bulan
     public int getTotalServiceSuccessElektro(Date months) {
         return serviceRepository.countTotalServiceSuccessElektro(months);
     }
 
+    // Menghitung total layanan bukan kategori Elektro berdasarkan bulan
     public int getTotalServiceNotElektro(Date months) {
         return serviceRepository.countTotalServiceNotElektro(months);
     }
 
+    // Menghitung total layanan bukan kategori CPU berdasarkan bulan
     public int getTotalServiceNotCPU(Date months) {
         return serviceRepository.countTotalServiceNotCPU(months);
     }
 
+    // Menghitung total layanan sukses kategori CPU berdasarkan bulan
     public int getTotalServiceSuccessCPU(Date months) {
         return serviceRepository.countTotalServiceSuccessCPU(months);
     }
+
+    // Mengambil semua layanan
     public List<ServiceBarang> getService() {
         return serviceRepository.getService();
     }
+
+    // Mengambil semua layanan yang telah diambil (status 'Taken')
     public List<ServiceBarang> getTakenN(){
         return serviceRepository.findByTakenN();
     }
 
+    // Mencari layanan berdasarkan rentang tanggal dan status
     public List<ServiceBarang> filterServiceByDateAndStatus(Date awal, Date akhir, String status) {
         return serviceRepository.filterByDateAndStatus(awal, akhir, status);
     }
 
+    // Mencari layanan berdasarkan status
     public List<ServiceBarang> filterServiceByStatus(String status) {
         return serviceRepository.filterByStatus(status);
     }
+
+    // Mencari layanan berdasarkan rentang tanggal
     public List<ServiceBarang> filterServiceByDateRange(Date awal, Date akhir) {
         return serviceRepository.filterByDateRange(awal, akhir);
     }
 
+    // Mengambil semua layanan yang dibatalkan (status 'CANCEL')
     public List<ServiceBarang> getServiceCancel() {
         return serviceRepository.findServiceCancel("CANCEL");
     }
 
+    // Mengambil semua layanan yang dibatalkan dalam rentang tanggal tertentu (status 'CANCEL')
     public List<ServiceBarang> getTglFilterServiceCancel(Date awal, Date akhir) {
         return serviceRepository.findServiceCancelByDate("CANCEL", awal, akhir);
     }
 
+    // Mengambil semua layanan yang ditangani oleh seorang teknisi berdasarkan ID teknisi
     public List<ServiceBarang> getMyServices(Long teknisiId) {
         return serviceRepository.findMyServices(teknisiId);
     }
 
+    // Mengambil semua layanan retur yang ditangani oleh seorang teknisi berdasarkan ID teknisi
     public List<ServiceBarang> getMyServicesRetur(Long teknisiId) {
         return serviceRepository.findMyServicesRetur(teknisiId);
     }
 
+    // Mengambil semua layanan yang telah diambil (status 'Taken')
     public List<ServiceBarang> getServiceTaken() {
         return serviceRepository.findServiceTaken();
     }
 
+    // Menghitung total semua layanan yang ada
     public long countAllServices() {
         return serviceRepository.countAllServices();
     }
 
+    // Menyimpan status baru 'PROSES' untuk layanan dan mencatatnya dalam entitas Status
     public Status aksiStatusNew(Long idTT, Long teknisiId, String status, String solusi, String ket, String validasi) {
         Optional<ServiceBarang> serviceBarangOptional = serviceRepository.findById(idTT);
         if (serviceBarangOptional.isPresent()) {
@@ -704,6 +764,8 @@ public class DataService {
         }
        throw new NotFoundException("Service Not Found");
     }
+
+    // Menyimpan status baru tanpa mengubah status layanan untuk entitas Status
     public Status aksiStatusPlus(Long idTT, Long teknisiId, String status, String solusi, String ket, String validasi) {
         Status newStatus = new Status();
         newStatus.setService(serviceRepository.findByIdTT(idTT).orElseThrow(() -> new NotFoundException("Id Service Not Found")));
@@ -716,6 +778,8 @@ public class DataService {
         newStatus.setValidasi("0");
         return statusRepository.save(newStatus);
     }
+
+    // Mengambil alih layanan oleh seorang teknisi dan mencatatnya dalam entitas Take
     public Take aksiTakeOver(Long idTT, Long teknisiId, Long takeTeknisiId) {
         Optional<ServiceBarang> serviceBarangOptional = serviceRepository.findById(idTT);
         if (serviceBarangOptional.isPresent()) {
@@ -733,6 +797,7 @@ public class DataService {
         throw new NotFoundException("Service Not Found");
     }
 
+    // Mengambil semua layanan dengan pagination
     public Page<ServiceBarang> getAllWithPagination(Long page, Long limit, String sort, String search) {
         Sort.Direction direction = Sort.Direction.ASC;
         if (sort.startsWith("-")) {
@@ -760,9 +825,13 @@ public class DataService {
             return serviceRepository.findAllByTaken(pageable);
         }
     }
+
+    // Mengambil semua layanan yang telah diambil (status 'Taken') untuk pimpinan
     public List<ServiceBarang> getServiceTakenPimpinan() {
         return serviceRepository.findServiceTaken();
     }
+
+    // Mengambil semua layanan yang telah diambil (status 'Taken') dalam rentang tanggal tertentu
     public List<ServiceBarang> getServiceTakenByDateRange(Date awal, Date akhir) {
         return serviceRepository.findServiceTakenByDateRange(awal, akhir);
     }

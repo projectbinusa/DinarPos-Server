@@ -50,6 +50,7 @@ public class TransaksiPenjualanDinarposService {
     @Autowired
     private PersediaanRepository persediaanRepository;
 
+    // Menambahkan transaksi penjualan baru berdasarkan data DTO transaksi penjualan
     public Transaksi addTransaksi(TransaksiPenjualanDTO transaksiDTO) {
         Date now = new Date();
         String not = getNoNotaTransaksi(); // method generateNotaNumber() menghasilkan nomor nota baru
@@ -267,6 +268,7 @@ public class TransaksiPenjualanDinarposService {
         }
     }
 
+    // Menghasilkan nomor nota transaksi baru berdasarkan waktu
     public String getNoNotaTransaksi() {
         try {
             String kd = "";
@@ -299,13 +301,19 @@ public class TransaksiPenjualanDinarposService {
             return nota;
         }
     }
+
+    // Mengambil daftar barang transaksi berdasarkan ID transaksi dan status
     public List<BarangTransaksi> getDinarposByIdTransaksi(Long idTransaksi){
         String status = "dinarpos";
         return barangTransaksiRepository.findBarangTransaksiByIdTransaksi(idTransaksi ,status);
     }
+
+    // Mengambil daftar semua transaksi penjualan yang tercatat dalam sistem
     public List<Transaksi> getAll(){
         return transaksiRepository.findAll();
     }
+
+    // Mengambil daftar transaksi penjualan berdasarkan bulan dan tahun tertentu
     public List<Transaksi> getDinarposBYMonthAndYear(int bulan , int tahun){
         return transaksiRepository.findTransaksiByMonthAndYear(bulan,tahun , "dinarpos");
     }
