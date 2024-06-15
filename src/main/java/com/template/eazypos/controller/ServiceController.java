@@ -377,5 +377,39 @@ public class ServiceController {
         return
         dataService.getTglKonfimasiByIdTt(idTt);
     }
+    @GetMapping("/finish/pimpinan")
+    public List<Object[]> getDataService(@RequestParam String months) {
+        return dataService.findDataService(months);
+    }
+
+    @GetMapping("/total-elektro")
+    public int getTotalServiceElektro(@RequestParam String months) {
+        return dataService.totalServiceElektro(months);
+    }
+
+    @GetMapping("/total-cpu")
+    public int getTotalServiceCpu(@RequestParam String months) {
+        return dataService.totalServiceCpu(months);
+    }
+
+    @GetMapping("/total-success-elektro")
+    public int getTotalServiceSuccessElektro(@RequestParam String months) {
+        return dataService.totalServiceSuccessElektro(months);
+    }
+
+    @GetMapping("/total-not-elektro")
+    public int getTotalServiceNotElektro(@RequestParam String months) {
+        return dataService.totalServiceNotElektro(months);
+    }
+
+    @GetMapping("/total-success-cpu")
+    public int getTotalServiceSuccessCpu(@RequestParam String months) {
+        return dataService.totalServiceSuccessCpu(months);
+    }
+
+    @GetMapping("/total-not-cpu")
+    public int getTotalServiceNotCpu(@RequestParam String months) {
+        return dataService.totalServiceNotCpu(months);
+    }
 
 }

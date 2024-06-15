@@ -58,6 +58,48 @@ public interface ServiceRepository extends JpaRepository<ServiceBarang, Long> {
     @Query("SELECT COUNT(s.idTT) FROM ServiceBarang s WHERE FUNCTION('DATE_FORMAT', s.tanggalMasuk, '%Y-%m') = FUNCTION('DATE_FORMAT', :months, '%Y-%m') AND (s.statusEnd LIKE '%READY%' OR s.statusEnd LIKE '%CANCEL%') AND s.teknisi.bagian = 'PC'")
     int countTotalServiceSuccessCPU(@Param("months") Date months);
 
+    @Query("SELECT t.nama, t.id, " +
+            "(SELECT COUNT(s.idTT) FROM ServiceBarang s WHERE s.teknisi.id = t.id AND FUNCTION('DATE_FORMAT', s.tanggalMasuk, '%Y-%m') = :months) AS ttl, " +
+            "(SELECT COUNT(s.idTT) FROM ServiceBarang s WHERE s.teknisi.id = t.id AND FUNCTION('DATE_FORMAT', s.tanggalMasuk, '%Y-%m') = :months AND " +
+            "(s.statusEnd LIKE '%READY%' OR (s.statusEnd LIKE '%CANCEL%' AND s.total <> 0))) AS success, " +
+            "(SELECT COUNT(s.idTT) FROM ServiceBarang s WHERE s.teknisi.id = t.id AND FUNCTION('DATE_FORMAT', s.tanggalMasuk, '%Y-%m') = :months AND " +
+            "(s.statusEnd LIKE '%PROSES%' OR (s.statusEnd LIKE '%CANCEL%' AND s.total = 0))) AS nots " +
+            "FROM Teknisi t " +
+            "ORDER BY success DESC")
+    List<Object[]> findDataService(@Param("months") String months);
+
+    @Query("SELECT COUNT(s) FROM ServiceBarang s WHERE FUNCTION('DATE_FORMAT', s.tanggalMasuk, '%Y-%m') = :months AND s.teknisi.id IN " +
+            "(SELECT t.id FROM Teknisi t WHERE t.bagian = 'Elektro')")
+    int totalServiceElektro(@Param("months") String months);
+
+    @Query("SELECT COUNT(s) FROM ServiceBarang s WHERE FUNCTION('DATE_FORMAT', s.tanggalMasuk, '%Y-%m') = :months AND s.teknisi.id IN " +
+            "(SELECT t.id FROM Teknisi t WHERE t.bagian = 'PC')")
+    int totalServiceCpu(@Param("months") String months);
+
+    @Query("SELECT COUNT(s) FROM ServiceBarang s WHERE (FUNCTION('DATE_FORMAT', s.tanggalMasuk, '%Y-%m') = :months AND s.statusEnd LIKE '%READY%' AND " +
+            "s.teknisi.id IN (SELECT t.id FROM Teknisi t WHERE t.bagian = 'Elektro')) OR " +
+            "(FUNCTION('DATE_FORMAT', s.tanggalMasuk, '%Y-%m') = :months AND s.statusEnd LIKE '%CANCEL%' AND " +
+            "s.teknisi.id IN (SELECT t.id FROM Teknisi t WHERE t.bagian = 'Elektro'))")
+    int totalServiceSuccessElektro(@Param("months") String months);
+
+    @Query("SELECT COUNT(s) FROM ServiceBarang s WHERE (FUNCTION('DATE_FORMAT', s.tanggalMasuk, '%Y-%m') = :months AND s.statusEnd LIKE '%PROSES%' AND " +
+            "s.teknisi.id IN (SELECT t.id FROM Teknisi t WHERE t.bagian = 'Elektro')) OR " +
+            "(FUNCTION('DATE_FORMAT', s.tanggalMasuk, '%Y-%m') = :months AND s.statusEnd LIKE '%CANCEL%' AND s.total = 0 AND " +
+            "s.teknisi.id IN (SELECT t.id FROM Teknisi t WHERE t.bagian = 'Elektro'))")
+    int totalServiceNotElektro(@Param("months") String months);
+
+    @Query("SELECT COUNT(s) FROM ServiceBarang s WHERE (FUNCTION('DATE_FORMAT', s.tanggalMasuk, '%Y-%m') = :months AND s.statusEnd LIKE '%PROSES%' AND " +
+            "s.teknisi.id IN (SELECT t.id FROM Teknisi t WHERE t.bagian = 'PC')) OR " +
+            "(FUNCTION('DATE_FORMAT', s.tanggalMasuk, '%Y-%m') = :months AND s.statusEnd LIKE '%CANCEL%' AND s.total = 0 AND " +
+            "s.teknisi.id IN (SELECT t.id FROM Teknisi t WHERE t.bagian = 'PC'))")
+    int totalServiceNotCpu(@Param("months") String months);
+
+    @Query("SELECT COUNT(s) FROM ServiceBarang s WHERE (FUNCTION('DATE_FORMAT', s.tanggalMasuk, '%Y-%m') = :months AND s.statusEnd LIKE '%READY%' AND " +
+            "s.teknisi.id IN (SELECT t.id FROM Teknisi t WHERE t.bagian = 'PC')) OR " +
+            "(FUNCTION('DATE_FORMAT', s.tanggalMasuk, '%Y-%m') = :months AND s.statusEnd LIKE '%CANCEL%' AND " +
+            "s.teknisi.id IN (SELECT t.id FROM Teknisi t WHERE t.bagian = 'PC'))")
+    int totalServiceSuccessCpu(@Param("months") String months);
+
     @Query(value = "SELECT s.*, " +
             "(SELECT st.status FROM status st WHERE st.id_tt = s.id_tt AND st.id = (SELECT MAX(st2.id) FROM status st2 WHERE st2.id_tt = s.id_tt)) AS sts " +
             "FROM service s " +

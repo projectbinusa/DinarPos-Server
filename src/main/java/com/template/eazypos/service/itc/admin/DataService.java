@@ -866,5 +866,33 @@ public class DataService {
         return tglKonfRepository.findTglKonfimasiByIdTt(idTt);
     }
 
+    public List<Object[]> findDataService(String months) {
+        return serviceRepository.findDataService(months);
+    }
+
+    public int totalServiceElektro(String months) {
+        return serviceRepository.totalServiceElektro(months);
+    }
+
+    public int totalServiceCpu(String months) {
+        return serviceRepository.totalServiceCpu(months);
+    }
+
+    public int totalServiceSuccessElektro(String months) {
+        return serviceRepository.totalServiceSuccessElektro(months);
+    }
+
+    public int totalServiceNotElektro(String months) {
+        return serviceRepository.totalServiceNotElektro(months);
+    }
+
+    public int totalServiceNotCpu(String months) {
+        return serviceRepository.totalServiceNotCpu(months);
+    }
+
+    public int totalServiceSuccessCpu(String months) {
+        return serviceRepository.totalServiceSuccessCpu(months);
+    }
+
 }
 
