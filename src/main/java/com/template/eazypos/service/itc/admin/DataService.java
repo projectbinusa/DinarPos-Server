@@ -866,8 +866,8 @@ public class DataService {
         return tglKonfRepository.findTglKonfimasiByIdTt(idTt);
     }
 
-    public List<ServiceReportDTO> findDataService(String months) {
-        return serviceRepository.findDataService(months);
+    public List<ServiceReportDTO> getServiceReportByMonth(Date month) {
+        return serviceRepository.findDataServicePimpinan(month);
     }
 
     public int totalServiceElektro(String months) {

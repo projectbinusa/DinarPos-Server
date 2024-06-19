@@ -59,15 +59,18 @@ public interface ServiceRepository extends JpaRepository<ServiceBarang, Long> {
     @Query("SELECT COUNT(s.idTT) FROM ServiceBarang s WHERE FUNCTION('DATE_FORMAT', s.tanggalMasuk, '%Y-%m') = FUNCTION('DATE_FORMAT', :months, '%Y-%m') AND (s.statusEnd LIKE '%READY%' OR s.statusEnd LIKE '%CANCEL%') AND s.teknisi.bagian = 'PC'")
     int countTotalServiceSuccessCPU(@Param("months") Date months);
 
-    @Query("SELECT t.nama, t.id, " +
-            "(SELECT COUNT(s.idTT) FROM ServiceBarang s WHERE s.teknisi.id = t.id AND FUNCTION('DATE_FORMAT', s.tanggalMasuk, '%Y-%m') = :months) AS ttl, " +
-            "(SELECT COUNT(s.idTT) FROM ServiceBarang s WHERE s.teknisi.id = t.id AND FUNCTION('DATE_FORMAT', s.tanggalMasuk, '%Y-%m') = :months AND " +
-            "(s.statusEnd LIKE '%READY%' OR (s.statusEnd LIKE '%CANCEL%' AND s.total <> 0))) AS success, " +
-            "(SELECT COUNT(s.idTT) FROM ServiceBarang s WHERE s.teknisi.id = t.id AND FUNCTION('DATE_FORMAT', s.tanggalMasuk, '%Y-%m') = :months AND " +
-            "(s.statusEnd LIKE '%PROSES%' OR (s.statusEnd LIKE '%CANCEL%' AND s.total = 0))) AS nots " +
-            "FROM Teknisi t " +
-            "ORDER BY success DESC")
-    List<ServiceReportDTO> findDataService(@Param("months") String months);
+    @Query("SELECT new com.template.eazypos.dto.ServiceReportDTO(" +
+            "t.nama, t.id, " +
+            "COUNT(s.idTT), " +
+            "COUNT(CASE WHEN s.statusEnd LIKE '%READY%' OR (s.statusEnd LIKE '%CANCEL%' AND s.total <> 0) THEN 1 END), " +
+            "COUNT(CASE WHEN s.statusEnd LIKE '%PROSES%' OR (s.statusEnd LIKE '%CANCEL%' AND s.total = 0) THEN 1 END)) " +
+            "FROM ServiceBarang s " +
+            "JOIN s.teknisi t " +
+            "WHERE FUNCTION('YEAR', s.tanggalMasuk) = FUNCTION('YEAR', :month) " +
+            "AND FUNCTION('MONTH', s.tanggalMasuk) = FUNCTION('MONTH', :month) " +
+            "GROUP BY t.nama, t.id " +
+            "ORDER BY COUNT(CASE WHEN s.statusEnd LIKE '%READY%' OR (s.statusEnd LIKE '%CANCEL%' AND s.total <> 0) THEN 1 END) DESC")
+    List<ServiceReportDTO> findDataServicePimpinan(@Param("month") Date month);
 
     @Query("SELECT COUNT(s) FROM ServiceBarang s WHERE FUNCTION('DATE_FORMAT', s.tanggalMasuk, '%Y-%m') = :months AND s.teknisi.id IN " +
             "(SELECT t.id FROM Teknisi t WHERE t.bagian = 'Elektro')")

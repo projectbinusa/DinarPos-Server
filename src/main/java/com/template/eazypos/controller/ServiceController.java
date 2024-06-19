@@ -377,9 +377,9 @@ public class ServiceController {
         return
         dataService.getTglKonfimasiByIdTt(idTt);
     }
-    @GetMapping("/finish/pimpinan")
-    public List<ServiceReportDTO> getDataService(@RequestParam String months) {
-        return dataService.findDataService(months);
+    @GetMapping("/finish/pimpinan/{month}")
+    public List<ServiceReportDTO> getServiceReportByMonth(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") Date month) {
+        return dataService.getServiceReportByMonth(month);
     }
 
 
