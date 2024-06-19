@@ -75,13 +75,15 @@ public class PoinService {
     }
 
     // Mengambil total poin dari semua riwayat poin
-    public PoinHistory getTotalPoin() {
-        return poinHistoryRepository.findTotalPoin();
+    public double getTotalPoin() {
+        Double totalPoin = poinHistoryRepository.getTotalPoin();
+        return totalPoin != null ? totalPoin : 0.0;
     }
 
     // Mengambil total poin berdasarkan bulan
-    public PoinHistory getTotalPoinByMonth(String month) {
-        return poinHistoryRepository.findTotalPoinByMonth(month);
+    public int getTotalPoinByMonth(int month) {
+        Integer totalPoin = poinHistoryRepository.findTotalPoinByMonth(month);
+        return totalPoin != null ? totalPoin : 0;
     }
 
     // Mengambil riwayat poin berdasarkan bulan
