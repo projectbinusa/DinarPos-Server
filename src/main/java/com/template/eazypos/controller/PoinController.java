@@ -71,13 +71,13 @@ public class PoinController {
 
     // Mendapatkan Total Poin Untuk Pimpinan
     @GetMapping("/pimpinan/total")
-    public PoinHistory getTotalPoin() {
+    public double getTotalPoin() {
         return poinService.getTotalPoin();
     }
 
     // Mendapatkan Total Poin Berdasarkan Bulan Untuk Pimpinan
     @GetMapping("/pimpinan/total-by-month")
-    public PoinHistory getTotalPoinByMonth(@RequestParam("month") String month) {
+    public int getTotalPoinByMonth(@RequestParam("month") int month) {
         return poinService.getTotalPoinByMonth(month);
     }
 
