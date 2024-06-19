@@ -866,7 +866,7 @@ public class DataService {
         return tglKonfRepository.findTglKonfimasiByIdTt(idTt);
     }
 
-    public List<Object[]> findDataService(String months) {
+    public List<ServiceReportDTO> findDataService(String months) {
         return serviceRepository.findDataService(months);
     }
 

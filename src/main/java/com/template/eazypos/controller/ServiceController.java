@@ -378,9 +378,10 @@ public class ServiceController {
         dataService.getTglKonfimasiByIdTt(idTt);
     }
     @GetMapping("/finish/pimpinan")
-    public List<Object[]> getDataService(@RequestParam String months) {
+    public List<ServiceReportDTO> getDataService(@RequestParam String months) {
         return dataService.findDataService(months);
     }
+
 
     @GetMapping("/total-elektro")
     public int getTotalServiceElektro(@RequestParam String months) {

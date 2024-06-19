@@ -1,6 +1,7 @@
 package com.template.eazypos.controller;
 
 import com.template.eazypos.dto.PoinHistoryDTO;
+import com.template.eazypos.dto.PoinHistoryMonthDTO;
 import com.template.eazypos.exception.CommonResponse;
 import com.template.eazypos.exception.ResponseHelper;
 import com.template.eazypos.model.Poin;
@@ -23,10 +24,10 @@ public class PoinController {
     private PoinService poinService;
 
     // Mendapatkan Riwayat Poin Berdasarkan Bulan
-    @GetMapping("/month/{month}")
-    public List<PoinHistory> getPoinByMonth(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate month) {
-        return poinService.getPoinByMonth(month);
-    }
+//    @GetMapping("/month/{month}")
+//    public List<PoinHistoryMonthDTO> getPoinByMonth(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate month) {
+//        return poinService.getPoinByMonth(month);
+//    }
 
     // Mendapatkan Semua Riwayat Poin Berdasarkan Rentang Tanggal
     @GetMapping("/tanggal/")

@@ -2,6 +2,7 @@ package com.template.eazypos.repository;
 
 
 import com.template.eazypos.dto.ServiceDataDTO;
+import com.template.eazypos.dto.ServiceReportDTO;
 import com.template.eazypos.model.ServiceBarang;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -66,7 +67,7 @@ public interface ServiceRepository extends JpaRepository<ServiceBarang, Long> {
             "(s.statusEnd LIKE '%PROSES%' OR (s.statusEnd LIKE '%CANCEL%' AND s.total = 0))) AS nots " +
             "FROM Teknisi t " +
             "ORDER BY success DESC")
-    List<Object[]> findDataService(@Param("months") String months);
+    List<ServiceReportDTO> findDataService(@Param("months") String months);
 
     @Query("SELECT COUNT(s) FROM ServiceBarang s WHERE FUNCTION('DATE_FORMAT', s.tanggalMasuk, '%Y-%m') = :months AND s.teknisi.id IN " +
             "(SELECT t.id FROM Teknisi t WHERE t.bagian = 'Elektro')")

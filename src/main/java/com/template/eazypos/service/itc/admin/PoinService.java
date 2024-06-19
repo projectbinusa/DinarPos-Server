@@ -1,6 +1,7 @@
 package com.template.eazypos.service.itc.admin;
 
 import com.template.eazypos.dto.PoinHistoryDTO;
+import com.template.eazypos.dto.PoinHistoryMonthDTO;
 import com.template.eazypos.model.Poin;
 import com.template.eazypos.model.PoinHistory;
 import com.template.eazypos.model.Teknisi;
@@ -16,6 +17,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class PoinService {
@@ -27,9 +29,12 @@ public class PoinService {
     private PoinRepository poinRepository;
 
     // Mengambil riwayat poin berdasarkan bulan
-    public List<PoinHistory> getPoinByMonth(LocalDate month) {
-        return poinHistoryRepository.findByMonth(month);
-    }
+//    public List<PoinHistoryMonthDTO> getPoinByMonth(LocalDate month) {
+//        List<PoinHistoryMonthDTO> data = poinHistoryRepository.findByMonth(month);
+//        return data.stream()
+//                .sorted((d1, d2) -> Long.compare(d2.getTeknisiId(), d1.getTeknisiId()))
+//                .collect(Collectors.toList());
+//    }
 
     // Mengambil riwayat poin berdasarkan rentang tanggal dan ID teknisi
     public List<PoinHistory> getByTanggal(Date tanggalAwal , Date tanggalAkhir){
