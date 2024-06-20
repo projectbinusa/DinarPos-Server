@@ -37,6 +37,7 @@ public class ExcelBarang {
             for (int col = 0; col < HEADERsBarang.length; col++) {
                 Cell cell = headerRow.createCell(col);
                 cell.setCellValue(HEADERsBarang[col]);
+                sheet.autoSizeColumn(col);
             }
 
 
@@ -68,6 +69,7 @@ public class ExcelBarang {
             for (int col = 0; col < HEADERsTemplate.length; col++) {
                 Cell cell = headerRow.createCell(col);
                 cell.setCellValue(HEADERsTemplate[col]);
+                sheet.autoSizeColumn(col);
             }
             workbook.write(out);
             return new ByteArrayInputStream(out.toByteArray());
