@@ -29,12 +29,12 @@ public class PoinService {
     private PoinRepository poinRepository;
 
     // Mengambil riwayat poin berdasarkan bulan
-//    public List<PoinHistoryMonthDTO> getPoinByMonth(LocalDate month) {
-//        List<PoinHistoryMonthDTO> data = poinHistoryRepository.findByMonth(month);
-//        return data.stream()
-//                .sorted((d1, d2) -> Long.compare(d2.getTeknisiId(), d1.getTeknisiId()))
-//                .collect(Collectors.toList());
-//    }
+    public List<PoinHistoryMonthDTO> getPoinByMonthAdmin(LocalDate month) {
+        List<PoinHistoryMonthDTO> data = poinHistoryRepository.findByMonth(month);
+        return data.stream()
+                .sorted((d1, d2) -> Long.compare(d2.getTeknisiId(), d1.getTeknisiId()))
+                .collect(Collectors.toList());
+    }
 
     // Mengambil riwayat poin berdasarkan rentang tanggal dan ID teknisi
     public List<PoinHistory> getByTanggal(Date tanggalAwal , Date tanggalAkhir){

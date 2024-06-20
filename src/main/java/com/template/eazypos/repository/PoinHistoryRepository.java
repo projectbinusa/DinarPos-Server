@@ -14,14 +14,14 @@ import java.util.List;
 import java.util.Optional;
 
 public interface PoinHistoryRepository extends JpaRepository<PoinHistory, Long> {
-//    @Query("SELECT new com.template.eazypos.dto.PoinHistoryMonthDTO(ph.teknisi.id, ph.teknisi.nama, SUM(ph.poin), SUM(ph.nominal)) " +
-//            "FROM PoinHistory ph " +
-//            "JOIN ph.teknisi t " +
-//            "WHERE FUNCTION('YEAR', ph.tanggal) = FUNCTION('YEAR', :month) " +
-//            "AND FUNCTION('MONTH', ph.tanggal) = FUNCTION('MONTH', :month) " +
-//            "GROUP BY ph.teknisi.id, ph.teknisi.nama " +
-//            "ORDER BY SUM(ph.poin) DESC")
-//    List<PoinHistoryMonthDTO> findByMonth(@Param("month") LocalDate month);
+    @Query("SELECT new com.template.eazypos.dto.PoinHistoryMonthDTO(ph.teknisi.id, ph.teknisi.nama, SUM(ph.poin), SUM(ph.nominal)) " +
+            "FROM PoinHistory ph " +
+            "JOIN ph.teknisi t " +
+            "WHERE FUNCTION('YEAR', ph.tanggal) = FUNCTION('YEAR', :month) " +
+            "AND FUNCTION('MONTH', ph.tanggal) = FUNCTION('MONTH', :month) " +
+            "GROUP BY ph.teknisi.id, ph.teknisi.nama " +
+            "ORDER BY SUM(ph.poin) DESC")
+    List<PoinHistoryMonthDTO> findByMonth(@Param("month") LocalDate month);
 
     @Query(value = "SELECT * FROM poin_history  WHERE tgl BETWEEN :tanggalAwal AND :tanggalAkhir" , nativeQuery = true)
     List<PoinHistory> findByTanggal(Date tanggalAwal, Date tanggalAkhir);
