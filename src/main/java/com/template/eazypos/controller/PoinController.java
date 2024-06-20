@@ -24,8 +24,8 @@ public class PoinController {
     private PoinService poinService;
 
     // Mendapatkan Riwayat Poin Berdasarkan Bulan
-    @GetMapping("/month/{month}")
-    public List<PoinHistoryMonthDTO> getPoinByMonth(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate month) {
+    @GetMapping("/month")
+    public List<PoinHistoryMonthDTO> getPoinByMonth(@RequestParam(name = "month") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate month) {
         return poinService.getPoinByMonthAdmin(month);
     }
 
