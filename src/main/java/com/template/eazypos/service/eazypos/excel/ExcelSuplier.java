@@ -34,6 +34,7 @@ public class ExcelSuplier {
             for (int col = 0; col < HEADERsSuplier.length; col++) {
                 Cell cell = headerRow.createCell(col);
                 cell.setCellValue(HEADERsSuplier[col]);
+                sheet.autoSizeColumn(col);
             }
 
             int rowIdx = 1;
@@ -67,6 +68,7 @@ public class ExcelSuplier {
                 Cell cell = headerRow.createCell(col);
                 cell.setCellValue(HEADERsTemplate[col]);
                 cell.setCellStyle(stringCellStyle); // Set the cell style to string type
+                sheet.autoSizeColumn(col);
             }
 
             workbook.write(out);

@@ -25,7 +25,7 @@ public class Hutang {
     @Column(name = "date", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" , timezone = "Asia/Jakarta")
-    private Date date;
+    private Date date; 
 
     public Long getId() {
         return id;
