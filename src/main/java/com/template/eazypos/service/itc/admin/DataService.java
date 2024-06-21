@@ -573,8 +573,8 @@ public class DataService {
     }
 
     // Mengambil daftar layanan berdasarkan rentang tanggal dan status
-    public List<ServiceBarang> getByTanggalAndStatus(Date tanggalAwal , Date tanggalAkhir , String status){
-        return serviceRepository.findByTanggalAndStatus(tanggalAwal , tanggalAkhir , status);
+    public List<ServiceBarang> getByTanggalAndStatus(Date tanggalAwal, Date tanggalAkhir, String status) {
+        return serviceRepository.findByTanggalAndStatus(tanggalAwal, tanggalAkhir, status);
     }
 
     // Mengambil daftar layanan yang telah diambil

@@ -152,7 +152,8 @@ public class ServiceController {
             @RequestParam(name = "tanggal_awal") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggalAwal,
             @RequestParam(name = "tanggal_akhir") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggalAkhir,
             @RequestParam String status) {
-        return ResponseHelper.ok(dataService.getByTanggalAndStatus(tanggalAwal, tanggalAkhir, status));
+        List<ServiceBarang> serviceList = dataService.getByTanggalAndStatus(tanggalAwal, tanggalAkhir, status);
+        return ResponseHelper.ok(serviceList);
     }
 
     // Endpoint untuk mendapatkan data layanan berdasarkan bulan
