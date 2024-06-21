@@ -25,8 +25,8 @@ public class PoinController {
 
     // Mendapatkan Riwayat Poin Berdasarkan Bulan
     @GetMapping("/month")
-    public List<PoinHistoryMonthDTO> getPoinByMonth(@RequestParam(name = "month") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate month) {
-        return poinService.getPoinByMonthAdmin(month);
+    public CommonResponse<List<PoinHistoryMonthDTO>> getPoinByMonth(@RequestParam(name = "month") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate month) {
+        return ResponseHelper.ok(poinService.getPoinByMonthAdmin(month));
     }
 
     // Mendapatkan Semua Riwayat Poin Berdasarkan Rentang Tanggal
@@ -45,11 +45,11 @@ public class PoinController {
 
     // Mencari Riwayat Poin Berdasarkan Filter Tanggal Dan ID Teknisi
     @GetMapping("/filter")
-    public List<PoinHistory> filterPoinHistory(
+    public CommonResponse<List<PoinHistory>> filterPoinHistory(
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date awal,
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date akhir,
             @RequestParam Long idTeknisi) {
-        return poinService.getPoinHistory(awal, akhir, idTeknisi);
+        return ResponseHelper.ok(poinService.getPoinHistory(awal, akhir, idTeknisi));
     }
 
     // Mendapatkan Riwayat Poin Berdasarkan ID Teknisi
@@ -66,20 +66,20 @@ public class PoinController {
 
     // Mendapatkan Semua Data Poin Untuk Pimpinan
     @GetMapping("/pimpinan")
-    public List<Poin> getPoin() {
-        return poinService.getPoin();
+    public CommonResponse<List<Poin>> getPoin() {
+        return ResponseHelper.ok(poinService.getPoin());
     }
 
     // Mendapatkan Total Poin Untuk Pimpinan
     @GetMapping("/pimpinan/total")
-    public double getTotalPoin() {
-        return poinService.getTotalPoin();
+    public CommonResponse<?> getTotalPoin() {
+        return ResponseHelper.ok(poinService.getTotalPoin());
     }
 
     // Mendapatkan Total Poin Berdasarkan Bulan Untuk Pimpinan
     @GetMapping("/pimpinan/total-by-month")
-    public int getTotalPoinByMonth(@RequestParam("month") int month) {
-        return poinService.getTotalPoinByMonth(month);
+    public CommonResponse<?> getTotalPoinByMonth(@RequestParam("month") int month) {
+        return ResponseHelper.ok( poinService.getTotalPoinByMonth(month));
     }
 
     // Mendapatkan Riwayat Poin Berdasarkan Bulan Untuk Pimpinan
@@ -90,10 +90,10 @@ public class PoinController {
 
     // Mendapatkan Total Poin Berdasarkan Bulan Dan Tahun Untuk Pimpinan
     @GetMapping("/pimpinan/total-by-month-year")
-    public double getTotalPoinByMonthAndYear(@RequestParam("idTeknisi") Long idTeknisi,
+    public CommonResponse<?> getTotalPoinByMonthAndYear(@RequestParam("idTeknisi") Long idTeknisi,
                                              @RequestParam("year") int year,
                                              @RequestParam("month") int month) {
-        return poinService.getTotalPoinByMonthAndYear(idTeknisi, year, month);
+        return ResponseHelper.ok( poinService.getTotalPoinByMonthAndYear(idTeknisi, year, month));
     }
 
     // Menambahkan Riwayat Poin Baru

@@ -75,15 +75,19 @@ public class PoinService {
     }
 
     // Mengambil total poin dari semua riwayat poin
-    public double getTotalPoin() {
+    public Map<Object, Object> getTotalPoin() {
         Double totalPoin = poinHistoryRepository.getTotalPoin();
-        return totalPoin != null ? totalPoin : 0.0;
+        Map<Object, Object> response = new HashMap<>();
+        response.put("total_poin" , totalPoin);
+         return response;
     }
 
     // Mengambil total poin berdasarkan bulan
-    public int getTotalPoinByMonth(int month) {
+    public Map<Object, Object> getTotalPoinByMonth(int month) {
         Integer totalPoin = poinHistoryRepository.findTotalPoinByMonth(month);
-        return totalPoin != null ? totalPoin : 0;
+        Map<Object, Object> response = new HashMap<>();
+        response.put("total_poin" , totalPoin);
+        return response;
     }
 
     // Mengambil riwayat poin berdasarkan bulan
@@ -92,9 +96,11 @@ public class PoinService {
     }
 
     // Menghitung total poin untuk seorang teknisi pada bulan dan tahun tertentu
-    public double getTotalPoinByMonthAndYear(Long idTeknisi, int year, int month) {
+    public Map<Object, Object> getTotalPoinByMonthAndYear(Long idTeknisi, int year, int month) {
         Double totalPoin = poinHistoryRepository.findTotalPoinByMonthAndYear(idTeknisi, year, month);
-        return totalPoin != null ? totalPoin : 0;
+        Map<Object, Object> response = new HashMap<>();
+        response.put("total_poin" , totalPoin);
+        return response;
     }
 
     // Menambahkan entri baru ke riwayat poin_history dan juga ke tabel Poin
