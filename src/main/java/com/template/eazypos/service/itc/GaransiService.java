@@ -29,7 +29,7 @@ public class GaransiService {
         garansi.setKerusakan(garansiDTO.getKerusakan());
         garansi.setMasukKe(garansiDTO.getMasukKe());
         garansi.setTanggalMasuk(garansiDTO.getTanggalMasuk());
-        garansi.setServiceBarang(serviceRepository.findByIdTT(garansiDTO.getId_tt()).orElseThrow(() -> new NotFoundException("Id Garansi Not Found")));
+        garansi.setServiceBarang(serviceRepository.findByIdTT(garansiDTO.getId_tt()).orElseThrow(() -> new NotFoundException("Id Service Not Found")));
         return garansiRepository.save(garansi);
     }
 

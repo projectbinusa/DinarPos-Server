@@ -15,27 +15,27 @@ public class Garansi extends DateConfig {
     private Long id;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
-    @JoinColumn(name = "id_tt", nullable = false, updatable = false)
+    @JoinColumn(name = "id_tt", updatable = false)
     private ServiceBarang serviceBarang;
 
-    @Column(name = "nama_brg", nullable = false)
+    @Column(name = "nama_brg")
     private String namaBrg;
 
-    @Column(name = "merek", nullable = false)
+    @Column(name = "merek")
     private String merek;
 
-    @Column(name = "masuk_ke", nullable = false)
+    @Column(name = "masuk_ke")
     private String masukKe;
 
-    @Column(name = "kerusakan", nullable = false)
+    @Column(name = "kerusakan")
     private String kerusakan;
 
-    @Column(name = "tgl_masuk", nullable = false)
+    @Column(name = "tgl_masuk")
     @Temporal(TemporalType.DATE)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" , timezone = "Asia/Jakarta")
     private Date tanggalMasuk;
 
-    @Column(name ="tgl_jadi", nullable = false)
+    @Column(name ="tgl_jadi")
     @Temporal(TemporalType.DATE)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" , timezone = "Asia/Jakarta")
     private Date tanggalJadi;
