@@ -86,7 +86,7 @@ public interface TransaksiRepository extends JpaRepository<Transaksi, Long> {
     @Query(value = "SELECT * FROM tabel_transaksi WHERE 365_hari = 0 AND status = :status", nativeQuery = true)
     List<Transaksi> findAllKonfrimasi365Hari(@Param("status") String status);
 
-    @Query("SELECT tt FROM Transaksi tt WHERE tt.serviceBarang = :idTt")
+    @Query("SELECT t FROM Transaksi t WHERE t.serviceBarang.idTT = :idTt")
     List<Transaksi> findTransaksiByIdTt(@Param("idTt") Long idTt);
 
 
