@@ -189,7 +189,7 @@ public class TransaksiIndentExcelcomService {
         Date now = new Date();
         Customer customer = customerRepository.findById(transaksiIndent.getCustomer().getId())
                 .orElseThrow(() -> new NotFoundException("Customer not found"));
-        Salesman salesman = markettingRepository.findById(transaksiIndent.getSalesman().getIdSalesman())
+        Salesman salesman = markettingRepository.findById(transaksiIndent.getSalesman().getId())
                 .orElseThrow(() -> new NotFoundException("Salesman not found"));
 
         Transaksi transaksi = new Transaksi();

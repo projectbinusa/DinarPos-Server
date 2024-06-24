@@ -11,7 +11,7 @@ public class Salesman extends DateConfig {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_salesman")
-    private Long idSalesman;
+    private Long id;
 
     @Column(name = "nama_salesman", nullable = false, length = 100)
     private String namaSalesman;
@@ -25,12 +25,12 @@ public class Salesman extends DateConfig {
     @Column(name = "del_flag", nullable = false, columnDefinition = "int default 1")
     private int delFlag;
 
-    public Long getIdSalesman() {
-        return idSalesman;
+    public Long getId() {
+        return id;
     }
 
-    public void setIdSalesman(Long idSalesman) {
-        this.idSalesman = idSalesman;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getNamaSalesman() {

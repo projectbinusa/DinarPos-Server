@@ -43,9 +43,9 @@ public class SalesmanController {
     // Endpoint Mendapatkan Salesman Dengan Pagination Dan Pencarian Opsional
     @GetMapping("/pagination")
     public PaginationResponse<List<Salesman>> getAllWithPagination(
-            @RequestParam(defaultValue = Pagination.page) Long page,
-            @RequestParam(defaultValue = Pagination.limit) Long limit,
-            @RequestParam(defaultValue = Pagination.sort) String sort,
+            @RequestParam(defaultValue = Pagination.page, required = false) Long page,
+            @RequestParam(defaultValue = Pagination.limit, required = false) Long limit,
+            @RequestParam(defaultValue = Pagination.sort, required = false) String sort,
             @RequestParam(required = false) String search
     ) {
         Page<Salesman> salesmanPage;
