@@ -1,20 +1,13 @@
 package com.template.eazypos.service.eazypos;
 
 import com.template.eazypos.exception.NotFoundException;
-import com.template.eazypos.model.Barang;
-import com.template.eazypos.model.BarangTransaksi;
-import com.template.eazypos.model.StokMasuk;
-import com.template.eazypos.model.Transaksi;
-import com.template.eazypos.repository.BarangRepository;
-import com.template.eazypos.repository.BarangTransaksiRepository;
-import com.template.eazypos.repository.StokMasukRepository;
-import com.template.eazypos.repository.TransaksiRepository;
+import com.template.eazypos.model.*;
+import com.template.eazypos.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import javax.transaction.Transactional;
+import java.util.*;
 
 @Service
 public class ReturnPenjualanService {
@@ -28,6 +21,8 @@ public class ReturnPenjualanService {
 
     @Autowired
     private StokMasukRepository stokMasukRepository;
+    @Autowired
+    private PersediaanRepository persediaanRepository;
 
     // Mengambil daftar transaksi penjualan untuk produk Excelcom
     public List<Transaksi> getAllExcelcom() {
@@ -45,31 +40,73 @@ public class ReturnPenjualanService {
     }
 
     // Memproses pengembalian transaksi penjualan
-    public Transaksi put(Long id) {
-        Transaksi transaksi = transaksiRepository.findById(id).orElseThrow(() -> new NotFoundException("Id transaksi not found"));
+    @Transactional
+    public Transaksi returnHistoriTransaksi(Long idTransaksi) {
+        Transaksi transaksi = transaksiRepository.findById(idTransaksi)
+                .orElseThrow(() -> new NotFoundException("Id transaksi not found"));
         transaksi.setDelFlag(0);
 
+        List<BarangTransaksi> barangTransaksiList = barangTransaksiRepository.findBarangTransaksiByIdTransaksi2(idTransaksi);
 
-        List<BarangTransaksi> barangTransaksiList = barangTransaksiRepository.findBarangTransaksiByIdTransaksi2(id);
+        List<StokMasuk> stokMasukList = new ArrayList<>();
+        List<Barang> barangUpdateList = new ArrayList<>();
 
-        // Perbarui stok barang kembali ke nilai semula
         for (BarangTransaksi barangTransaksi : barangTransaksiList) {
             Barang barang = barangRepository.findByBarcode(barangTransaksi.getBarcodeBarang());
-            barang.setJumlahStok(barang.getJumlahStok() + barangTransaksi.getQty());
-            StokMasuk stokMasuk = new StokMasuk();
-            stokMasuk.setDelFlag(1);
-            stokMasuk.setSuplier(null);
-            stokMasuk.setBarang(barang);
-            stokMasuk.setJumlahStok(String.valueOf(barangTransaksi.getQty()));
-            stokMasuk.setKeteranganStokMasuk("Return Barang " + transaksi.getNoFaktur());
-            stokMasukRepository.save(stokMasuk);
-            barangRepository.save(barang);
+            if (barang != null) {
+                barang.setJumlahStok(barang.getJumlahStok() + barangTransaksi.getQty());
+                barangUpdateList.add(barang);
+
+                StokMasuk stokMasuk = new StokMasuk();
+                stokMasuk.setDelFlag(1);
+                stokMasuk.setSuplier(null);
+                stokMasuk.setBarang(barang);
+                stokMasuk.setJumlahStok(String.valueOf(barangTransaksi.getQty()));
+                stokMasuk.setKeteranganStokMasuk("Return Barang " + transaksi.getNoFaktur());
+                stokMasukList.add(stokMasuk);
+            }
             barangTransaksi.setDelFlag(0);
             barangTransaksiRepository.save(barangTransaksi);
         }
 
-        return transaksiRepository.save(transaksi);
+        if (!stokMasukList.isEmpty()) {
+            stokMasukRepository.saveAll(stokMasukList);
+        }
+
+        if (!barangUpdateList.isEmpty()) {
+            barangRepository.saveAll(barangUpdateList);
+        }
+
+        transaksiRepository.save(transaksi);
+
+        updatePenjualanTabelPersediaan(transaksi.getTanggal());
+
+        return transaksi;
     }
+
+    private void updatePenjualanTabelPersediaan(Date date) {
+        Persediaan persediaan = persediaanRepository.findByTanggal(date)
+                .orElseGet(() -> new Persediaan(persediaanAkhirToAwal(date), date));
+
+        List<BarangTransaksi> totalPenjualan = barangTransaksiRepository.findByTanggal(date);
+
+        long total = totalPenjualan.stream()
+                .mapToLong(BarangTransaksi::getHargaBrng)
+                .sum();
+
+        persediaan.setPenjualan(String.valueOf(total));
+        long p = Long.parseLong(persediaan.getBarangSiapJual());
+        long p2 = p - total;
+        persediaan.setPersediaanAkhir(String.valueOf(p2));
+
+        persediaanRepository.save(persediaan);
+    }
+
+    private long persediaanAkhirToAwal(Date date) {
+        // Implementasikan logika untuk menghitung persediaan awal berdasarkan tanggal.
+        return 0L; // Ganti dengan logika aktual.
+    }
+
 
     // Menghapus transaksi penjualan berdasarkan ID
     public Map<String, Boolean> delete(Long id ) {

@@ -31,6 +31,13 @@ public class Persediaan {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" , timezone = "Asia/Jakarta")
     private Date date;
 
+    public Persediaan(long persediaanAkhirToAwal, Date date) {
+    }
+
+    public Persediaan() {
+
+    }
+
     public Long getId() {
         return id;
     }

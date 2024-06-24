@@ -14,6 +14,8 @@ public interface BarangTransaksiRepository extends JpaRepository<BarangTransaksi
 
     @Query(value = "SELECT * FROM tabel_barang_transaksi WHERE status = 'dinarpos'  AND del_flag = 0  ", nativeQuery = true)
     List<BarangTransaksi> findBarangTransaksiDinarpos();
+    @Query(value = "SELECT * FROM tabel_barang_transaksi WHERE date =:date ", nativeQuery = true)
+    List<BarangTransaksi> findByDate(Date date);
     @Query(value = "SELECT * FROM tabel_barang_transaksi WHERE id_transaksi =:transaksi AND status =:status AND del_flag = 1", nativeQuery = true)
     List<BarangTransaksi> findBarangTransaksiByIdTransaksi(Long transaksi , String status);
 
@@ -30,9 +32,12 @@ public interface BarangTransaksiRepository extends JpaRepository<BarangTransaksi
     @Query(value = "SELECT * FROM tabel_barang_transaksi WHERE id_transaksi = :idTransaksi AND del_flag = 0", nativeQuery = true)
     List<BarangTransaksi> findBarangTransaksiReturnByIdTransaksi(@Param("idTransaksi") Long idTransaksi);
 
+
+
     @Query("SELECT bt FROM BarangTransaksi bt WHERE bt.transaksi = :idTransaksi")
     List<BarangTransaksi> findBarangTransaksiByIdTransaksi(@Param("idTransaksi") Long idTransaksi);
 
 
+    List<BarangTransaksi> findByTanggal(Date date);
 }
 
