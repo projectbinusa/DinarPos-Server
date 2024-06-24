@@ -103,10 +103,17 @@ public class ReturnPenjualanService {
     }
 
     private long persediaanAkhirToAwal(Date date) {
-        // Implementasikan logika untuk menghitung persediaan awal berdasarkan tanggal.
-        return 0L; // Ganti dengan logika aktual.
-    }
+        // Menghitung persediaan awal berdasarkan persediaan akhir hari sebelumnya
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.DATE, -1);
+        Date previousDate = calendar.getTime();
 
+        Persediaan persediaanSebelumnya = persediaanRepository.findByTanggal(previousDate)
+                .orElseThrow(() -> new NotFoundException("Persediaan sebelumnya tidak ditemukan"));
+
+        return Long.parseLong(persediaanSebelumnya.getPersediaanAkhir());
+    }
 
     // Menghapus transaksi penjualan berdasarkan ID
     public Map<String, Boolean> delete(Long id ) {
