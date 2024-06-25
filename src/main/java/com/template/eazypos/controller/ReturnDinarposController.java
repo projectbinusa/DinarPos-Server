@@ -70,7 +70,7 @@ public class ReturnDinarposController {
     // Update Retur Pembelian Transaction
     @PutMapping("/retur_pembelian/{id}")
     public CommonResponse<TransaksiBeli> returTransaksiBeli(@PathVariable("id") Long id) {
-        return ResponseHelper.ok(returnPembelianService.put(id));
+        return ResponseHelper.ok(returnPembelianService.returnHistoriTransaksiPembelian(id));
     }
 
     // Update Retur Barang Pembelian Transaction

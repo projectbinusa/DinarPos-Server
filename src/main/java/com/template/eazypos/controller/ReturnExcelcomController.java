@@ -91,7 +91,7 @@ public class ReturnExcelcomController {
     // Update Retur Transaksi Pembelian Berdasarkan ID
     @PutMapping("/retur_pembelian/{id}")
     public CommonResponse<TransaksiBeli> returTransaksiBeli(@PathVariable("id") Long id) {
-        return ResponseHelper.ok(returnPembelianService.put(id));
+        return ResponseHelper.ok(returnPembelianService.returnHistoriTransaksiPembelian(id));
     }
 
     // Update Retur Transaksi Barang Pembelian Berdasarkan ID
