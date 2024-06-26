@@ -2,6 +2,7 @@ package com.template.eazypos.service.itc.admin;
 
 import com.template.eazypos.dto.AddServiceDTO;
 import com.template.eazypos.exception.NotFoundException;
+import com.template.eazypos.model.Customer;
 import com.template.eazypos.model.Retur;
 import com.template.eazypos.model.ServiceBarang;
 import com.template.eazypos.repository.CustomerRepository;
@@ -28,7 +29,8 @@ public class ReturService {
     // Proses retur barang layanan berdasarkan ID layanan yang diberikan
     public ServiceBarang retur(Long id , AddServiceDTO serviceDTO){
         ServiceBarang service = new ServiceBarang();
-        service.setCustomer(customerRepository.findById(serviceDTO.getId_customer()).orElseThrow(() -> new NotFoundException("Id Customer tidak dinemukan")));
+        Customer customer = customerRepository.findById(serviceDTO.getId_customer()).orElseThrow(() -> new NotFoundException("Id Customer tidak dinemukan"));
+        service.setCustomer(customer);
         service.setKet(serviceDTO.getKet());
         service.setProduk(serviceDTO.getJenis_produk());
         service.setMerk(serviceDTO.getMerek());
@@ -41,10 +43,10 @@ public class ReturService {
         service.setBmax(serviceDTO.getBiaya_maximal());
         service.setEstimasi(serviceDTO.getEstimasi_biaya());
         service.setChecker(serviceDTO.getChecker());
-        service.setCp(serviceDTO.getCp());
+        service.setCp(customer.getTelp());
         service.setStatusEnd("N_A");
-        service.setAlamat(serviceDTO.getAlamat());
-        service.setNama(serviceDTO.getNama());
+        service.setAlamat(customer.getAlamat());
+        service.setNama(customer.getNama_customer());
         ServiceBarang serviceBarang = serviceRepository.save(service);
 
         Retur retur = new Retur();
