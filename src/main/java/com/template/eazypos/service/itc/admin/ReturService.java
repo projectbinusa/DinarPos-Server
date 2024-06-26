@@ -41,10 +41,10 @@ public class ReturService {
         service.setBmax(serviceDTO.getBiaya_maximal());
         service.setEstimasi(serviceDTO.getEstimasi_biaya());
         service.setChecker(serviceDTO.getChecker());
-        service.setCp(serviceDTO.getCp());
+//        service.setCp(serviceDTO.getCp());
         service.setStatusEnd("N_A");
-        service.setAlamat(serviceDTO.getAlamat());
-        service.setNama(serviceDTO.getNama());
+//        service.setAlamat(serviceDTO.getAlamat());
+//        service.setNama(serviceDTO.getNama());
         ServiceBarang serviceBarang = serviceRepository.save(service);
 
         Retur retur = new Retur();

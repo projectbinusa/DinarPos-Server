@@ -75,7 +75,7 @@ public class BarangController {
         if (search != null && !search.isEmpty()) {
             barangPage = barangService.getAllWithPagination(page, limit, sort, search);
         } else {
-            barangPage = barangService.getAllWithPagination( page, limit, sort, null);
+            barangPage = barangService.getAllWithPagination(page, limit, sort, null);
         }
 
         List<Barang> barangs = barangPage.getContent();

@@ -12,7 +12,7 @@ public class Barang extends DateConfig {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_barang")
-    private Long idBarang;
+    private Long id;
 
     @Column(name = "id_suplier")
     private Long idSuplier;
@@ -47,12 +47,12 @@ public class Barang extends DateConfig {
     @Column(name = "del_flag", nullable = false, columnDefinition = "int default 1")
     private int delFlag;
 
-    public Long getIdBarang() {
-        return idBarang;
+    public Long getId() {
+        return id;
     }
 
-    public void setIdBarang(Long idBarang) {
-        this.idBarang = idBarang;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Long getIdSuplier() {
