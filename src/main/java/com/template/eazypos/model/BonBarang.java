@@ -12,6 +12,12 @@ public class BonBarang {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "status_barang")
+    private String status_barang;
+
+    @Column(name = "status_service")
+    private String status_service;
+
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     @JoinColumn(name = "id_teknisi", nullable = false, updatable = false)
     private Teknisi teknisi;
@@ -29,7 +35,7 @@ public class BonBarang {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" , timezone = "Asia/Jakarta")
     private Date tgl_ambil;
 
-    @Column(name = "tgl_kembalikan", nullable = false)
+    @Column(name = "tgl_kembalikan", nullable = true)
     @Temporal(TemporalType.TIMESTAMP)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" , timezone = "Asia/Jakarta")
     private Date tgl_kembalikan;
@@ -80,5 +86,21 @@ public class BonBarang {
 
     public void setTgl_kembalikan(Date tgl_kembalikan) {
         this.tgl_kembalikan = tgl_kembalikan;
+    }
+
+    public String getStatus_barang() {
+        return status_barang;
+    }
+
+    public void setStatus_barang(String status_barang) {
+        this.status_barang = status_barang;
+    }
+
+    public String getStatus_service() {
+        return status_service;
+    }
+
+    public void setStatus_service(String status_service) {
+        this.status_service = status_service;
     }
 }
