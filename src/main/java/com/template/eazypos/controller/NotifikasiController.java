@@ -107,6 +107,34 @@ public class NotifikasiController {
     public CommonResponse<List<Transaksi>> getAllKonfirmasi365HariDinarpos() {
         return ResponseHelper.ok(notifikasiService.getNotifikasi365HariDinarpos());
     }
+    @GetMapping("/konfirmasi/7_hari/excelcom")
+    public CommonResponse<List<Transaksi>> getAllKonfirmasi7HariExcelcom() {
+        return ResponseHelper.ok(notifikasiService.getNotifikasi7HariExcelcom());
+    }
+
+    // Endpoint Untuk Mendapatkan Notifikasi Konfirmasi Transaksi 30 Hari Untuk Excelcom
+    @GetMapping("/konfirmasi/30_hari/excelcom")
+    public CommonResponse<List<Transaksi>> getAllKonfirmasi30HariExcelcom() {
+        return ResponseHelper.ok(notifikasiService.getNotifikasi30HariExcelcom());
+    }
+
+    // Endpoint Untuk Mendapatkan Notifikasi Konfirmasi Transaksi 90 Hari Untuk Excelcom
+    @GetMapping("/konfirmasi/90_hari/excelcom")
+    public CommonResponse<List<Transaksi>> getAllKonfirmasi90HariExcelcom() {
+        return ResponseHelper.ok(notifikasiService.getNotifikasi90HariExcelcom());
+    }
+
+    // Endpoint Untuk Mendapatkan Notifikasi Konfirmasi Transaksi 120 Hari Untuk Excelcom
+    @GetMapping("/konfirmasi/120_hari/excelcom")
+    public CommonResponse<List<Transaksi>> getAllKonfirmasi120HariExcelcom() {
+        return ResponseHelper.ok(notifikasiService.getNotifikasi120HariExcelcom());
+    }
+
+    // Endpoint Untuk Mendapatkan Notifikasi Konfirmasi Transaksi 365 Hari Untuk Excelcom
+    @GetMapping("/konfirmasi/365_hari/excelcom")
+    public CommonResponse<List<Transaksi>> getAllKonfirmasi365HariExcelcom() {
+        return ResponseHelper.ok(notifikasiService.getNotifikasi365HariExcelcom());
+    }
 
     // Endpoint Untuk Konfirmasi Transaksi 7 Hari Untuk Excelcom
     @PutMapping("/konfirmasi/7_hari/{id}")

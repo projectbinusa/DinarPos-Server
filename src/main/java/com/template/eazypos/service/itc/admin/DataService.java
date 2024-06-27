@@ -118,6 +118,7 @@ public class DataService {
         service.setStatusEnd("N_A");
         service.setAlamat(customer.getAlamat());
         service.setNama(customer.getNama_customer());
+        service.setTaken("N");
         return serviceRepository.save(service);
     }
 
