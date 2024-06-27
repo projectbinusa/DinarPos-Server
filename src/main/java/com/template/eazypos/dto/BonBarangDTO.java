@@ -11,6 +11,8 @@ public class BonBarangDTO {
 
     public Date tanggal_ambil;
 
+    public String status_barang;
+
     public Long getId_teknisi() {
         return id_teknisi;
     }
@@ -41,5 +43,13 @@ public class BonBarangDTO {
 
     public void setTanggal_ambil(Date tanggal_ambil) {
         this.tanggal_ambil = tanggal_ambil;
+    }
+
+    public String getStatus_barang() {
+        return status_barang;
+    }
+
+    public void setStatus_barang(String status_barang) {
+        this.status_barang = status_barang;
     }
 }
