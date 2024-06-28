@@ -52,6 +52,10 @@ public class BonBarangController {
     // Menghapus Data Bon Barang Berdasarkan ID
     @PutMapping("/update/{id}")
     public CommonResponse<BonBarang> put(@PathVariable("id") Long id, @RequestBody UpdateDataBonBarangDTO dataBonBarangDTO) {
-        return ResponseHelper.ok(bonBarangService.updateBonBarang(dataBonBarangDTO, id));
+        if (dataBonBarangDTO == null) {
+            throw new IllegalArgumentException("Update data cannot be null");
+        }
+        BonBarang updatedBonBarang = bonBarangService.updateBonBarang(dataBonBarangDTO, id);
+        return ResponseHelper.ok(updatedBonBarang);
     }
 }

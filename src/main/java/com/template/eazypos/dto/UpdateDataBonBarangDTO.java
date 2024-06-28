@@ -6,13 +6,10 @@ public class UpdateDataBonBarangDTO {
 
     private Date tgl_ambil;
 
-    public Long id_teknisi;
+    private Long id_teknisi;
 
-    public Long id_tt;
-
-    public String barcode_brg;
-
-    public String status_service;
+    private Long id_tt;
+    private String barcode_brg;
 
     public Date getTgl_ambil() {
         return tgl_ambil;
@@ -44,13 +41,5 @@ public class UpdateDataBonBarangDTO {
 
     public void setBarcode_brg(String barcode_brg) {
         this.barcode_brg = barcode_brg;
-    }
-
-    public String getStatus_service() {
-        return status_service;
-    }
-
-    public void setStatus_service(String status_service) {
-        this.status_service = status_service;
     }
 }
