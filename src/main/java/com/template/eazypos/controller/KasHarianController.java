@@ -55,9 +55,9 @@ public class KasHarianController {
         return ResponseHelper.ok(kasHarianService.edit(shift, id));
     }
     @GetMapping("/export/excel")
-    public void exportToExcel(HttpServletResponse response, @RequestParam(name = "tanggal_awal") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggalAwal,
+    public void exportToExcel( @RequestParam(name = "tanggal_awal") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggalAwal,
                                                 @RequestParam(name = "tanggal_akhir") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggalAkhir) throws IOException {
-        excelKasHarian.generateKasHarianExcel(response, tanggalAwal, tanggalAkhir);
+        excelKasHarian.excelKasHarian( tanggalAwal, tanggalAkhir);
     }
 
 }

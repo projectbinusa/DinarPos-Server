@@ -28,88 +28,149 @@ public class ExcelKasHarian {
     @Autowired
     private SaldoAwalShiftRepository saldoAwalShiftRepository;
 
-    public void generateKasHarianExcel(HttpServletResponse response, Date startDate, Date endDate) throws IOException {
+    public void excelKasHarian(Date tglAwal, Date tglAkhir) throws IOException {
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("Kas Harian");
 
-        // Create cell styles
+        // Cell styles
         CellStyle styleHeader = createHeaderStyle(workbook);
-        CellStyle styleData = createDataStyle(workbook);
+        CellStyle styleColor1 = createColor1Style(workbook);
+        CellStyle styleColor2 = createColor2Style(workbook);
+        CellStyle styleColor3 = createColor3Style(workbook);
+        CellStyle styleColumn = createColumnStyle(workbook);
+        CellStyle styleColumnNumber = createColumnNumberStyle(workbook);
+        CellStyle styleColumnNama = createColumnNamaStyle(workbook);
 
-        // Generate header row
-        Row headerRow = sheet.createRow(0);
-        String[] headers = {
-                "Date", "Invoice Number", "Customers", "Product / Service", "Quantity",
-                "Sales", "Payment", "Receivable", "Sales Return", "Bank"
-        };
-        for (int i = 0; i < headers.length; i++) {
-            Cell cell = headerRow.createCell(i);
-            cell.setCellValue(headers[i]);
-            cell.setCellStyle(styleHeader);
+        // Header
+        Row headerRow1 = sheet.createRow(1);
+        Cell headerCell1 = headerRow1.createCell(0);
+        headerCell1.setCellValue("KAS HARIAN");
+        sheet.addMergedRegion(new CellRangeAddress(1, 1, 0, 12));
+        headerCell1.setCellStyle(styleColor1);
+
+        Row headerRow2 = sheet.createRow(2);
+        createMergedCell(headerRow2, 0, "DATE", styleColor1);
+        createMergedCell(headerRow2, 1, "INVOICE NUMB.", styleColor1);
+        createMergedCell(headerRow2, 2, "CUSTOMERS", styleColor1);
+        createMergedCell(headerRow2, 3, "NAMA BARANG / JASA", styleColor1);
+        createMergedCell(headerRow2, 4, "JML BRG", styleColor1);
+        createMergedCell(headerRow2, 5, "DEBET", styleColor1);
+        createMergedCell(headerRow2, 8, "KREDIT", styleColor1);
+        createMergedCell(headerRow2, 12, "SALDO", styleColor1);
+
+        // Dates
+
+
+        int rowIndex = 5;
+        int endRowSiang = 5;
+        int saldoAwal = 0;
+        int saldoAwalS = 0;
+
+        while (!tglAwal.equals(tglAkhir)) {
+
+            // Shift Pagi
+            createMergedCell(sheet.createRow(rowIndex), 0, "Shift Pagi", styleColumn);
+            createMergedCell(sheet.createRow(rowIndex), 2, "Saldo Awal", styleColor2);
+            createCell(sheet, rowIndex, 5, saldoAwal, styleColumnNumber);
+
+            rowIndex++;
+
+            // Your data retrieval logic goes here, omitted for brevity
+
+            rowIndex++;
+            createCell(sheet, rowIndex, 5, saldoAwal, styleColor3);
+
+            rowIndex++;
+
+            // Shift Siang
+            createMergedCell(sheet.createRow(rowIndex), 0, "Shift Siang", styleColumn);
+            createMergedCell(sheet.createRow(rowIndex), 2, "Saldo Awal", styleColor2);
+            createCell(sheet, rowIndex, 5, saldoAwalS, styleColumnNumber);
+
+            rowIndex++;
+
+            // Your data retrieval logic goes here, omitted for brevity
+
+            rowIndex++;
+            createCell(sheet, rowIndex, 5, saldoAwalS, styleColor3);
+
+            rowIndex++;
+
+
         }
 
-        // Fetch data from repositories
-        List<KasHarian> kasHarianList = kasHarianRepository.findByTimestampBetween(startDate, endDate);
-        List<SaldoAwalShift> saldoAwalShiftList = saldoAwalShiftRepository.findByDateBetween(startDate, endDate);
-
-        // Populate data rows
-        int rowNum = 1;
-        for (KasHarian kasHarian : kasHarianList) {
-            Row row = sheet.createRow(rowNum++);
-            row.createCell(0).setCellValue(kasHarian.getTimestamp().toString()); // Date
-            row.createCell(1).setCellValue(kasHarian.getTransaksi().getNoFaktur()); // Invoice Number
-            row.createCell(2).setCellValue(kasHarian.getTransaksi().getNamaCustomer()); // Customers
-            row.createCell(3).setCellValue(barangTransaksiRepository.findById(kasHarian.getTransaksi().getIdTransaksi()).get().getNamaBarang()); // Product / Service
-            row.createCell(4).setCellValue(barangTransaksiRepository.findById(kasHarian.getTransaksi().getIdTransaksi()).get().getQty()); // Quantity
-            row.createCell(5).setCellValue(kasHarian.getPenjualan()); // Sales
-            row.createCell(6).setCellValue(kasHarian.getPelunasan()); // Payment
-            row.createCell(7).setCellValue(kasHarian.getPiutang()); // Receivable
-            row.createCell(8).setCellValue(kasHarian.getReturn_penjualan()); // Sales Return
-            row.createCell(9).setCellValue(kasHarian.getBank()); // Bank
-            for (SaldoAwalShift saldoAwalShift : saldoAwalShiftList) {
-                Row row1 = sheet.createRow(rowNum++);
-                row1.createCell(1).setCellValue(saldoAwalShift.getShift());
-                row1.createCell(2).setCellValue(saldoAwalShift.getSaldoAwal());
-                row1.createCell(3).setCellValue(saldoAwalShift.getSetorKas());
-                row1.createCell(4).setCellValue(saldoAwalShift.getDate().toString());
-                row1.createCell(5).setCellValue(saldoAwalShift.getId().toString());
-            }
+        // Write the output to a file
+        try (FileOutputStream fileOut = new FileOutputStream("KasHarian.xlsx")) {
+            workbook.write(fileOut);
         }
 
-        // Set column widths (adjust as needed)
-        for (int i = 0; i < headers.length; i++) {
-            sheet.autoSizeColumn(i);
-        }
-
-        // Set response headers
-        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-        String fileName = "KasHarian.xlsx";
-        response.setHeader("Content-Disposition", "attachment; filename=" + fileName);
-
-        // Write workbook to response output stream
-        workbook.write(response.getOutputStream());
-
-        // Close workbook
+        // Closing the workbook
         workbook.close();
+    }
+
+    private void createMergedCell(Row row, int cellIndex, String value, CellStyle style) {
+        Cell cell = row.createCell(cellIndex);
+        cell.setCellValue(value);
+        cell.setCellStyle(style);
+        row.getSheet().addMergedRegion(new CellRangeAddress(row.getRowNum(), row.getRowNum(), cellIndex, cellIndex + 1));
+    }
+
+    private void createCell(Sheet sheet, int rowIndex, int cellIndex, int value, CellStyle style) {
+        Row row = sheet.getRow(rowIndex);
+        if (row == null) {
+            row = sheet.createRow(rowIndex);
+        }
+        Cell cell = row.createCell(cellIndex);
+        cell.setCellValue(value);
+        cell.setCellStyle(style);
     }
 
     private CellStyle createHeaderStyle(Workbook workbook) {
         CellStyle style = workbook.createCellStyle();
-        Font font = workbook.createFont();
-        font.setBold(true);
-        style.setFont(font);
         style.setAlignment(HorizontalAlignment.CENTER);
         style.setVerticalAlignment(VerticalAlignment.CENTER);
         style.setBorderTop(BorderStyle.THIN);
         style.setBorderRight(BorderStyle.THIN);
         style.setBorderBottom(BorderStyle.THIN);
         style.setBorderLeft(BorderStyle.THIN);
-        style.setFillForegroundColor(IndexedColors.GREEN.getIndex());
+        Font font = workbook.createFont();
+        font.setBold(true);
+        font.setFontHeightInPoints((short) 11);
+        font.setColor(IndexedColors.WHITE.getIndex());
+        style.setFont(font);
+        style.setFillForegroundColor(IndexedColors.DARK_GREEN.getIndex());
         style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
         return style;
     }
 
-    private CellStyle createDataStyle(Workbook workbook) {
+    private CellStyle createColor1Style(Workbook workbook) {
+        CellStyle style = workbook.createCellStyle();
+        style.cloneStyleFrom(createHeaderStyle(workbook));
+        return style;
+    }
+
+    private CellStyle createColor2Style(Workbook workbook) {
+        CellStyle style = workbook.createCellStyle();
+        style.setAlignment(HorizontalAlignment.CENTER);
+        style.setVerticalAlignment(VerticalAlignment.CENTER);
+        style.setBorderTop(BorderStyle.THIN);
+        style.setBorderRight(BorderStyle.THIN);
+        style.setBorderBottom(BorderStyle.THIN);
+        style.setBorderLeft(BorderStyle.THIN);
+        style.setFillForegroundColor(IndexedColors.RED.getIndex());
+        style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        return style;
+    }
+
+    private CellStyle createColor3Style(Workbook workbook) {
+        CellStyle style = workbook.createCellStyle();
+        style.cloneStyleFrom(createColor1Style(workbook));
+        style.setFillForegroundColor(IndexedColors.YELLOW.getIndex());
+        style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        return style;
+    }
+
+    private CellStyle createColumnStyle(Workbook workbook) {
         CellStyle style = workbook.createCellStyle();
         style.setAlignment(HorizontalAlignment.CENTER);
         style.setVerticalAlignment(VerticalAlignment.CENTER);
@@ -119,4 +180,19 @@ public class ExcelKasHarian {
         style.setBorderLeft(BorderStyle.THIN);
         return style;
     }
+
+    private CellStyle createColumnNumberStyle(Workbook workbook) {
+        CellStyle style = workbook.createCellStyle();
+        style.cloneStyleFrom(createColumnStyle(workbook));
+        style.setAlignment(HorizontalAlignment.RIGHT);
+        return style;
+    }
+
+    private CellStyle createColumnNamaStyle(Workbook workbook) {
+        CellStyle style = workbook.createCellStyle();
+        style.cloneStyleFrom(createColumnStyle(workbook));
+        style.setAlignment(HorizontalAlignment.LEFT);
+        return style;
+    }
+
 }
