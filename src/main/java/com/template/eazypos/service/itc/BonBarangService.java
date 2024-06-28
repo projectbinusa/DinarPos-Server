@@ -3,6 +3,7 @@ package com.template.eazypos.service.itc;
 import com.template.eazypos.dto.BonBarangDTO;
 import com.template.eazypos.dto.UpdateBonBarangDTO;
 import com.template.eazypos.dto.UpdateDataBonBarangDTO;
+import com.template.eazypos.dto.UpdateStatusBarangBonBarangDTO;
 import com.template.eazypos.exception.NotFoundException;
 import com.template.eazypos.model.Barang;
 import com.template.eazypos.model.BonBarang;
@@ -79,33 +80,25 @@ public class BonBarangService {
     }
 
     // Mengupdate data BonBarang berdasarkan UpdateDataBonBarangDTO
-    @Transactional
     public BonBarang updateBonBarang(UpdateDataBonBarangDTO dataBonBarangDTO, Long id) {
-        BonBarang bonBarang = bonBarangRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Id Not Found"));
-
+        BonBarang bonBarang = bonBarangRepository.findById(id).orElseThrow(() -> new NotFoundException("Id Not Found"));
         bonBarang.setTgl_ambil(dataBonBarangDTO.getTgl_ambil());
-
         if (dataBonBarangDTO.getId_teknisi() != null) {
-            Teknisi teknisi = teknisiRepository.findById(dataBonBarangDTO.getId_teknisi())
-                    .orElseThrow(() -> new NotFoundException("Id Teknisi Not Found"));
-            bonBarang.setTeknisi(teknisi);
+            bonBarang.setTeknisi(teknisiRepository.findById(dataBonBarangDTO.getId_teknisi()).orElseThrow(() -> new NotFoundException("Id Teknisi Not Found")));
         }
-
         if (dataBonBarangDTO.getId_tt() != null) {
-            ServiceBarang serviceBarang = serviceRepository.findByIdTT(dataBonBarangDTO.getId_tt())
-                    .orElseThrow(() -> new NotFoundException("Id Service Not Found"));
-            bonBarang.setServiceBarang(serviceBarang);
+            bonBarang.setServiceBarang(serviceRepository.findByIdTT(dataBonBarangDTO.getId_tt()).orElseThrow(() -> new NotFoundException("Id Service Not Found")));
         }
-
         if (dataBonBarangDTO.getBarcode_brg() != null) {
-            Barang barang = barangRepository.findByBarcode(dataBonBarangDTO.getBarcode_brg());
-            if (barang == null) {
-                throw new NotFoundException("Barcode Barang Not Found");
-            }
-            bonBarang.setBarang(barang);
+            bonBarang.setBarang(barangRepository.findByBarcode(dataBonBarangDTO.getBarcode_brg()));
         }
+        return bonBarangRepository.save(bonBarang);
+    }
 
+    @Transactional
+    public BonBarang updateStatusBarang(UpdateStatusBarangBonBarangDTO statusBarangBonBarangDTO, Long id) {
+        BonBarang bonBarang = bonBarangRepository.findById(id).orElseThrow(() -> new NotFoundException("Id Not Found"));
+        bonBarang.setStatus_barang(statusBarangBonBarangDTO.getStatus_barang());
         return bonBarangRepository.save(bonBarang);
     }
 }

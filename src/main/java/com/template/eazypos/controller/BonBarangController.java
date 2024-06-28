@@ -3,6 +3,7 @@ package com.template.eazypos.controller;
 import com.template.eazypos.dto.BonBarangDTO;
 import com.template.eazypos.dto.UpdateBonBarangDTO;
 import com.template.eazypos.dto.UpdateDataBonBarangDTO;
+import com.template.eazypos.dto.UpdateStatusBarangBonBarangDTO;
 import com.template.eazypos.exception.CommonResponse;
 import com.template.eazypos.exception.ResponseHelper;
 import com.template.eazypos.model.BonBarang;
@@ -52,10 +53,13 @@ public class BonBarangController {
     // Menghapus Data Bon Barang Berdasarkan ID
     @PutMapping("/update/{id}")
     public CommonResponse<BonBarang> put(@PathVariable("id") Long id, @RequestBody UpdateDataBonBarangDTO dataBonBarangDTO) {
-        if (dataBonBarangDTO == null) {
-            throw new IllegalArgumentException("Update data cannot be null");
-        }
-        BonBarang updatedBonBarang = bonBarangService.updateBonBarang(dataBonBarangDTO, id);
+        return ResponseHelper.ok( bonBarangService.updateBonBarang(dataBonBarangDTO , id));
+    }
+
+    @PutMapping("update_status_barang/{id}")
+    public CommonResponse<BonBarang> put(@PathVariable("id") Long id, @RequestBody UpdateStatusBarangBonBarangDTO statusBarangBonBarangDTO) {
+        BonBarang updatedBonBarang = bonBarangService.updateStatusBarang(statusBarangBonBarangDTO, id);
         return ResponseHelper.ok(updatedBonBarang);
     }
+
 }
