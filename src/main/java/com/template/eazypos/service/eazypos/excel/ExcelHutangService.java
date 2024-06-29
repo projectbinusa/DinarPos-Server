@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -270,5 +271,106 @@ public class ExcelHutangService {
         response.setHeader("Content-Disposition", "attachment; filename=RekapHutang.xlsx");
         workbook.write(response.getOutputStream());
         workbook.close();
+    }
+    public void exportHistoryHutang(HttpServletResponse response, Date startDate, Date endDate) throws IOException {
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet("HistoryHutang");
+
+        // Create styles
+        CellStyle headerStyle = workbook.createCellStyle();
+        Font headerFont = workbook.createFont();
+        headerFont.setBold(true);
+        headerFont.setColor(IndexedColors.WHITE.getIndex());
+        headerStyle.setFillForegroundColor(IndexedColors.GREEN.getIndex());
+        headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        headerStyle.setAlignment(HorizontalAlignment.CENTER);
+        headerStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+        headerStyle.setFont(headerFont);
+
+        CellStyle cellStyle = workbook.createCellStyle();
+        cellStyle.setBorderTop(BorderStyle.THIN);
+        cellStyle.setBorderBottom(BorderStyle.THIN);
+        cellStyle.setBorderLeft(BorderStyle.THIN);
+        cellStyle.setBorderRight(BorderStyle.THIN);
+
+        CellStyle numberStyle = workbook.createCellStyle();
+        numberStyle.setDataFormat(workbook.createDataFormat().getFormat("#,##0.00"));
+        numberStyle.setBorderTop(BorderStyle.THIN);
+        numberStyle.setBorderBottom(BorderStyle.THIN);
+        numberStyle.setBorderLeft(BorderStyle.THIN);
+        numberStyle.setBorderRight(BorderStyle.THIN);
+
+        // Create header row
+        Row headerRow = sheet.createRow(2);
+        String[] headers = {"TGL INVOICE", "NAMA SUPLIER", "NO INVOICE", "HUTANG (Rp)", "PEMBAYARAN 1 (Rp)", "PEMBAYARAN 2 (Rp)", "PEMBAYARAN 3 (Rp)", "PEMBAYARAN 4 (Rp)", "SISA HUTANG (Rp)", "TGL PEMBAYARAN TERAKHIR", "KETERANGAN"};
+        for (int i = 0; i < headers.length; i++) {
+            Cell cell = headerRow.createCell(i);
+            cell.setCellValue(headers[i]);
+            cell.setCellStyle(headerStyle);
+        }
+
+        // Create data rows
+        int rowNum = 3;
+        List<TransaksiBeli> hutangDataList = transaksiBeliRepository.findHistoryHutang(startDate, endDate);
+        double totalHutang = 0;
+
+        for (TransaksiBeli data : hutangDataList) {
+            Row row = sheet.createRow(rowNum++);
+            List<Hutang> hutangs = hutangRepository.findByidTransaksiBeli(data.getIdTransaksiBeli());
+
+            double pelunasan1 = hutangs.size() > 0 ? Double.parseDouble(hutangs.get(0).getPelunasan()) : 0;
+            double pelunasan2 = hutangs.size() > 1 ? Double.parseDouble(hutangs.get(1).getPelunasan()) : 0;
+            double pelunasan3 = hutangs.size() > 2 ? Double.parseDouble(hutangs.get(2).getPelunasan()) : 0;
+            double pelunasan4 = hutangs.size() > 3 ? Double.parseDouble(hutangs.get(3).getPelunasan()) : 0;
+
+            double sisaHutang = data.getNominalHutang() - (pelunasan1 + pelunasan2 + pelunasan3 + pelunasan4);
+            totalHutang += data.getNominalHutang();
+
+            Optional<Date> tglPelunasanTerakhir = hutangRepository.findLatestPelunasanDateByIdTransaksiBeli(data.getIdTransaksiBeli());
+
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+            createCell(row, 0, dateFormat.format(data.getTanggal()), cellStyle);
+            createCell(row, 1, data.getNamaSuplier(), cellStyle);
+            createCell(row, 2, data.getNoFaktur(), cellStyle);
+            createCell(row, 3, data.getNominalHutang(), numberStyle);
+            createCell(row, 4, pelunasan1, numberStyle);
+            createCell(row, 5, pelunasan2, numberStyle);
+            createCell(row, 6, pelunasan3, numberStyle);
+            createCell(row, 7, pelunasan4, numberStyle);
+            createCell(row, 8, sisaHutang, numberStyle);
+            createCell(row, 9, tglPelunasanTerakhir.map(dateFormat::format).orElse("-"), cellStyle);
+            createCell(row, 10, data.getKeterangan(), cellStyle);
+        }
+
+        // Total row
+        Row totalRow = sheet.createRow(rowNum);
+        createCell(totalRow, 2, "Total", headerStyle);
+        createCell(totalRow, 3, totalHutang, numberStyle);
+
+        // Auto-size columns
+        for (int i = 0; i < headers.length; i++) {
+            sheet.autoSizeColumn(i);
+        }
+
+        // Set response headers
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        response.setHeader("Content-Disposition", "attachment; filename=\"HistoryHutang.xlsx\"");
+
+        // Write to response stream
+        workbook.write(response.getOutputStream());
+        workbook.close();
+    }
+
+    private void createCell(Row row, int column, Object value, CellStyle style) {
+        Cell cell = row.createCell(column);
+        if (value instanceof String) {
+            cell.setCellValue((String) value);
+        } else if (value instanceof Number) {
+            cell.setCellValue(((Number) value).doubleValue());
+        } else if (value instanceof Date) {
+            cell.setCellValue((Date) value);
+        }
+        cell.setCellStyle(style);
     }
 }

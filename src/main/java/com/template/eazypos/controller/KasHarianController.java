@@ -29,7 +29,7 @@ public class KasHarianController {
     @Autowired
     private ExcelKasHarian excelKasHarian;
 
-    @PostMapping("/add")
+    @PostMapping("/saldo_shift_awal/add")
     public CommonResponse<SaldoAwalShift> add(@RequestBody SaldoAwalShift shift) {
         return ResponseHelper.ok(kasHarianService.add(shift));
     }
