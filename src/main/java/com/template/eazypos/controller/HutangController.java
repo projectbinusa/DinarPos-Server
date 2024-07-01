@@ -59,4 +59,10 @@ public class HutangController {
     public void exportExcelRekapHutang(HttpServletResponse response) throws IOException {
         excelHutangService.excelRekapHutang(response);
     }
+    @GetMapping("/export/excel/history-hutang")
+    public void exportHistoryHutang(@RequestParam("tglAwal") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tglAwal,
+                                    @RequestParam("tglAkhir") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tglAkhir,
+                                    HttpServletResponse response) throws IOException {
+        excelHutangService.exportHistoryHutang(response, tglAwal, tglAkhir);
+    }
 }

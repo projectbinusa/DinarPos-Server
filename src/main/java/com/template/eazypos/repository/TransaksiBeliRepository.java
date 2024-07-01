@@ -37,6 +37,8 @@ public interface TransaksiBeliRepository extends JpaRepository<TransaksiBeli , L
 
     @Query(value = "SELECT * FROM tabel_transaksi_beli WHERE status = :status AND MONTH(tanggal) = :bulan AND YEAR(tanggal) = :tahun AND del_flag = 1  ", nativeQuery = true)
     List<TransaksiBeli> findTransaksiByMonthAndYear(@Param("bulan") int bulan,@Param("tahun") int tahun , @Param("status") String status);
+    @Query(value = "SELECT * FROM tabel_transaksi_beli WHERE nominal_hutang != 0 AND del_flag = 1 AND tanggal BETWEEN :tgl_awal AND :tgl_akhir" , nativeQuery = true)
+    List<TransaksiBeli> findHistoryHutang(@Param("tgl_awal") Date tgl_awal , @Param("tgl_akhir") Date tgl_akhir);
 
 
 }

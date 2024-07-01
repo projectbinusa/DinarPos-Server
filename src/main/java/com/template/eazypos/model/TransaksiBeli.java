@@ -40,6 +40,9 @@ public class TransaksiBeli extends DateConfig {
     @Column(name = "diskon", nullable = false)
     private int diskon;
 
+    @Column(name = "nominal_hutang")
+    private int nominalHutang;
+
     @Column(name = "total_belanja", nullable = false, length = 50)
     private String totalBelanja;
 
@@ -214,5 +217,13 @@ public class TransaksiBeli extends DateConfig {
 
     public void setDelFlag(int delFlag) {
         this.delFlag = delFlag;
+    }
+
+    public int getNominalHutang() {
+        return nominalHutang;
+    }
+
+    public void setNominalHutang(int nominalHutang) {
+        this.nominalHutang = nominalHutang;
     }
 }
