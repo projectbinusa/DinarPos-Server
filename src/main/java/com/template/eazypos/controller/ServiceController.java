@@ -413,4 +413,8 @@ public class ServiceController {
         return dataService.totalServiceNotCpu(months);
     }
 
+    @GetMapping("/lebih-dari-seminggu")
+    public CommonResponse<List<ServiceBarang>> getAllServicesOlderThanWeekAndTaken() {
+        return ResponseHelper.ok(dataService.getServicesOlderThanWeekAndNotTaken());
+    }
 }

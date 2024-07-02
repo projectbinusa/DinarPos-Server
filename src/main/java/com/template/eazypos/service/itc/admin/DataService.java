@@ -896,5 +896,8 @@ public class DataService {
         return serviceRepository.totalServiceSuccessCpu(months);
     }
 
+    public List<ServiceBarang> getServicesOlderThanWeekAndNotTaken() {
+        return serviceRepository.findServicesOverWeekAndNotTaken();
+    }
 }
 

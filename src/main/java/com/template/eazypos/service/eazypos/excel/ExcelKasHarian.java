@@ -49,14 +49,14 @@ public class ExcelKasHarian {
         headerCell1.setCellStyle(styleColor1);
 
         Row headerRow2 = sheet.createRow(2);
-        createMergedCell(headerRow2, 0, "DATE", styleColor1);
-        createMergedCell(headerRow2, 1, "INVOICE NUMB.", styleColor1);
-        createMergedCell(headerRow2, 2, "CUSTOMERS", styleColor1);
-        createMergedCell(headerRow2, 3, "NAMA BARANG / JASA", styleColor1);
-        createMergedCell(headerRow2, 4, "JML BRG", styleColor1);
-        createMergedCell(headerRow2, 5, "DEBET", styleColor1);
-        createMergedCell(headerRow2, 8, "KREDIT", styleColor1);
-        createMergedCell(headerRow2, 12, "SALDO", styleColor1);
+        createMergedCell(headerRow2, 0, "DATE", styleColor1); // A3:A3 (no merge needed)
+        createMergedCell(headerRow2, 1, "INVOICE NUMB.", styleColor1); // B3:B3 (no merge needed)
+        createMergedCell(headerRow2, 2, "CUSTOMERS", styleColor1); // C3:C3 (no merge needed)
+        createMergedCell(headerRow2, 3, "NAMA BARANG / JASA", styleColor1); // D3:D3 (no merge needed)
+        createMergedCell(headerRow2, 4, "JML BRG", styleColor1); // E3:E3 (no merge needed)
+        createMergedCell(headerRow2, 5, "DEBET", styleColor1); // F3:H3 (merged region F3:G3 is adjusted)
+        createMergedCell(headerRow2, 8, "KREDIT", styleColor1); // I3:K3
+        createMergedCell(headerRow2, 12, "SALDO", styleColor1); // M3:N3
 
         // Dates
 
@@ -194,5 +194,4 @@ public class ExcelKasHarian {
         style.setAlignment(HorizontalAlignment.LEFT);
         return style;
     }
-
 }
