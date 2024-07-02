@@ -228,5 +228,7 @@ public interface ServiceRepository extends JpaRepository<ServiceBarang, Long> {
             "ELSE 5 END DESC")
     List<Object[]> findServiceBarang();
 
+    @Query(value = "SELECT * FROM service WHERE taken = 'N' AND tgl_masuk < DATE_SUB(NOW(), INTERVAL 1 WEEK)", nativeQuery = true)
+    List<ServiceBarang> findServicesOverWeekAndNotTaken();
 }
 
