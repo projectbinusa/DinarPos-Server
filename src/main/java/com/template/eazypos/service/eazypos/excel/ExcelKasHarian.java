@@ -11,6 +11,10 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import javax.servlet.http.HttpServletResponse;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -28,7 +32,9 @@ public class ExcelKasHarian {
     @Autowired
     private SaldoAwalShiftRepository saldoAwalShiftRepository;
 
-    public void excelKasHarian(Date tglAwal, Date tglAkhir) throws IOException {
+    private static final Logger logger = LoggerFactory.getLogger(ExcelKasHarian.class);
+
+    public void excelKasHarian(Date tglAwal, Date tglAkhir, HttpServletResponse response) throws IOException {
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("Kas Harian");
 
@@ -49,28 +55,56 @@ public class ExcelKasHarian {
         headerCell1.setCellStyle(styleColor1);
 
         Row headerRow2 = sheet.createRow(2);
-        createMergedCell(headerRow2, 0, "DATE", styleColor1); // A3:A3 (no merge needed)
-        createMergedCell(headerRow2, 1, "INVOICE NUMB.", styleColor1); // B3:B3 (no merge needed)
-        createMergedCell(headerRow2, 2, "CUSTOMERS", styleColor1); // C3:C3 (no merge needed)
-        createMergedCell(headerRow2, 3, "NAMA BARANG / JASA", styleColor1); // D3:D3 (no merge needed)
-        createMergedCell(headerRow2, 4, "JML BRG", styleColor1); // E3:E3 (no merge needed)
-        createMergedCell(headerRow2, 5, "DEBET", styleColor1); // F3:H3 (merged region F3:G3 is adjusted)
-        createMergedCell(headerRow2, 8, "KREDIT", styleColor1); // I3:K3
-        createMergedCell(headerRow2, 12, "SALDO", styleColor1); // M3:N3
+        createMergedCell(headerRow2, 0, "DATE", styleColor1, 0, 0);
+        createMergedCell(headerRow2, 1, "INVOICE NUMB.", styleColor1, 1, 1);
+        createMergedCell(headerRow2, 2, "CUSTOMERS", styleColor1, 2, 2);
+        createMergedCell(headerRow2, 3, "NAMA BARANG / JASA", styleColor1, 3, 3);
+        createMergedCell(headerRow2, 4, "JML BRG", styleColor1, 4, 4);
+        createMergedCell(headerRow2, 5, "DEBET", styleColor1, 5, 7);
+        createMergedCell(headerRow2, 8, "KREDIT", styleColor1, 8, 11);
+        createMergedCell(headerRow2, 12, "SALDO", styleColor1, 12, 12);
+
+        Row headerRow3 = sheet.createRow(3);
+        createMergedCell(headerRow3, 5, "SALDO AWAL", styleColor1, 5, 5);
+        createMergedCell(headerRow3, 6, "PENJUALAN", styleColor1, 6, 6);
+        createMergedCell(headerRow3, 7, "PELUNASAN", styleColor1, 7, 7);
+        createMergedCell(headerRow3, 8, "PIUTANG", styleColor1, 8, 8);
+        createMergedCell(headerRow3, 9, "RETURN PENJUALAN", styleColor1, 9, 9);
+        createMergedCell(headerRow3, 10, "BANK", styleColor1, 10, 10);
+        createMergedCell(headerRow3, 11, "SETOR", styleColor1, 11, 11);
+
+        // Mengatur lebar kolom untuk kolom
+        sheet.setColumnWidth(0, 15 * 256);
+        sheet.setColumnWidth(1, 25 * 256);
+        sheet.setColumnWidth(2, 25 * 256);
+        sheet.setColumnWidth(3, 25 * 256);
+        sheet.setColumnWidth(4, 15 * 256);
+        sheet.setColumnWidth(5, 25 * 256);
+        sheet.setColumnWidth(6, 25 * 256);
+        sheet.setColumnWidth(7, 25 * 256);
+        sheet.setColumnWidth(8, 25 * 256);
+        sheet.setColumnWidth(9, 25 * 256);
+        sheet.setColumnWidth(10, 25 * 256);
+        sheet.setColumnWidth(10, 25 * 256);
+        sheet.setColumnWidth(11, 25 * 256);
+        sheet.setColumnWidth(12, 25 * 256);
+
+        // Convert Date to LocalDate
+        LocalDate startDate = tglAwal.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate endDate = tglAkhir.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
         // Dates
-
-
         int rowIndex = 5;
-        int endRowSiang = 5;
         int saldoAwal = 0;
         int saldoAwalS = 0;
 
-        while (!tglAwal.equals(tglAkhir)) {
+        while (!startDate.isAfter(endDate)) {
+            // Logging tanggal saat ini
+            logger.info("Memproses data untuk tanggal: {}", startDate);
 
             // Shift Pagi
-            createMergedCell(sheet.createRow(rowIndex), 0, "Shift Pagi", styleColumn);
-            createMergedCell(sheet.createRow(rowIndex), 2, "Saldo Awal", styleColor2);
+            createMergedCell(sheet.createRow(rowIndex), 0, "Shift Pagi", styleColumn, 0, 1);
+            createMergedCell(sheet.createRow(rowIndex), 2, "Saldo Awal", styleColor2, 2, 3);
             createCell(sheet, rowIndex, 5, saldoAwal, styleColumnNumber);
 
             rowIndex++;
@@ -83,8 +117,8 @@ public class ExcelKasHarian {
             rowIndex++;
 
             // Shift Siang
-            createMergedCell(sheet.createRow(rowIndex), 0, "Shift Siang", styleColumn);
-            createMergedCell(sheet.createRow(rowIndex), 2, "Saldo Awal", styleColor2);
+            createMergedCell(sheet.createRow(rowIndex), 0, "Shift Siang", styleColumn, 0, 1);
+            createMergedCell(sheet.createRow(rowIndex), 2, "Saldo Awal", styleColor2, 2, 3);
             createCell(sheet, rowIndex, 5, saldoAwalS, styleColumnNumber);
 
             rowIndex++;
@@ -95,24 +129,28 @@ public class ExcelKasHarian {
             createCell(sheet, rowIndex, 5, saldoAwalS, styleColor3);
 
             rowIndex++;
-
-
+            startDate = startDate.plusDays(1);
         }
 
-        // Write the output to a file
-        try (FileOutputStream fileOut = new FileOutputStream("KasHarian.xlsx")) {
-            workbook.write(fileOut);
-        }
+        // Set response properties
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        response.setHeader("Content-Disposition", "attachment; filename=KasHarian2.xlsx");
+
+        // Write the output to the response output stream
+        workbook.write(response.getOutputStream());
 
         // Closing the workbook
         workbook.close();
+        logger.info("Selesai membuat laporan kas harian");
     }
 
-    private void createMergedCell(Row row, int cellIndex, String value, CellStyle style) {
+    private void createMergedCell(Row row, int cellIndex, String value, CellStyle style, int startCol, int endCol) {
         Cell cell = row.createCell(cellIndex);
         cell.setCellValue(value);
         cell.setCellStyle(style);
-        row.getSheet().addMergedRegion(new CellRangeAddress(row.getRowNum(), row.getRowNum(), cellIndex, cellIndex + 1));
+        if (startCol != endCol) {
+            row.getSheet().addMergedRegion(new CellRangeAddress(row.getRowNum(), row.getRowNum(), startCol, endCol));
+        }
     }
 
     private void createCell(Sheet sheet, int rowIndex, int cellIndex, int value, CellStyle style) {
