@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 
-public interface TeknisiRepository extends JpaRepository<Teknisi ,Long> {
+public interface TeknisiRepository extends JpaRepository<Teknisi, Long> {
     @Query(value = "SELECT * FROM teknisi WHERE nama = :username ", nativeQuery = true)
     Optional<Teknisi> findByNama(String username);
 

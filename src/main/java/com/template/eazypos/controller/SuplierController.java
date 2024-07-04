@@ -89,8 +89,8 @@ public class SuplierController {
 
     // Endpoint untuk menghapus data supplier berdasarkan ID
     @DeleteMapping("/{id}")
-    public CommonResponse<?> delete(@PathVariable("id")  Long id ) {
-        return ResponseHelper.ok( service.delete(id));
+    public CommonResponse<?> delete(@PathVariable("id") Long id) {
+        return ResponseHelper.ok(service.deleteSupplier(id));
     }
 
     // Endpoint untuk mengunggah file excel data supplier

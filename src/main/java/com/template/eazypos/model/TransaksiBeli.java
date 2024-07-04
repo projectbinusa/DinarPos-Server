@@ -41,7 +41,7 @@ public class TransaksiBeli extends DateConfig {
     private int diskon;
 
     @Column(name = "nominal_hutang")
-    private int nominalHutang;
+    private Integer nominalHutang;
 
     @Column(name = "total_belanja", nullable = false, length = 50)
     private String totalBelanja;
@@ -219,11 +219,11 @@ public class TransaksiBeli extends DateConfig {
         this.delFlag = delFlag;
     }
 
-    public int getNominalHutang() {
+    public Integer getNominalHutang() {
         return nominalHutang;
     }
 
-    public void setNominalHutang(int nominalHutang) {
+    public void setNominalHutang(Integer nominalHutang) {
         this.nominalHutang = nominalHutang;
     }
 }

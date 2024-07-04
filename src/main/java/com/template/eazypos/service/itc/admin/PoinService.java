@@ -22,9 +22,9 @@ import java.util.stream.Collectors;
 @Service
 public class PoinService {
     @Autowired
-    private PoinHistoryRepository poinHistoryRepository;
     private TeknisiRepository teknisiRepository;
-
+    @Autowired
+    private PoinHistoryRepository poinHistoryRepository;
     @Autowired
     private PoinRepository poinRepository;
 
@@ -107,8 +107,7 @@ public class PoinService {
     @Transactional
     public PoinHistory add(PoinHistoryDTO poinHistoryDTO) {
         // Mencari teknisi berdasarkan id_teknisi
-        Teknisi teknisi = teknisiRepository.findById(poinHistoryDTO.getId_teknisi())
-                .orElseThrow(() -> new RuntimeException("Teknisi not found"));
+        Teknisi teknisi = teknisiRepository.findById(poinHistoryDTO.getId_teknisi()).orElseThrow(() -> new RuntimeException("Teknisi not found"));
 
         // Membuat instance PoinHistory baru dan mengisi properti dari DTO
         PoinHistory poinHistory = new PoinHistory();

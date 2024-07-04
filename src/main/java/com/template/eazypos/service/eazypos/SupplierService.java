@@ -1,7 +1,9 @@
 package com.template.eazypos.service.eazypos;
 
 import com.template.eazypos.exception.BadRequestException;
+import com.template.eazypos.exception.CommonResponse;
 import com.template.eazypos.exception.NotFoundException;
+import com.template.eazypos.exception.ResponseHelper;
 import com.template.eazypos.model.Suplier;
 import com.template.eazypos.repository.SuplierRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,15 +53,9 @@ public class SupplierService {
     }
 
     // Menghapus supplier berdasarkan ID
-    public Map<String, Boolean> delete(Long id ) {
-        try {
-            suplierRepository.deleteById(id);
-            Map<String, Boolean> res = new HashMap<>();
-            res.put("Deleted", Boolean.TRUE);
-            return res;
-        } catch (Exception e) {
-            return null;
-        }
+    public CommonResponse<String> deleteSupplier(Long id) {
+        suplierRepository.deleteById(id);
+        return ResponseHelper.ok("Supplier deleted successfully");
     }
 
     // Mengambil daftar supplier dengan paginasi dan sorting

@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface SuplierRepository extends JpaRepository<Suplier , Long> {
+public interface SuplierRepository extends JpaRepository<Suplier, Long> {
     @Query(value = "SELECT * FROM tabel_suplier WHERE del_flag = 1  ", nativeQuery = true)
     List<Suplier> findAllSuplier();
 

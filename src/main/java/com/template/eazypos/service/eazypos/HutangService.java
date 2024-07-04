@@ -22,19 +22,21 @@ public class HutangService {
 
     // Melakukan pelunasan hutang untuk transaksi pembelian
     public Hutang pelunasan(PelunasanDTO pelunasanDTO) {
-        TransaksiBeli transaksiBeli = transaksiBeliRepository.findById(pelunasanDTO.getId_transaksi()).orElseThrow((() -> new NotFoundException("Id Not Found")));
-     int kekurangan = Integer.parseInt(transaksiBeli.getKekurangan());
-     int pelunasan = Integer.parseInt(pelunasanDTO.getPelunasan());
-     int sisaKekurangan = kekurangan - pelunasan;
-     transaksiBeli.setKekurangan(String.valueOf(sisaKekurangan));
-     transaksiBeliRepository.save(transaksiBeli);
+        TransaksiBeli transaksiBeli = transaksiBeliRepository.findById(pelunasanDTO.getId_transaksi()).orElseThrow(() -> new NotFoundException("Id Not Found"));
+        int kekurangan = Integer.parseInt(transaksiBeli.getKekurangan());
+        int pelunasan = Integer.parseInt(pelunasanDTO.getPelunasan());
+        int sisaKekurangan = kekurangan - pelunasan;
 
-     Hutang hutang = new Hutang();
-     hutang.setPelunasan(pelunasanDTO.getPelunasan());
-     hutang.setHutang(String.valueOf(sisaKekurangan));
-     hutang.setTransaksiBeli(transaksiBeliRepository.findById(transaksiBeli.getIdTransaksiBeli()).get());
-     hutang.setDate(new Date());
-       return hutangRepository.save(hutang);
+        transaksiBeli.setKekurangan(String.valueOf(sisaKekurangan));
+        transaksiBeliRepository.save(transaksiBeli);
+
+        Hutang hutang = new Hutang();
+        hutang.setPelunasan(pelunasanDTO.getPelunasan());
+        hutang.setHutang(String.valueOf(sisaKekurangan));
+        hutang.setTransaksiBeli(transaksiBeli);
+        hutang.setDate(new Date());
+
+        return hutangRepository.save(hutang);
     }
 
     // Mendapatkan semua transaksi pembelian yang memiliki hutang

@@ -34,9 +34,9 @@ public class HutangController {
     }
 
     // Melakukan Pelunasan Hutang
-    @PostMapping()
-    public CommonResponse<Hutang> pelunasan(@RequestBody PelunasanDTO hutang) {
-        return ResponseHelper.ok(hutangService.pelunasan(hutang));
+    @PostMapping("/pelunasan")
+    public CommonResponse<Hutang> pelunasan(@RequestBody PelunasanDTO pelunasanDTO) {
+        return ResponseHelper.ok(hutangService.pelunasan(pelunasanDTO));
     }
 
     // Mendapatkan Semua Transaksi Beli
