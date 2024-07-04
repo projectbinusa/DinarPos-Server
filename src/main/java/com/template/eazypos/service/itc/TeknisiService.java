@@ -2,7 +2,9 @@ package com.template.eazypos.service.itc;
 
 import com.template.eazypos.dto.TeknisiDTO;
 import com.template.eazypos.exception.BadRequestException;
+import com.template.eazypos.exception.CommonResponse;
 import com.template.eazypos.exception.NotFoundException;
+import com.template.eazypos.exception.ResponseHelper;
 import com.template.eazypos.model.*;
 import com.template.eazypos.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -31,6 +34,9 @@ public class TeknisiService {
 
     @Autowired
     private StatusRepository statusRepository;
+
+    @Autowired
+    private BonBarangRepository bonBarangRepository;
 
     // Menambahkan data Teknisi baru berdasarkan TeknisiDTO
     public Teknisi add(TeknisiDTO teknisiDTO){
@@ -102,15 +108,11 @@ public class TeknisiService {
     }
 
     // Menghapus data Teknisi berdasarkan ID
-    public Map<String, Boolean> delete(Long id ) {
-        try {
-            teknisiRepository.deleteById(id);
-            Map<String, Boolean> res = new HashMap<>();
-            res.put("Deleted", Boolean.TRUE);
-            return res;
-        } catch (Exception e) {
-            return null;
-        }
+    @Transactional
+    public CommonResponse<String> deleteTeknisi(Long id) {
+        bonBarangRepository.deleteByTeknisiId(id);
+        teknisiRepository.deleteById(id);
+        return ResponseHelper.ok("Teknisi deleted successfully");
     }
 
     //  Mengambil halaman data Teknisi dengan pagination, sorting, dan pencarian

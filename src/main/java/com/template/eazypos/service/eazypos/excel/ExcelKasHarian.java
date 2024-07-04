@@ -134,7 +134,7 @@ public class ExcelKasHarian {
 
         // Set response properties
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-        response.setHeader("Content-Disposition", "attachment; filename=KasHarian2.xlsx");
+        response.setHeader("Content-Disposition", "attachment; filename=KasHarian.xlsx");
 
         // Write the output to the response output stream
         workbook.write(response.getOutputStream());

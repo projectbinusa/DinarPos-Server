@@ -54,8 +54,8 @@ public class TeknisiController {
 
     // Endpoint untuk menghapus data teknisi berdasarkan ID
     @DeleteMapping("/{id}")
-    public CommonResponse<?> delete(@PathVariable("id")  Long id ) {
-        return ResponseHelper.ok( teknisiService.delete(id));
+    public CommonResponse<?> delete(@PathVariable("id") Long id) {
+        return teknisiService.deleteTeknisi(id);
     }
 
     // Endpoint untuk mendapatkan data teknisi dengan pagination
