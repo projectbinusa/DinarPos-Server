@@ -5,6 +5,7 @@ import com.template.eazypos.model.SaldoAwalShift;
 import com.template.eazypos.repository.BarangTransaksiRepository;
 import com.template.eazypos.repository.KasHarianRepository;
 import com.template.eazypos.repository.SaldoAwalShiftRepository;
+import com.template.eazypos.service.eazypos.KasHarianService;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -23,14 +24,9 @@ import java.util.*;
 
 @Service
 public class ExcelKasHarian {
-    @Autowired
-    private KasHarianRepository kasHarianRepository;
 
     @Autowired
-    private BarangTransaksiRepository barangTransaksiRepository;
-
-    @Autowired
-    private SaldoAwalShiftRepository saldoAwalShiftRepository;
+    private KasHarianService kasHarianService;
 
     private static final Logger logger = LoggerFactory.getLogger(ExcelKasHarian.class);
 
@@ -73,7 +69,7 @@ public class ExcelKasHarian {
         createMergedCell(headerRow3, 10, "BANK", styleColor1, 10, 10);
         createMergedCell(headerRow3, 11, "SETOR", styleColor1, 11, 11);
 
-        // Mengatur lebar kolom untuk kolom
+        // Set column widths
         sheet.setColumnWidth(0, 15 * 256);
         sheet.setColumnWidth(1, 25 * 256);
         sheet.setColumnWidth(2, 25 * 256);
@@ -85,7 +81,6 @@ public class ExcelKasHarian {
         sheet.setColumnWidth(8, 25 * 256);
         sheet.setColumnWidth(9, 25 * 256);
         sheet.setColumnWidth(10, 25 * 256);
-        sheet.setColumnWidth(10, 25 * 256);
         sheet.setColumnWidth(11, 25 * 256);
         sheet.setColumnWidth(12, 25 * 256);
 
@@ -95,38 +90,88 @@ public class ExcelKasHarian {
 
         // Dates
         int rowIndex = 5;
-        int saldoAwal = 0;
-        int saldoAwalS = 0;
 
         while (!startDate.isAfter(endDate)) {
-            // Logging tanggal saat ini
-            logger.info("Memproses data untuk tanggal: {}", startDate);
+            // Logging the current date
+            logger.info("Processing data for date: {}", startDate);
 
-            // Shift Pagi
+            Date currentDate = Date.from(startDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+
+            // Fetch data for Shift Pagi
+            SaldoAwalShift saldoAwalShiftPagi = kasHarianService.findByDateAndShift(currentDate, "Pagi");
+            List<KasHarian> kasHarianListPagi = kasHarianService.findByDate(currentDate);
+
+            int saldoAwal = safeParseInt(saldoAwalShiftPagi != null ? saldoAwalShiftPagi.getSaldoAwal() : null, 0);
+            int penjualan = 0;
+            int pelunasan = 0;
+            int piutang = 0;
+            int returnPenjualan = 0;
+            int bank = 0;
+
+            for (KasHarian kasHarian : kasHarianListPagi) {
+                penjualan += safeParseInt(kasHarian.getPenjualan(), 0);
+                pelunasan += safeParseInt(kasHarian.getPelunasan(), 0);
+                piutang += safeParseInt(kasHarian.getPiutang(), 0);
+                returnPenjualan += safeParseInt(kasHarian.getReturn_penjualan(), 0);
+                bank += safeParseInt(kasHarian.getBank(), 0);
+            }
+
+            // Create row for Shift Pagi
             createMergedCell(sheet.createRow(rowIndex), 0, "Shift Pagi", styleColumn, 0, 1);
             createMergedCell(sheet.createRow(rowIndex), 2, "Saldo Awal", styleColor2, 2, 3);
-            createCell(sheet, rowIndex, 5, saldoAwal, styleColumnNumber);
+            createCell(sheet.createRow(rowIndex), 5, saldoAwal, styleColumnNumber);
 
             rowIndex++;
 
-            // Your data retrieval logic goes here, omitted for brevity
+            // Populate cells for Shift Pagi
+            Row pagiRow = sheet.createRow(rowIndex);
+            createCell(pagiRow, 6, penjualan, styleColumnNumber);
+            createCell(pagiRow, 7, pelunasan, styleColumnNumber);
+            createCell(pagiRow, 8, piutang, styleColumnNumber);
+            createCell(pagiRow, 9, returnPenjualan, styleColumnNumber);
+            createCell(pagiRow, 10, bank, styleColumnNumber);
 
             rowIndex++;
-            createCell(sheet, rowIndex, 5, saldoAwal, styleColor3);
+            createCell(sheet.createRow(rowIndex), 5, saldoAwal, styleColor3);
 
             rowIndex++;
 
-            // Shift Siang
+            // Fetch data for Shift Siang
+            SaldoAwalShift saldoAwalShiftSiang = kasHarianService.findByDateAndShift(currentDate, "Siang");
+            List<KasHarian> kasHarianListSiang = kasHarianService.findByDate(currentDate);
+
+            int saldoAwalS = safeParseInt(saldoAwalShiftSiang != null ? saldoAwalShiftSiang.getSaldoAwal() : null, 0);
+            penjualan = 0;
+            pelunasan = 0;
+            piutang = 0;
+            returnPenjualan = 0;
+            bank = 0;
+
+            for (KasHarian kasHarian : kasHarianListSiang) {
+                penjualan += safeParseInt(kasHarian.getPenjualan(), 0);
+                pelunasan += safeParseInt(kasHarian.getPelunasan(), 0);
+                piutang += safeParseInt(kasHarian.getPiutang(), 0);
+                returnPenjualan += safeParseInt(kasHarian.getReturn_penjualan(), 0);
+                bank += safeParseInt(kasHarian.getBank(), 0);
+            }
+
+            // Create row for Shift Siang
             createMergedCell(sheet.createRow(rowIndex), 0, "Shift Siang", styleColumn, 0, 1);
             createMergedCell(sheet.createRow(rowIndex), 2, "Saldo Awal", styleColor2, 2, 3);
-            createCell(sheet, rowIndex, 5, saldoAwalS, styleColumnNumber);
+            createCell(sheet.createRow(rowIndex), 5, saldoAwalS, styleColumnNumber);
 
             rowIndex++;
 
-            // Your data retrieval logic goes here, omitted for brevity
+            // Populate cells for Shift Siang
+            Row siangRow = sheet.createRow(rowIndex);
+            createCell(siangRow, 6, penjualan, styleColumnNumber);
+            createCell(siangRow, 7, pelunasan, styleColumnNumber);
+            createCell(siangRow, 8, piutang, styleColumnNumber);
+            createCell(siangRow, 9, returnPenjualan, styleColumnNumber);
+            createCell(siangRow, 10, bank, styleColumnNumber);
 
             rowIndex++;
-            createCell(sheet, rowIndex, 5, saldoAwalS, styleColor3);
+            createCell(sheet.createRow(rowIndex), 5, saldoAwalS, styleColor3);
 
             rowIndex++;
             startDate = startDate.plusDays(1);
@@ -141,7 +186,22 @@ public class ExcelKasHarian {
 
         // Closing the workbook
         workbook.close();
-        logger.info("Selesai membuat laporan kas harian");
+        logger.info("Finished creating daily cash report");
+    }
+    private void createCell(Row row, int column, int value, CellStyle style) {
+        Cell cell = row.createCell(column);
+        cell.setCellValue(value);
+        cell.setCellStyle(style);
+    }
+    private int safeParseInt(String value, int defaultValue) {
+        if (value == null || value.isEmpty()) {
+            return defaultValue;
+        }
+        try {
+            return Integer.parseInt(value);
+        } catch (NumberFormatException e) {
+            return defaultValue;
+        }
     }
 
     private void createMergedCell(Row row, int cellIndex, String value, CellStyle style, int startCol, int endCol) {

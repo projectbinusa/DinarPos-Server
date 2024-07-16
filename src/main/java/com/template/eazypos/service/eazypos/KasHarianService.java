@@ -1,11 +1,15 @@
 package com.template.eazypos.service.eazypos;
 
 import com.template.eazypos.exception.NotFoundException;
+import com.template.eazypos.model.KasHarian;
 import com.template.eazypos.model.SaldoAwalShift;
+import com.template.eazypos.repository.KasHarianRepository;
 import com.template.eazypos.repository.SaldoAwalShiftRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -15,6 +19,8 @@ import java.util.Map;
 public class KasHarianService {
     @Autowired
     private SaldoAwalShiftRepository saldoAwalShiftRepository;
+    @Autowired
+    private KasHarianRepository kasHarianRepository;
 
     public SaldoAwalShift add(SaldoAwalShift shift){
         SaldoAwalShift saldoAwalShift = new SaldoAwalShift();
@@ -46,5 +52,15 @@ public class KasHarianService {
         } catch (Exception e) {
             return null;
         }
+    }
+    public SaldoAwalShift findByDateAndShift(Date date, String shift) {
+        return saldoAwalShiftRepository.findByDateAndShift(date, shift);
+    }
+    public List<KasHarian> findByDate(Date date) {
+        LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        Date startOfDay = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+        Date endOfDay = Date.from(localDate.plusDays(1).atStartOfDay(ZoneId.systemDefault()).minusNanos(1).toInstant());
+
+        return kasHarianRepository.findByTimestampBetween(startOfDay, endOfDay);
     }
 }
