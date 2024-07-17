@@ -259,7 +259,8 @@ public class DataService {
         transaksi.setNamaSalesman(salesman.getNamaSalesman());
         transaksi.setNamaCustomer(customer.getNama_customer());
         transaksi.setStatus("dinarpos");
-        transaksi.setNota(not);
+        transaksi.setNota("1");
+        transaksi.setNoFaktur(not);
         transaksi.setServiceBarang(serviceBarang);
         transaksi.setKekurangan(transaksiDTO.getKekurangan());
         transaksi.setKeterangan(transaksiDTO.getKeterangan());
@@ -437,13 +438,6 @@ public class DataService {
     }
 
     // Method to parse double to string safely
-    private String parseDoubleString(String value) {
-        try {
-            return value != null ? String.valueOf(Double.parseDouble(value)) : "0";
-        } catch (NumberFormatException e) {
-            return "0";
-        }
-    }
 
     // Method to update Penjualan Tabel Persediaan
     private void updatePenjualanTabelPersediaan(Date date) {
@@ -898,6 +892,16 @@ public class DataService {
 
     public List<ServiceBarang> getServicesOlderThanWeekAndNotTaken() {
         return serviceRepository.findServicesOverWeekAndNotTaken();
+    }
+    public ServiceBarang remove_f_a(Long id){
+        ServiceBarang update = serviceRepository.findById(id).orElseThrow(() -> new NotFoundException("Id Not Found"));
+        update.setFa(null);
+        return serviceRepository.save(update);
+    }
+    public ServiceBarang remove_f_b(Long id){
+        ServiceBarang update = serviceRepository.findById(id).orElseThrow(() -> new NotFoundException("Id Not Found"));
+        update.setFb(null);
+        return serviceRepository.save(update);
     }
 }
 

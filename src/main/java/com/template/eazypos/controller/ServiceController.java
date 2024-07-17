@@ -417,4 +417,12 @@ public class ServiceController {
     public CommonResponse<List<ServiceBarang>> getAllServicesOlderThanWeekAndTaken() {
         return ResponseHelper.ok(dataService.getServicesOlderThanWeekAndNotTaken());
     }
+    @PutMapping("/remove/f_a/{id}")
+    public CommonResponse<ServiceBarang> remove_f_a( @PathVariable Long id) {
+        return ResponseHelper.ok(dataService.remove_f_a( id));
+    }
+    @PutMapping("/remove/f_b/{id}")
+    public CommonResponse<ServiceBarang> remove_f_b( @PathVariable Long id) {
+        return ResponseHelper.ok(dataService.remove_f_b( id));
+    }
 }
