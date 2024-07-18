@@ -298,6 +298,7 @@ public class DataService {
             barangTransaksi.setQty(barangDTO.getQty());
             barangTransaksi.setDiskon(barangDTO.getDiskon());
             barangTransaksi.setHargaBrng(barangDTO.getHargaBrng());
+            barangTransaksi.setStatus("dinarpos");
             barangTransaksi.setTotalHarga(barangDTO.getTotalHarga());
             Barang barang = barangRepository.findByBarcode(barangDTO.getBarcodeBarang());
             if (barang == null) {
