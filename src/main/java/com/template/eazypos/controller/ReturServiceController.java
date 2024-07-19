@@ -1,7 +1,7 @@
 package com.template.eazypos.controller;
 
 import com.template.eazypos.dto.AddServiceDTO;
-import com.template.eazypos.dto.GetServiceReturDTO;
+import com.template.eazypos.dto.ReturServiceDTO;
 import com.template.eazypos.exception.CommonResponse;
 import com.template.eazypos.exception.ResponseHelper;
 import com.template.eazypos.model.Retur;
@@ -27,8 +27,8 @@ public class ReturServiceController {
 
     // Mendapatkan Semua Data Layanan Pengembalian
     @GetMapping
-    public CommonResponse<List<GetServiceReturDTO>> getAll(){
-        return ResponseHelper.ok( returService.getAll());
+    public CommonResponse<List<ReturServiceDTO>> getAll(){
+        return ResponseHelper.ok( returService.findAllReturService());
     }
 
     // Mendapatkan Layanan Yang Siap Dalam Rentang Tanggal

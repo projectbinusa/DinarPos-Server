@@ -1,7 +1,7 @@
 package com.template.eazypos.service.itc.admin;
 
 import com.template.eazypos.dto.AddServiceDTO;
-import com.template.eazypos.dto.GetServiceReturDTO;
+import com.template.eazypos.dto.ReturServiceDTO;
 import com.template.eazypos.exception.NotFoundException;
 import com.template.eazypos.model.Customer;
 import com.template.eazypos.model.Retur;
@@ -61,8 +61,8 @@ public class ReturService {
     }
 
     // Mengambil semua entitas Retur yang tersimpan
-    public List<GetServiceReturDTO> getAll() {
-        return returRepository.findAllReturWithoutTeknisi();
+    public List<ReturServiceDTO> findAllReturService() {
+        return returRepository.findAllReturService();
     }
 
     // Mengambil layanan yang siap dengan status "READY" dalam rentang tanggal tertentu
