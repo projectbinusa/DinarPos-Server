@@ -589,10 +589,10 @@ public class DataService {
     }
 
     // Mengedit riwayat poin berdasarkan DTO serta menghitung kembali total poin teknisi
-    public PoinHistory editPoinHistory(EditPoinDTO editPoinDTO , String id) {
-        PoinHistory poinHistory = poinHistoryRepository.findByIdTT(id).orElseThrow(() -> new NotFoundException("Id Service Not Found"));
-        ServiceBarang serviceBarang = serviceRepository.findByIdTT(Long.valueOf(id)).orElseThrow(() -> new NotFoundException("Id Not Found"));
-        Poin poin = poinRepository.findByIdTeknisi(serviceBarang.getIdTT()).orElseThrow(() -> new NotFoundException("Id Teknisi Not Found"));
+    public PoinHistory editPoinHistory(EditPoinDTO editPoinDTO , Long id) {
+        PoinHistory poinHistory = poinHistoryRepository.findById(id).orElseThrow(() -> new NotFoundException("Id Poin History Not Found"));
+        ServiceBarang serviceBarang = serviceRepository.findByIdTT(Long.valueOf(poinHistory.getKeterangan())).orElseThrow(() -> new NotFoundException("Id Not Found"));
+        Poin poin = poinRepository.findByIdTeknisi(serviceBarang.getTeknisi().getId()).orElseThrow(() -> new NotFoundException("Id Teknisi Not Found"));
         double poinlama = poinHistory.getPoin();
         double totalPoinLama = poin.getPoin() - poinlama;
         double totalPoinBaru = totalPoinLama + editPoinDTO.getPoin();

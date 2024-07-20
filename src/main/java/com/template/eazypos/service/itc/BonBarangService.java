@@ -83,16 +83,11 @@ public class BonBarangService {
     public BonBarang updateBonBarang(UpdateDataBonBarangDTO dataBonBarangDTO, Long id) {
         BonBarang bonBarang = bonBarangRepository.findById(id).orElseThrow(() -> new NotFoundException("Id Not Found"));
         bonBarang.setTgl_ambil(dataBonBarangDTO.getTgl_ambil());
-        if (dataBonBarangDTO.getId_teknisi() != null) {
-            bonBarang.setTeknisi(teknisiRepository.findById(dataBonBarangDTO.getId_teknisi()).orElseThrow(() -> new NotFoundException("Id Teknisi Not Found")));
-        }
-        if (dataBonBarangDTO.getId_tt() != null) {
-            bonBarang.setServiceBarang(serviceRepository.findByIdTT(dataBonBarangDTO.getId_tt()).orElseThrow(() -> new NotFoundException("Id Service Not Found")));
-        }
-        if (dataBonBarangDTO.getBarcode_brg() != null) {
-            bonBarang.setBarang(barangRepository.findByBarcode(dataBonBarangDTO.getBarcode_brg()));
-        }
-        return bonBarangRepository.save(bonBarang);
+        bonBarang.setTeknisi(teknisiRepository.findById(dataBonBarangDTO.getId_teknisi()).orElseThrow(() -> new NotFoundException("Id Not Found")));
+        bonBarang.setBarang(barangRepository.findByBarcode(dataBonBarangDTO.getBarcode_brg()));
+        bonBarang.setServiceBarang(serviceRepository.findByIdTT(dataBonBarangDTO.getId_tt()).orElseThrow(() -> new NotFoundException("Id Not Found")));
+        bonBarangRepository.save(bonBarang);
+        return bonBarang;
     }
 
     @Transactional

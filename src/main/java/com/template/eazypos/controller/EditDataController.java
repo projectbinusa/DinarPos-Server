@@ -25,7 +25,7 @@ public class EditDataController {
 
     // Mengedit Poin History Berdasarkan ID
     @PutMapping("/update_poin_history/{id}")
-    public CommonResponse<PoinHistory> editPoinHistory(@RequestBody EditPoinDTO editPoinDTO, @PathVariable("id") String id) {
+    public CommonResponse<PoinHistory> editPoinHistory(@RequestBody EditPoinDTO editPoinDTO, @PathVariable("id") Long id) {
         return ResponseHelper.ok(dataService.editPoinHistory(editPoinDTO, id));
     }
 

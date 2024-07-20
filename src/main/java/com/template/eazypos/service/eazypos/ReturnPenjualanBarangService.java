@@ -94,9 +94,9 @@ public class ReturnPenjualanBarangService {
                 .orElseGet(() -> new Persediaan(persediaanAkhirToAwal(date), date));
 
         long nominal = tampilNominalPersediaanAwalTransaksiById(barangTransaksi.getTransaksi().getIdTransaksi());
-        long hargabeli = tampilHargaBeliBarangByBarcode(barangTransaksi.getBarcodeBarang()) * barangTransaksi.getQty();
-        long p2 = Long.parseLong(persediaan.getPenjualan());
-        long p = p2- hargabeli;
+        long hargabeli = (long) (tampilHargaBeliBarangByBarcode(barangTransaksi.getBarcodeBarang()) * barangTransaksi.getQty());
+        long p2 = (long) Double.parseDouble(persediaan.getPenjualan());
+        long p = p2 - hargabeli;
         persediaan.setPenjualan(String.valueOf(p));
 
         persediaanRepository.save(persediaan);
@@ -111,13 +111,13 @@ public class ReturnPenjualanBarangService {
         Persediaan persediaanSebelumnya = persediaanRepository.findByTanggal(previousDate)
                 .orElseThrow(() -> new NotFoundException("Persediaan sebelumnya tidak ditemukan"));
 
-        return Long.parseLong(persediaanSebelumnya.getPersediaanAkhir());
+        return (long) Double.parseDouble(persediaanSebelumnya.getPersediaanAkhir());
     }
 
     private long tampilNominalPersediaanAwalTransaksiById(Long idTransaksi) {
         // Mendapatkan nominal persediaan awal berdasarkan ID transaksi
         Optional<PersediaanAwal> persediaanOptional = persediaanAwalRepository.findByIdTransaksi(idTransaksi);
-        return Long.parseLong(persediaanOptional.map(PersediaanAwal::getNominal).orElseThrow(() -> new NotFoundException("Nominal persediaan awal tidak ditemukan")));
+        return (long) Double.parseDouble(persediaanOptional.map(PersediaanAwal::getNominal).orElseThrow(() -> new NotFoundException("Nominal persediaan awal tidak ditemukan")));
     }
 
     private long tampilHargaBeliBarangByBarcode(String barcode) {
@@ -126,7 +126,7 @@ public class ReturnPenjualanBarangService {
         if (barang == null) {
             throw new NotFoundException("Barang tidak ditemukan dengan barcode: " + barcode);
         }
-        return Long.parseLong(barang.getHargaBeli());
+        return (long) Double.parseDouble(barang.getHargaBeli());
     }
 
     // Mengambil daftar barang yang telah diretur berdasarkan ID transaksi
