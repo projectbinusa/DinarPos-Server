@@ -19,15 +19,15 @@ public class BonBarang {
     private String status_service;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
-    @JoinColumn(name = "id_teknisi", nullable = false, updatable = false)
+    @JoinColumn(name = "id_teknisi", nullable = false)
     private Teknisi teknisi;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
-    @JoinColumn(name = "id_tt", nullable = false, updatable = false)
+    @JoinColumn(name = "id_tt", nullable = false)
     private ServiceBarang serviceBarang;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
-    @JoinColumn(name = "id_barang", nullable = false, updatable = false)
+    @JoinColumn(name = "id_barang", nullable = false)
     private Barang barang;
 
     @Column(name = "tgl_ambil", nullable = false)

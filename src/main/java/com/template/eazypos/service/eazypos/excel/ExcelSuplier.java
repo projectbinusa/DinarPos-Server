@@ -102,8 +102,11 @@ public class ExcelSuplier {
                             suplier.setDelFlag(1);
                             break;
                         case 4:
+                            if (currentCell.getCellType() == CellType.NUMERIC) {
+                                suplier.setNoTelpSuplier(String.valueOf(currentCell.getNumericCellValue()));
+                            } else {
                                 suplier.setNoTelpSuplier(currentCell.getStringCellValue());
-
+                            }
                             break;
                         case 3:
                             suplier.setAlamatSuplier(currentCell.getStringCellValue());
