@@ -133,4 +133,5 @@ public class PoinService {
     public List<PoinHistory> getAllPoinHistory() {
         return poinHistoryRepository.findAll();
     }
+
 }

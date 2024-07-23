@@ -53,4 +53,8 @@ public interface PoinHistoryRepository extends JpaRepository<PoinHistory, Long> 
 
     @Query("SELECT SUM(ph.poin) FROM PoinHistory ph WHERE ph.teknisi.id = :idTeknisi AND YEAR(ph.tanggal) = :year AND MONTH(ph.tanggal) = :month")
     Double findTotalPoinByMonthAndYear(@Param("idTeknisi") Long idTeknisi, @Param("year") int year, @Param("month") int month);
+    @Query("SELECT SUM(ph.nominal) FROM PoinHistory ph " +
+            "JOIN ph.teknisi t " +
+            "WHERE t.bagian = :bagian AND t.status = 'Y' AND DATE(ph.tanggal) = :tanggal")
+    Integer findNominalByBagianAndTanggal(@Param("bagian") String bagian, @Param("tanggal") Date tanggal);
 }

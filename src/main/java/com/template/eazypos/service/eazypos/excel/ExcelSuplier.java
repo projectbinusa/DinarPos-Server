@@ -108,7 +108,7 @@ public class ExcelSuplier {
                                 suplier.setNoTelpSuplier(currentCell.getStringCellValue());
                             }
                             break;
-                        case 3:
+                        case 3:   
                             suplier.setAlamatSuplier(currentCell.getStringCellValue());
                             break;
                         case 5:

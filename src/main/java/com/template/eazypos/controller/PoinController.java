@@ -6,11 +6,14 @@ import com.template.eazypos.exception.CommonResponse;
 import com.template.eazypos.exception.ResponseHelper;
 import com.template.eazypos.model.Poin;
 import com.template.eazypos.model.PoinHistory;
+import com.template.eazypos.service.eazypos.excel.ExcelService;
 import com.template.eazypos.service.itc.admin.PoinService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
@@ -22,6 +25,8 @@ public class PoinController {
 
     @Autowired
     private PoinService poinService;
+    @Autowired
+    private ExcelService excelService;
 
     // Mendapatkan Riwayat Poin Berdasarkan Bulan
     @GetMapping("/month")
@@ -106,5 +111,12 @@ public class PoinController {
     @GetMapping
     public List<PoinHistory> getAllPoinHistory() {
         return poinService.getAllPoinHistory();
+    }
+    @GetMapping("/export")
+    public void generateReport(
+            @RequestParam("bulanAwal") String bulanAwal,
+            @RequestParam("bulanAkhir") String bulanAkhir,
+            HttpServletResponse response) throws IOException {
+        excelService.generateReport(bulanAwal, bulanAkhir, response);
     }
 }
