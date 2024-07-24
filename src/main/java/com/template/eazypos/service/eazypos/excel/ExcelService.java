@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
@@ -25,6 +26,7 @@ import java.util.List;
 public class ExcelService {
     @Autowired
     private PoinHistoryRepository poinHistoryRepository;
+
     public void generateReport(String bulanAwal, String bulanAkhir, HttpServletResponse response) throws IOException {
         XSSFWorkbook workbook = new XSSFWorkbook();
         XSSFSheet sheet = workbook.createSheet("LaporanServicePerTim");
@@ -195,10 +197,12 @@ public class ExcelService {
     }
 
     private Integer getNominalPC(Date tanggal) {
-        return poinHistoryRepository.findNominalByBagianAndTanggal("PC", tanggal);
+        Integer nominal = poinHistoryRepository.findNominalByBagianAndTanggal("PC", tanggal);
+        return nominal != null ? nominal : 0;
     }
 
     private Integer getNominalElektro(Date tanggal) {
-        return poinHistoryRepository.findNominalByBagianAndTanggal("Elektro", tanggal);
+        Integer nominal = poinHistoryRepository.findNominalByBagianAndTanggal("Elektro", tanggal);
+        return nominal != null ? nominal : 0;
     }
 }
