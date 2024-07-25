@@ -1,8 +1,11 @@
 package com.template.eazypos.service.eazypos.excel;
 
+import com.template.eazypos.exception.BadRequestException;
 import com.template.eazypos.model.Suplier;
+import com.template.eazypos.repository.SuplierRepository;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -11,14 +14,18 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class ExcelSuplier {
+
     public static String TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
     static String[] HEADERsSuplier = {"NO", "KODE SUPLIER", "NAMA SUPLIER", "ALAMAT SUPLIER", "NO TELEPON", "KETERANGAN"};
     static String[] HEADERsTemplate = {"NO", "KODE SUPLIER", "NAMA SUPLIER", "ALAMAT SUPLIER", "NO TELEPON", "KETERANGAN"};
     static String SHEET = "Sheet1";
+    private SuplierRepository suplierRepository;
 
     // Method untuk memeriksa apakah file memiliki format Excel yang sesuai
     public static boolean hasExcelFormat(MultipartFile file) {
@@ -78,11 +85,11 @@ public class ExcelSuplier {
 
     // Method untuk mengkonversi data Excel menjadi daftar Suplier
     public static List<Suplier> excelToSuplier(InputStream is) {
-        try {
-            Workbook workbook = new XSSFWorkbook(is);
-            Sheet sheet = workbook.getSheet(SHEET);
+        Set<String> existingCodes = new HashSet<>(); // Untuk melacak kode yang sudah ada
+        List<Suplier> suplierList = new ArrayList<>();
 
-            List<Suplier> suplierList = new ArrayList<>();
+        try (Workbook workbook = new XSSFWorkbook(is)) {
+            Sheet sheet = workbook.getSheet(SHEET);
 
             for (Row row : sheet) {
                 // Lewati baris pertama (header)
@@ -90,11 +97,20 @@ public class ExcelSuplier {
 
                 Suplier suplier = new Suplier();
 
+                String kodeSuplier = "";
+                boolean isValid = true;
+
                 for (int cellIdx = 0; cellIdx < 6; cellIdx++) {
                     Cell currentCell = row.getCell(cellIdx, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
                     switch (cellIdx) {
                         case 1:
-                                suplier.setKodeSuplier(currentCell.getStringCellValue());
+                            kodeSuplier = currentCell.getStringCellValue();
+//                            if (existingCodes.contains(kodeSuplier) || !suplierRepository.findByCode(kodeSuplier).isEmpty()) {
+//                                isValid = false; // Kode sudah ada, jadi abaikan baris ini
+//                            } else {
+//                                suplier.setKodeSuplier(kodeSuplier);
+//                                existingCodes.add(kodeSuplier); // Tambahkan kode ke dalam Set
+//                            }
                             break;
                         case 2:
                             // Nama Suplier
@@ -108,7 +124,7 @@ public class ExcelSuplier {
                                 suplier.setNoTelpSuplier(currentCell.getStringCellValue());
                             }
                             break;
-                        case 3:   
+                        case 3:
                             suplier.setAlamatSuplier(currentCell.getStringCellValue());
                             break;
                         case 5:
@@ -118,13 +134,16 @@ public class ExcelSuplier {
                             break;
                     }
                 }
-                suplierList.add(suplier);
+
+                if (isValid) {
+                    suplierList.add(suplier);
+                }
             }
 
-            workbook.close();
-            return suplierList;
         } catch (IOException e) {
             throw new RuntimeException("Fail to parse Excel file: " + e.getMessage());
         }
+
+        return suplierList;
     }
 }

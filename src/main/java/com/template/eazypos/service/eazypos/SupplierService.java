@@ -44,7 +44,6 @@ public class SupplierService {
     // Mengedit data supplier berdasarkan ID
     public Suplier edit(Suplier suplier , Long id){
         Suplier update = suplierRepository.findById(id).orElseThrow(() -> new NotFoundException("Id tidak dinemukan"));
-        update.setKodeSuplier(suplier.getKodeSuplier());
         update.setAlamatSuplier(suplier.getAlamatSuplier());
         update.setKeterangan(suplier.getKeterangan());
         update.setNamaSuplier(suplier.getNamaSuplier());

@@ -113,10 +113,13 @@ public class PoinController {
         return poinService.getAllPoinHistory();
     }
     @GetMapping("/export")
-    public void generateReport(
-            @RequestParam("bulanAwal") String bulanAwal,
-            @RequestParam("bulanAkhir") String bulanAkhir,
-            HttpServletResponse response) throws IOException {
-        excelService.generateReport(bulanAwal, bulanAkhir, response);
+    public void generateReport(@RequestParam("bulanAwal") String bulanAwal,
+                               @RequestParam("bulanAkhir") String bulanAkhir,
+                               HttpServletResponse response) {
+        try {
+            excelService.generateReport(bulanAwal, bulanAkhir, response);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

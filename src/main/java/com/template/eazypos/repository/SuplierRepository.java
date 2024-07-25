@@ -18,7 +18,7 @@ public interface SuplierRepository extends JpaRepository<Suplier, Long> {
     List<Suplier> findAllSuplier();
 
     @Query(value = "SELECT * FROM tabel_suplier WHERE kode_suplier = :code ", nativeQuery = true)
-    Optional<Suplier> findByCode(String code);
+     Optional<Suplier> findByCode(String code);
 
     @Query(value = "SELECT * FROM tabel_suplier  WHERE LOWER(kode_suplier) LIKE LOWER(concat('%', :keyword, '%'))" , nativeQuery = true)
     Page<Suplier> findAllByKeyword(@Param("keyword") String keyword, Pageable pageable);
