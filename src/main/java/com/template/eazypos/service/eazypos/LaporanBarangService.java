@@ -46,7 +46,8 @@ public class LaporanBarangService {
     // Menghapus entitas BarangTransaksi berdasarkan ID
     public Map<String, Boolean> delete(Long id ) {
         try {
-            barangTransaksiRepository.deleteById(id);
+            BarangTransaksi update = barangTransaksiRepository.findById(id).orElseThrow(() -> new NotFoundException("Id tidak dinemukan"));
+            update.setDelFlag(0);
             Map<String, Boolean> res = new HashMap<>();
             res.put("Deleted", Boolean.TRUE);
             return res;

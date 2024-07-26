@@ -543,6 +543,7 @@ public class DataService {
     // Menghapus data konfirmasi berdasarkan ID dan mengembalikan status penghapusan
     public Map<String , Boolean> deleteTglKonf(Long id){
         try {
+//            TglKonf tglKonf = tglKonfRepository.findById(id).orElseThrow(() -> new NotFoundException("Id Not Found"));
             tglKonfRepository.deleteById(id);
             Map<String, Boolean> res = new HashMap<>();
             res.put("Deleted", Boolean.TRUE);
@@ -560,6 +561,8 @@ public class DataService {
     // Menghapus data layanan berdasarkan ID dan mengembalikan status penghapusan
     public Map<String, Boolean> delete(Long id ) {
         try {
+//            ServiceBarang serviceBarang = serviceRepository.findById(id).orElseThrow(() -> new NotFoundException("Id Not Found"));
+
             serviceRepository.deleteById(id);
             Map<String, Boolean> res = new HashMap<>();
             res.put("Deleted", Boolean.TRUE);

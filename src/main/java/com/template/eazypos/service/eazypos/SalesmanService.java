@@ -47,7 +47,8 @@ public class SalesmanService {
     // Menghapus data salesman berdasarkan ID
     public Map<String, Boolean> delete(Long id ) {
         try {
-            salesmanRepository.deleteById(id);
+            Salesman update = salesmanRepository.findById(id).orElseThrow(() -> new NotFoundException("Id tidak dinemukan"));
+            update.setDelFlag(0);
             Map<String, Boolean> res = new HashMap<>();
             res.put("Deleted", Boolean.TRUE);
             return res;

@@ -34,6 +34,9 @@ public class SuplierController {
     @Autowired
     private ExcelSuplierService excelSuplier;
 
+    @Autowired
+    private ExcelSuplier excelSuplierService;
+
     // Endpoint untuk menambahkan data supplier baru
     @PostMapping("/add")
     public CommonResponse<Suplier> add(@RequestBody Suplier suplier){
@@ -99,7 +102,7 @@ public class SuplierController {
         String message = "";
         if (ExcelSuplier.hasExcelFormat(file)) {
             try {
-                excelSuplier.saveSuplier(file);
+                excelSuplierService.saveSuplier(file);
                 message = "Uploaded the file successfully: " + file.getOriginalFilename();
                 return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(message));
 

@@ -27,12 +27,5 @@ public class ExcelSuplierService {
     }
 
     // Method untuk menyimpan data Suplier yang diunggah dari file Excel
-    public void saveSuplier(MultipartFile file) {
-        try {
-            List<Suplier> supliersList = ExcelSuplier.excelToSuplier(file.getInputStream());
-            suplierRepository.saveAll(supliersList);
-        } catch (IOException e) {
-            throw new RuntimeException("fail to store excel data: " + e.getMessage());
-        }
-    }
+
 }

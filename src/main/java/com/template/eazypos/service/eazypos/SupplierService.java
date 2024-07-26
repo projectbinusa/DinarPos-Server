@@ -53,7 +53,8 @@ public class SupplierService {
 
     // Menghapus supplier berdasarkan ID
     public CommonResponse<String> deleteSupplier(Long id) {
-        suplierRepository.deleteById(id);
+        Suplier update = suplierRepository.findById(id).orElseThrow(() -> new NotFoundException("Id tidak dinemukan"));
+        update.setDelFlag(0);
         return ResponseHelper.ok("Supplier deleted successfully");
     }
 

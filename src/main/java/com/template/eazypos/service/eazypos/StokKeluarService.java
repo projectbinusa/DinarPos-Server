@@ -65,7 +65,8 @@ public class StokKeluarService {
     // Menghapus data stok keluar berdasarkan ID
     public Map<String, Boolean> delete(Long id) {
         try {
-            stokKeluarRepository.deleteById(id);
+            StokKeluar update = stokKeluarRepository.findById(id).orElseThrow(() -> new NotFoundException("Id tidak dinemukan"));
+            update.setDelFlag(0);
             Map<String, Boolean> res = new HashMap<>();
             res.put("Deleted", Boolean.TRUE);
             return res;

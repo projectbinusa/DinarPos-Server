@@ -111,7 +111,8 @@ public class PenggunaService {
     // Menghapus data pengguna berdasarkan ID pengguna
     public Map<String, Boolean> delete(Long id ) {
             try {
-                penggunaRepository.deleteById(id);
+                Pengguna update = penggunaRepository.findById(id).orElseThrow(() -> new NotFoundException("Id tidak ditemukan"));
+                update.setDelFlag(0);
                 Map<String, Boolean> res = new HashMap<>();
                 res.put("Deleted", Boolean.TRUE);
                 return res;

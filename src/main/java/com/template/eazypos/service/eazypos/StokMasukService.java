@@ -75,7 +75,8 @@ public class StokMasukService {
     // Menghapus data stok masuk berdasarkan ID
     public Map<String, Boolean> delete(Long id ) {
         try {
-            stokMasukRepository.deleteById(id);
+            StokMasuk update = stokMasukRepository.findById(id).orElseThrow(() -> new NotFoundException("Id tidak dinemukan"));
+            update.setDelFlag(0);
             Map<String, Boolean> res = new HashMap<>();
             res.put("Deleted", Boolean.TRUE);
             return res;

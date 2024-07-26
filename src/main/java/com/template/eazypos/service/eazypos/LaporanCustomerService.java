@@ -1,6 +1,7 @@
 package com.template.eazypos.service.eazypos;
 
 import com.template.eazypos.exception.NotFoundException;
+import com.template.eazypos.model.BarangTransaksi;
 import com.template.eazypos.model.Transaksi;
 import com.template.eazypos.repository.TransaksiRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +39,8 @@ public class LaporanCustomerService {
     // Menghapus entitas Transaksi berdasarkan ID
     public Map<String, Boolean> delete(Long id ) {
         try {
-            transaksiRepository.deleteById(id);
+            Transaksi update = transaksiRepository.findById(id).orElseThrow(() -> new NotFoundException("Id tidak dinemukan"));
+            update.setDelFlag(0);
             Map<String, Boolean> res = new HashMap<>();
             res.put("Deleted", Boolean.TRUE);
             return res;

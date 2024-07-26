@@ -84,7 +84,7 @@ public class ExcelSuplier {
     }
 
     // Method untuk mengkonversi data Excel menjadi daftar Suplier
-    public static List<Suplier> excelToSuplier(InputStream is) {
+    public List<Suplier> excelToSuplier(InputStream is) {
         Set<String> existingCodes = new HashSet<>(); // Untuk melacak kode yang sudah ada
         List<Suplier> suplierList = new ArrayList<>();
 
@@ -105,12 +105,12 @@ public class ExcelSuplier {
                     switch (cellIdx) {
                         case 1:
                             kodeSuplier = currentCell.getStringCellValue();
-//                            if (existingCodes.contains(kodeSuplier) || !suplierRepository.findByCode(kodeSuplier).isEmpty()) {
-//                                isValid = false; // Kode sudah ada, jadi abaikan baris ini
-//                            } else {
-//                                suplier.setKodeSuplier(kodeSuplier);
-//                                existingCodes.add(kodeSuplier); // Tambahkan kode ke dalam Set
-//                            }
+                            if (existingCodes.contains(kodeSuplier) || !suplierRepository.findByCode(kodeSuplier).isEmpty()) {
+                                isValid = false; // Kode sudah ada, jadi abaikan baris ini
+                            } else {
+                                suplier.setKodeSuplier(kodeSuplier);
+                                existingCodes.add(kodeSuplier); // Tambahkan kode ke dalam Set
+                            }
                             break;
                         case 2:
                             // Nama Suplier
@@ -145,5 +145,13 @@ public class ExcelSuplier {
         }
 
         return suplierList;
+    }
+    public void saveSuplier(MultipartFile file) {
+        try {
+            List<Suplier> supliersList = excelToSuplier(file.getInputStream());
+            suplierRepository.saveAll(supliersList);
+        } catch (IOException e) {
+            throw new RuntimeException("fail to store excel data: " + e.getMessage());
+        }
     }
 }

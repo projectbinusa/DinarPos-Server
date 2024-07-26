@@ -126,7 +126,8 @@ public class ReturnPembelianService {
     // Menghapus transaksi pembelian berdasarkan ID
     public Map<String, Boolean> delete(Long id) {
         try {
-            transaksiBeliRepository.deleteById(id);
+            TransaksiBeli update = transaksiBeliRepository.findById(id).orElseThrow(() -> new NotFoundException("Id tidak ditemukan"));
+            update.setDelFlag(0);
             Map<String, Boolean> res = new HashMap<>();
             res.put("Deleted", Boolean.TRUE);
             return res;

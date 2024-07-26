@@ -2,6 +2,7 @@ package com.template.eazypos.service.eazypos;
 
 import com.template.eazypos.exception.NotFoundException;
 import com.template.eazypos.model.BarangTransaksiBeli;
+import com.template.eazypos.model.Transaksi;
 import com.template.eazypos.model.TransaksiBeli;
 import com.template.eazypos.repository.BarangTransaksiBeliRepository;
 import com.template.eazypos.repository.TransaksiBeliRepository;
@@ -43,7 +44,8 @@ public class LaporanSuplierService {
     // Menghapus entitas BarangTransaksiBeli berdasarkan ID
     public Map<String, Boolean> delete(Long id) {
         try {
-            barangTransaksiBeliRepository.deleteById(id);
+            BarangTransaksiBeli update = barangTransaksiBeliRepository.findById(id).orElseThrow(() -> new NotFoundException("Id tidak dinemukan"));
+            update.setDelFlag(0);
             Map<String, Boolean> res = new HashMap<>();
             res.put("Deleted", Boolean.TRUE);
             return res;

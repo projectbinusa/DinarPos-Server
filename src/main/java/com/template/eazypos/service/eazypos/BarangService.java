@@ -62,7 +62,8 @@ public class BarangService {
     // Menghapus barang berdasarkan ID
     public Map<String, Boolean> delete(Long id ) {
         try {
-            barangRepository.deleteById(id);
+            Barang update = barangRepository.findById(id).orElseThrow(() -> new NotFoundException("Id tidak dinemukan"));
+            update.setDelFlag(0);
             Map<String, Boolean> res = new HashMap<>();
             res.put("Deleted", Boolean.TRUE);
             return res;

@@ -66,7 +66,8 @@ public class CustomerService {
     // Menghapus customer berdasarkan ID
     public Map<String, Boolean> delete(Long id ) {
         try {
-            customerRepository.deleteById(id);
+            Customer update = customerRepository.findById(id).orElseThrow(() -> new NotFoundException("Id tidak dinemukan"));
+            update.setDel_flag(0);
             Map<String, Boolean> res = new HashMap<>();
             res.put("Deleted", Boolean.TRUE);
             return res;
