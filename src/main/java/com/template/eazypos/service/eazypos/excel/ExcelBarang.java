@@ -1,18 +1,25 @@
 package com.template.eazypos.service.eazypos.excel;
 
 import com.template.eazypos.model.Barang;
+import com.template.eazypos.model.Suplier;
+import com.template.eazypos.repository.BarangRepository;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
+
+@Service
 public class ExcelBarang {
+
+    @Autowired
+    private BarangRepository barangRepository;
     public static String TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
     static String[] HEADERsBarang = {"NO", "BARCODE BARANG", "NAMA BARANG", " UNIT BARANG", "HARGA BELI", "HARGA JUAL", "JUMLAH STOK"};
     static String[] HEADERsTemplate = {"NO", "BARCODE BARANG", "NAMA BARANG", " UNIT BARANG", "HARGA BELI", "HARGA JUAL"};
@@ -79,8 +86,8 @@ public class ExcelBarang {
     }
 
     // Mengonversi InputStream dari file Excel menjadi daftar barang
-    public static List<Barang> excelToBarang(InputStream is) {
-
+    public  List<Barang> excelToBarang(InputStream is) {
+        Set<String> existingCodes = new HashSet<>(); // Untuk melacak kode yang sudah ada
         try {
             Workbook workbook = new XSSFWorkbook(is);
 
@@ -100,6 +107,8 @@ public class ExcelBarang {
                 Iterator<Cell> cellsInRow = currentRow.iterator();
 
                 Barang barang = new Barang();
+                String barcodeBarang = "";
+                boolean isValid = true;
 
                 int cellIdx = 0;
                 while (cellsInRow.hasNext()) {
@@ -107,7 +116,13 @@ public class ExcelBarang {
 
                     switch (cellIdx) {
                         case 1:
-                            barang.setBarcodeBarang(currentCell.getStringCellValue());
+                            barcodeBarang = currentCell.getStringCellValue();
+                            if (existingCodes.contains(barcodeBarang) || !barangRepository.findByBarcodeBarang(barcodeBarang).isEmpty()) {
+                                isValid = false; // Kode sudah ada, jadi abaikan baris ini
+                            } else {
+                                barang.setBarcodeBarang(barcodeBarang);
+                                existingCodes.add(barcodeBarang); // Tambahkan kode ke dalam Set
+                            }
 
                             break;
                         case 2:

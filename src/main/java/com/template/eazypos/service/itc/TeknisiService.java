@@ -110,8 +110,8 @@ public class TeknisiService {
     // Menghapus data Teknisi berdasarkan ID
     @Transactional
     public CommonResponse<String> deleteTeknisi(Long id) {
-        bonBarangRepository.deleteByTeknisiId(id);
-        teknisiRepository.deleteById(id);
+        Teknisi update = teknisiRepository.findById(id).orElseThrow(() -> new NotFoundException("Id Teknisi tidak dinemukan"));
+        update.setStatus("N");
         return ResponseHelper.ok("Teknisi deleted successfully");
     }
 
