@@ -32,7 +32,7 @@ public class SalesmanService {
 
     // Mengambil semua data salesman
     public List<Salesman> getAll(){
-        return salesmanRepository.findAll();
+        return salesmanRepository.findAllSalesmen();
     }
 
     // Mengedit data salesman berdasarkan ID
