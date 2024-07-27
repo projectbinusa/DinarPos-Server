@@ -49,7 +49,7 @@ public class CustomerService {
 
     // Mendapatkan semua customer
     public List<Customer> getAll(){
-        return customerRepository.findAll();
+        return customerRepository.findAllCustomer();
     }
 
     // Mengedit customer berdasarkan ID
