@@ -329,4 +329,8 @@ public class TransaksiPenjualanExcelcomService {
     public List<BarangTransaksi> getBarangTransaksiByIdTransaksi(Long idTransaksi) {
         return barangTransaksiRepository.findBarangTransaksiByIdTransaksi(idTransaksi);
     }
+
+    public List<Transaksi> getAll(){
+        return transaksiRepository.findAllTransaksi();
+    }
 }

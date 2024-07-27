@@ -141,4 +141,8 @@ public class TransaksiController {
         return transaksiPenjualanService.getBarangTransaksiByIdTransaksi(idTransaksi);
     }
 
+    @GetMapping
+    public CommonResponse<List<Transaksi>> getAll(){
+        return ResponseHelper.ok(transaksiPenjualanService.getAll());
+    }
 }

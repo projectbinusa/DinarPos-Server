@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
+import java.util.List;
 
 public interface CustomerRepository extends JpaRepository<Customer , Long> {
     @Query(value = "SELECT * FROM customer WHERE email = :email OR telp = :telp ", nativeQuery = true)
@@ -20,4 +21,7 @@ public interface CustomerRepository extends JpaRepository<Customer , Long> {
 
     @Query(value = "SELECT * FROM customer  WHERE LOWER(nama_customer) LIKE LOWER(concat('%', :keyword, '%'))" , nativeQuery = true)
     Page<Customer> findAllByKeyword(@Param("keyword") String keyword, Pageable pageable);
+
+    @Query(value = "SELECT * FROM customer WHERE del_flag = 1 ", nativeQuery = true)
+    List<Customer> findAllCustomer();
 }
