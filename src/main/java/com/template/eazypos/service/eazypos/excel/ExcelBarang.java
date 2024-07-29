@@ -162,5 +162,13 @@ public class ExcelBarang {
             throw new RuntimeException("fail to parse Excel file: " + e.getMessage());
         }
     }
+    public void saveBarang(MultipartFile file) {
+        try {
+            List<Barang> barangList = excelToBarang(file.getInputStream());
+            barangRepository.saveAll(barangList);
+        } catch (IOException e) {
+            throw new RuntimeException("fail to store excel data: " + e.getMessage());
+        }
+    }
 
 }

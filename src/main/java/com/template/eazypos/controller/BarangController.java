@@ -37,6 +37,9 @@ public class BarangController {
     @Autowired
     private ExcelBarangService excelBarang;
 
+    @Autowired
+    private ExcelBarang excelBarangService;
+
     // Menambahkan Barang Baru
     @PostMapping("/add")
     public CommonResponse<Barang> add(@RequestBody Barang barang){
@@ -108,7 +111,7 @@ public class BarangController {
         String message = "";
         if (ExcelBarang.hasExcelFormat(file)) {
             try {
-                excelBarang.saveBarang(file);
+                excelBarangService.saveBarang(file);
                 message = "Uploaded the file successfully: " + file.getOriginalFilename();
                 return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(message));
 

@@ -30,12 +30,5 @@ public class ExcelBarangService {
     }
 
     // Menerima file Excel dan menyimpan data barang yang terkandung di dalamnya ke dalam repository
-    public void saveBarang(MultipartFile file) {
-        try {
-            List<Barang> barangList = ExcelBarang.excelToBarang(file.getInputStream());
-            barangRepository.saveAll(barangList);
-        } catch (IOException e) {
-            throw new RuntimeException("fail to store excel data: " + e.getMessage());
-        }
-    }
+
 }
