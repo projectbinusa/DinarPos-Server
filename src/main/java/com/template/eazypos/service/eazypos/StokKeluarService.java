@@ -67,6 +67,7 @@ public class StokKeluarService {
         try {
             StokKeluar update = stokKeluarRepository.findById(id).orElseThrow(() -> new NotFoundException("Id tidak dinemukan"));
             update.setDelFlag(0);
+            stokKeluarRepository.save(update);
             Map<String, Boolean> res = new HashMap<>();
             res.put("Deleted", Boolean.TRUE);
             return res;

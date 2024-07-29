@@ -31,8 +31,8 @@ public class PersediaanBarang {
     @Column(name = "stok_awal")
     private String stok_awal;
 
-    @Column(name = "stok_keluar")
-    private String stok_keluar;
+    @Column(name = "stok_akhir")
+    private String stok_akhir;
 
     // getter and setter
 
@@ -84,11 +84,11 @@ public class PersediaanBarang {
         this.stok_awal = stok_awal;
     }
 
-    public String getStok_keluar() {
-        return stok_keluar;
+    public String getStok_akhir() {
+        return stok_akhir;
     }
 
-    public void setStok_keluar(String stok_keluar) {
-        this.stok_keluar = stok_keluar;
+    public void setStok_akhir(String stok_akhir) {
+        this.stok_akhir = stok_akhir;
     }
 }

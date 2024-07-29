@@ -68,6 +68,7 @@ public class CustomerService {
         try {
             Customer update = customerRepository.findById(id).orElseThrow(() -> new NotFoundException("Id tidak dinemukan"));
             update.setDel_flag(0);
+            customerRepository.save(update);
             Map<String, Boolean> res = new HashMap<>();
             res.put("Deleted", Boolean.TRUE);
             return res;

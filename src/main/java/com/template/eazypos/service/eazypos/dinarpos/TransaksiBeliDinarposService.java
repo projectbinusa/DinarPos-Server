@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TransaksiBeliDinarposService {
@@ -133,7 +134,7 @@ public class TransaksiBeliDinarposService {
     // Method untuk mengupdate tabel persediaan berdasarkan penjualan pada tanggal tertentu
     private void updatePenjualanTabelPersediaan(Date date) {
         // Retrieve the persediaan entry for the given date
-        List<Persediaan> persediaanOpt = persediaanRepository.findByDate(date);
+        Optional<Persediaan> persediaanOpt = persediaanRepository.findByDate(date);
 
         // Calculate the total penjualan
         List<PersediaanAkhir> totalPenjualanList = persediaanAkhirRepository.findByTanggal(date);
@@ -150,7 +151,7 @@ public class TransaksiBeliDinarposService {
                 .sum();
 
         if (!persediaanOpt.isEmpty()) {
-            Persediaan persediaan = persediaanOpt.get(0);
+            Persediaan persediaan = persediaanOpt.get();
             persediaan.setPenjualan(String.valueOf(totalPenjualan));
             int barangSiapJual = Integer.parseInt(persediaan.getBarangSiapJual());
             int persediaanAkhir = barangSiapJual + totalPenjualan;

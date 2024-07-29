@@ -49,6 +49,7 @@ public class SalesmanService {
         try {
             Salesman update = salesmanRepository.findById(id).orElseThrow(() -> new NotFoundException("Id tidak dinemukan"));
             update.setDelFlag(0);
+            salesmanRepository.save(update);
             Map<String, Boolean> res = new HashMap<>();
             res.put("Deleted", Boolean.TRUE);
             return res;

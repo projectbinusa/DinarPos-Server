@@ -137,7 +137,7 @@ public class TransaksiBeliExcelcomService {
     private void updatePenjualanTabelPersediaan(Date date) {
 
         // Retrieve the persediaan entry for the given date
-        List<Persediaan> persediaanOpt = persediaanRepository.findByDate(date);
+        Optional<Persediaan> persediaanOpt = persediaanRepository.findByDate(date);
 
         // Calculate the total penjualan
         List<PersediaanAkhir> totalPenjualanList = persediaanAkhirRepository.findByTanggal(date);
@@ -154,7 +154,7 @@ public class TransaksiBeliExcelcomService {
                 .sum();
 
         if (!persediaanOpt.isEmpty()) {
-            Persediaan persediaan = persediaanOpt.get(0);
+            Persediaan persediaan = persediaanOpt.get();
             persediaan.setPenjualan(String.valueOf(totalPenjualan));
             int barangSiapJual = Integer.parseInt(persediaan.getBarangSiapJual());
             int persediaanAkhir = barangSiapJual + totalPenjualan;

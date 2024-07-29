@@ -55,6 +55,7 @@ public class SupplierService {
     public CommonResponse<String> deleteSupplier(Long id) {
         Suplier update = suplierRepository.findById(id).orElseThrow(() -> new NotFoundException("Id tidak dinemukan"));
         update.setDelFlag(0);
+        suplierRepository.save(update);
         return ResponseHelper.ok("Supplier deleted successfully");
     }
 

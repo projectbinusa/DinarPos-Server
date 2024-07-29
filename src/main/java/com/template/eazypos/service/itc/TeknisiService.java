@@ -112,6 +112,7 @@ public class TeknisiService {
     public CommonResponse<String> deleteTeknisi(Long id) {
         Teknisi update = teknisiRepository.findById(id).orElseThrow(() -> new NotFoundException("Id Teknisi tidak dinemukan"));
         update.setStatus("N");
+        teknisiRepository.save(update);
         return ResponseHelper.ok("Teknisi deleted successfully");
     }
 

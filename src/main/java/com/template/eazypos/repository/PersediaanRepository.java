@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface PersediaanRepository extends JpaRepository<Persediaan, Long> {
-    List<Persediaan> findByDate(Date date);
+    Optional<Persediaan> findByDate(Date date);
     @Query("SELECT p FROM Persediaan p WHERE p.date < :date ORDER BY p.date DESC")
     List<Persediaan> findLastBeforeDate(@Param("date") Date date);
 

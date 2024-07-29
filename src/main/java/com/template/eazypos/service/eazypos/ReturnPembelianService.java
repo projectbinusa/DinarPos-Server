@@ -128,6 +128,7 @@ public class ReturnPembelianService {
         try {
             TransaksiBeli update = transaksiBeliRepository.findById(id).orElseThrow(() -> new NotFoundException("Id tidak ditemukan"));
             update.setDelFlag(0);
+            transaksiBeliRepository.save(update);
             Map<String, Boolean> res = new HashMap<>();
             res.put("Deleted", Boolean.TRUE);
             return res;

@@ -48,6 +48,7 @@ public class LaporanBarangService {
         try {
             BarangTransaksi update = barangTransaksiRepository.findById(id).orElseThrow(() -> new NotFoundException("Id tidak dinemukan"));
             update.setDelFlag(0);
+            barangTransaksiRepository.save(update);
             Map<String, Boolean> res = new HashMap<>();
             res.put("Deleted", Boolean.TRUE);
             return res;
