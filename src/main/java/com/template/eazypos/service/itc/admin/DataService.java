@@ -253,7 +253,7 @@ public class DataService {
 
         Transaksi transaksi = new Transaksi();
         transaksi.setTotalBelanja(transaksiDTO.getTotalBelanja());
-        transaksi.setPembayaran(Double.valueOf(transaksiDTO.getPembayaran()));
+        transaksi.setPembayaran(transaksiDTO.getPembayaran());
         transaksi.setPotongan(transaksiDTO.getPotongan());
         transaksi.setDiskon(transaksiDTO.getDiskon());
         transaksi.setTotalBayarBarang(transaksiDTO.getTotalBayarBarang());
@@ -361,7 +361,7 @@ public class DataService {
 
         // Update Omzet
         Omzet omzet = new Omzet();
-        omzet.setOmzet(transaksiDTO.getTotalBelanja());
+        omzet.setOmzet(Double.valueOf(transaksiDTO.getTotalBelanja()));
         omzet.setTransaksi(savedTransaksi);
         omzet.setNmCustomer(customer.getNama_customer());
         omzet.setSalesman(salesman);

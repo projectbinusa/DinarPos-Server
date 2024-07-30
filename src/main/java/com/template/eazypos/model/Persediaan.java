@@ -28,7 +28,7 @@ public class Persediaan {
     private String penjualan;
 
     @Column(name = "date", nullable = false)
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" , timezone = "Asia/Jakarta")
+    @JsonFormat(pattern = "yyyy-MM-dd" , timezone = "Asia/Jakarta")
     private Date date;
 
     public Persediaan(long persediaanAkhirToAwal, Date date) {

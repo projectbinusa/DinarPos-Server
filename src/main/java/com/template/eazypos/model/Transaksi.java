@@ -53,25 +53,25 @@ public class Transaksi extends DateConfig {
     private String namaSalesman;
 
     @Column(name = "total_bayar_barang", length = 50)
-    private Double totalBayarBarang;
+    private int totalBayarBarang;
 
     @Column(name = "pembayaran", length = 50)
-    private Double pembayaran;
+    private int pembayaran;
 
     @Column(name = "diskon", length = 50)
-    private Double diskon;
+    private int diskon;
 
     @Column(name = "total_belanja", length = 50)
-    private Double totalBelanja;
+    private int totalBelanja;
 
     @Column(name = "sisa", length = 50)
-    private Double sisa;
+    private int sisa;
 
     @Column(name = "potongan", length = 50)
-    private Double potongan;
+    private int potongan;
 
     @Column(name = "ttl_bayar_hemat", length = 50)
-    private Double ttlBayarHemat;
+    private int ttlBayarHemat;
 
     @Column(name = "nota", length = 50)
     private String nota;
@@ -296,59 +296,59 @@ public class Transaksi extends DateConfig {
         this.namaSalesman = namaSalesman;
     }
 
-    public Double getTotalBayarBarang() {
+    public int getTotalBayarBarang() {
         return totalBayarBarang;
     }
 
-    public void setTotalBayarBarang(Double totalBayarBarang) {
+    public void setTotalBayarBarang(int totalBayarBarang) {
         this.totalBayarBarang = totalBayarBarang;
     }
 
-    public Double getPembayaran() {
+    public int getPembayaran() {
         return pembayaran;
     }
 
-    public void setPembayaran(Double pembayaran) {
+    public void setPembayaran(int pembayaran) {
         this.pembayaran = pembayaran;
     }
 
-    public Double getDiskon() {
+    public int getDiskon() {
         return diskon;
     }
 
-    public void setDiskon(Double diskon) {
+    public void setDiskon(int diskon) {
         this.diskon = diskon;
     }
 
-    public Double getTotalBelanja() {
+    public int getTotalBelanja() {
         return totalBelanja;
     }
 
-    public void setTotalBelanja(Double totalBelanja) {
+    public void setTotalBelanja(int totalBelanja) {
         this.totalBelanja = totalBelanja;
     }
 
-    public Double getSisa() {
+    public int getSisa() {
         return sisa;
     }
 
-    public void setSisa(Double sisa) {
+    public void setSisa(int sisa) {
         this.sisa = sisa;
     }
 
-    public Double getPotongan() {
+    public int getPotongan() {
         return potongan;
     }
 
-    public void setPotongan(Double potongan) {
+    public void setPotongan(int potongan) {
         this.potongan = potongan;
     }
 
-    public Double getTtlBayarHemat() {
+    public int getTtlBayarHemat() {
         return ttlBayarHemat;
     }
 
-    public void setTtlBayarHemat(Double ttlBayarHemat) {
+    public void setTtlBayarHemat(int ttlBayarHemat) {
         this.ttlBayarHemat = ttlBayarHemat;
     }
 

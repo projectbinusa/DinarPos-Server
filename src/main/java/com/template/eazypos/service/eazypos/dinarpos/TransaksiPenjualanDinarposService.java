@@ -64,7 +64,7 @@ public class TransaksiPenjualanDinarposService {
 
         Transaksi transaksi = new Transaksi();
         transaksi.setTotalBelanja(transaksiDTO.getTotalBelanja());
-        transaksi.setPembayaran(Double.valueOf(transaksiDTO.getPembayaran()));
+        transaksi.setPembayaran(transaksiDTO.getPembayaran());
         transaksi.setPotongan(transaksiDTO.getPotongan());
         transaksi.setDiskon(transaksiDTO.getDiskon());
         transaksi.setTotalBayarBarang(transaksiDTO.getTotalBayarBarang());
@@ -195,7 +195,7 @@ public class TransaksiPenjualanDinarposService {
 
         // Update Omzet
         Omzet omzet = new Omzet();
-        omzet.setOmzet(transaksiDTO.getTotalBelanja());
+        omzet.setOmzet(Double.valueOf(transaksiDTO.getTotalBelanja()));
         omzet.setTransaksi(transaksiRepository.findById(savedTransaksi.getIdTransaksi()).get());
         omzet.setNmCustomer(customer.getNama_customer());
         omzet.setSalesman(salesmanRepository.findById(transaksiDTO.getIdSalesman()).get());

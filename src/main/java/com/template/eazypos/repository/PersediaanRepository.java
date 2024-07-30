@@ -17,7 +17,7 @@ public interface PersediaanRepository extends JpaRepository<Persediaan, Long> {
     @Query(value = "SELECT * FROM persediaan WHERE del_flag = 1 ", nativeQuery = true)
     List<Persediaan> findAllPersediaan();
 
-    @Query(value = "SELECT * FROM persediaan WHERE date =:date ", nativeQuery = true)
-    Optional<Persediaan> findByTanggal(Date date);
+    @Query(value = "SELECT * FROM persediaan WHERE DATE(date) = DATE(:date)", nativeQuery = true)
+    Optional<Persediaan> findByTanggal(@Param("date") Date date);
 
 }

@@ -10,8 +10,10 @@ import com.template.eazypos.service.eazypos.dinarpos.TransaksiPenjualanDinarposS
 import com.template.eazypos.service.eazypos.excelcom.TransaksiBeliExcelcomService;
 import com.template.eazypos.service.eazypos.excelcom.TransaksiPenjualanExcelcomService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -131,6 +133,10 @@ public class TransaksiController {
         return transaksiPenjualanService.getLastNotaByMonthAndYear(bulan, tahun);
     }
 
+    @GetMapping("/persediaan")
+    public Persediaan getByDate(@RequestParam("tanggal") @DateTimeFormat(pattern = "yyyy-MM-dd") Date date) {
+        return transaksiPenjualanService.getByDate(date);
+    }
     @GetMapping("/get-transaksi-by-id-tt/{idTt}")
     public List<Transaksi> getTransaksiByIdTt(@PathVariable Long idTt) {
         return transaksiPenjualanService.getTransaksiByIdTt(idTt);

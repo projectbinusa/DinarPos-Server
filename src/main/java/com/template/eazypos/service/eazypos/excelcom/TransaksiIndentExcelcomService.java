@@ -197,11 +197,11 @@ public class TransaksiIndentExcelcomService {
 
         Transaksi transaksi = new Transaksi();
         int dp = Integer.parseInt(transaksiIndent.getPembayaran()) + pembayaranDTO.getPrembayaran();
-        transaksi.setTotalBelanja(parseDouble(transaksiIndent.getTotalBelanja()));
-        transaksi.setPembayaran((double) dp);
-        transaksi.setPotongan(parseDouble(transaksiIndent.getPotongan()));
-        transaksi.setDiskon(parseDouble(transaksiIndent.getDiskon()));
-        transaksi.setTotalBayarBarang(parseDouble(transaksiIndent.getTotalBayarBarang()));
+        transaksi.setTotalBelanja(Integer.parseInt(transaksiIndent.getTotalBelanja()));
+        transaksi.setPembayaran(dp);
+        transaksi.setPotongan(Integer.parseInt(transaksiIndent.getPotongan()));
+        transaksi.setDiskon(Integer.parseInt(transaksiIndent.getDiskon()));
+        transaksi.setTotalBayarBarang(Integer.parseInt(transaksiIndent.getTotalBayarBarang()));
         transaksi.setCustomer(customer);
         transaksi.setSalesman(salesman);
         transaksi.setNamaSalesman(salesman.getNamaSalesman());
@@ -219,8 +219,8 @@ public class TransaksiIndentExcelcomService {
         transaksi.setNoFaktur(transaksiIndent.getNoFaktur());
         transaksi.setKeterangan(transaksiIndent.getKeterangan());
         transaksi.setCashKredit(transaksiIndent.getCashKredit());
-        transaksi.setSisa(parseDouble(transaksiIndent.getSisa()));
-        transaksi.setTtlBayarHemat(parseDouble(transaksiIndent.getTtlBayarHemat()));
+        transaksi.setSisa(Integer.parseInt(transaksiIndent.getSisa()));
+        transaksi.setTtlBayarHemat(Integer.parseInt(transaksiIndent.getTtlBayarHemat()));
         transaksi.setTanggal(now);
         transaksi.setDelFlag(1);
 

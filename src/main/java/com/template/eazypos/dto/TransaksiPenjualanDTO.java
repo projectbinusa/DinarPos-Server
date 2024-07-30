@@ -4,23 +4,24 @@ import java.util.List;
 
 public class TransaksiPenjualanDTO {
 
-    private Double totalBelanja;
+    private int totalBelanja;
     private int pembayaran;
-    private Double potongan;
-    private Double diskon;
-    private Double totalBayarBarang;
+
+    private int potongan;
+    private int diskon;
+    private int totalBayarBarang;
     private Long idCustomer;
     private Long idSalesman;
     private String noFaktur;
     private String keterangan;
     private String cashKredit;
-    private Double sisa;
+    private int sisa;
 
     private String kekurangan;
-    private Double ttlBayarHemat;
+    private int ttlBayarHemat;
     private List<BarangTransaksiDTO> produk;
 
-    public Double getTotalBelanja() {
+    public int getTotalBelanja() {
         return totalBelanja;
     }
 
@@ -32,7 +33,7 @@ public class TransaksiPenjualanDTO {
         this.kekurangan = kekurangan;
     }
 
-    public void setTotalBelanja(Double totalBelanja) {
+    public void setTotalBelanja(int totalBelanja) {
         this.totalBelanja = totalBelanja;
     }
 
@@ -44,27 +45,27 @@ public class TransaksiPenjualanDTO {
         this.pembayaran = pembayaran;
     }
 
-    public Double getPotongan() {
+    public int getPotongan() {
         return potongan;
     }
 
-    public void setPotongan(Double potongan) {
+    public void setPotongan(int potongan) {
         this.potongan = potongan;
     }
 
-    public Double getDiskon() {
+    public int getDiskon() {
         return diskon;
     }
 
-    public void setDiskon(Double diskon) {
+    public void setDiskon(int diskon) {
         this.diskon = diskon;
     }
 
-    public Double getTotalBayarBarang() {
+    public int getTotalBayarBarang() {
         return totalBayarBarang;
     }
 
-    public void setTotalBayarBarang(Double totalBayarBarang) {
+    public void setTotalBayarBarang(int totalBayarBarang) {
         this.totalBayarBarang = totalBayarBarang;
     }
 
@@ -109,19 +110,19 @@ public class TransaksiPenjualanDTO {
         this.cashKredit = cashKredit;
     }
 
-    public Double getSisa() {
+    public int getSisa() {
         return sisa;
     }
 
-    public void setSisa(Double sisa) {
+    public void setSisa(int sisa) {
         this.sisa = sisa;
     }
 
-    public Double getTtlBayarHemat() {
+    public int getTtlBayarHemat() {
         return ttlBayarHemat;
     }
 
-    public void setTtlBayarHemat(Double ttlBayarHemat) {
+    public void setTtlBayarHemat(int ttlBayarHemat) {
         this.ttlBayarHemat = ttlBayarHemat;
     }
 
