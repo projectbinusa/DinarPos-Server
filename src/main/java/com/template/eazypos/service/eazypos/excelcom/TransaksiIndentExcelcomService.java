@@ -282,6 +282,8 @@ public class TransaksiIndentExcelcomService {
             barangTransaksi.setStatus(transaksiIndent.getStatus());
             barangTransaksiRepository.save(barangTransaksi);
 
+
+
             // Update stock
             int sisaStok = barang.getJumlahStok() - barangDTO.getQty();
             if (sisaStok < 0) {
@@ -296,7 +298,7 @@ public class TransaksiIndentExcelcomService {
             stokAwalrepository.save(stokAwal);
 
             // Insert/Update Persediaan Barang
-            tabelPersediaanBarangStokKeluar(stokAwal);
+            tabelPersediaanBarangStokKeluar(barangDTO, now);
         }
 
         // Update Kas Harian
@@ -369,32 +371,27 @@ public class TransaksiIndentExcelcomService {
     }
 
     // Method to update Penjualan Tabel Persediaan
-    private void tabelPersediaanBarangStokKeluar(StokAwal stokAwal) {
-        Long id = stokAwal.getIdStokAwal();
-        Optional<StokAwal> stokKeluarOpt = stokAwalrepository.findById(id);
-        if (!stokKeluarOpt.isPresent()) {
-            throw new NotFoundException("Stok Awal not found");
-        }
-        StokAwal stokKeluar = stokKeluarOpt.get();
+    private void tabelPersediaanBarangStokKeluar(BarangTransaksiIndent barangDTO, Date now) {
+        String barcode = barangDTO.getBarcodeBarang();
+        int qty = barangDTO.getQty();
 
-        List<PersediaanBarang> persediaanBarangList = persediaanBarangRepository.findByTanggalAndBarangBarcode(
-                stokKeluar.getTanggal(), stokKeluar.getBarcodeBarang());
+        List<PersediaanBarang> persediaanBarangList = persediaanBarangRepository.findByTanggalAndBarangBarcode(now, barcode);
 
-        int stokAwalQty = persediaanAkhirToAwalBarang(stokKeluar.getTanggal(), stokKeluar.getBarcodeBarang());
+        int stokAwalQty = persediaanAkhirToAwalBarang(now, barcode);
 
         if (!persediaanBarangList.isEmpty()) {
-            for (PersediaanBarang persediaan : persediaanBarangList) {
-                int keluar = Integer.parseInt(persediaan.getKeluar() + Integer.parseInt(stokKeluar.getQty()));
-                persediaan.setKeluar(String.valueOf(keluar));
-                persediaan.setStok_akhir(String.valueOf(Integer.parseInt(persediaan.getStok_akhir()) - Integer.parseInt(stokKeluar.getQty())));
-                persediaanBarangRepository.save(persediaan);
-            }
+            PersediaanBarang persediaan = persediaanBarangList.get(0); // Assuming only one record per day per item
+            int keluar = Integer.parseInt(persediaan.getKeluar()) + qty;
+            persediaan.setKeluar(String.valueOf(keluar));
+            persediaan.setStok_akhir(String.valueOf(stokAwalQty - keluar));
+            persediaanBarangRepository.save(persediaan);
         } else {
             PersediaanBarang persediaanBarang = new PersediaanBarang();
-            persediaanBarang.setBarang(barangRepository.findByBarcodeBarang(stokKeluar.getBarcodeBarang()).get());
+            persediaanBarang.setBarang(barangRepository.findByBarcodeBarang(barcode).get());
             persediaanBarang.setStok_awal(String.valueOf(stokAwalQty));
-            persediaanBarang.setKeluar(stokKeluar.getQty());
-            persediaanBarang.setStok_akhir(String.valueOf(stokAwalQty - Integer.parseInt(stokKeluar.getQty())));
+            persediaanBarang.setKeluar(String.valueOf(qty));
+            persediaanBarang.setStok_akhir(String.valueOf(stokAwalQty - qty));
+            persediaanBarang.setTanggal(now);
             persediaanBarangRepository.save(persediaanBarang);
         }
     }
@@ -408,32 +405,26 @@ public class TransaksiIndentExcelcomService {
         } else if (res.isPresent()) {
             return Integer.parseInt(res.get().getStok_awal());
         } else {
-            Optional<Barang> stokBarang = Optional.ofNullable(barangRepository.findByBarcode(barcodeBarang));
-            if (stokBarang.isPresent()) {
-                return stokBarang.get().getJumlahStok();
+            Barang barang = barangRepository.findByBarcode(barcodeBarang);
+            if (barang != null) {
+                return barang.getJumlahStok();
             }
         }
         return 0;
     }
 
     private void updatePenjualanTabelPersediaan(Date date) {
-        Optional<Persediaan> persediaanOpt = persediaanRepository.findByDate(date);
+        Optional<Persediaan> persediaanOpt = persediaanRepository.findByTanggal(date);
         List<PersediaanAwal> totalPenjualanList = persediaanAwalRepository.findByTanggal(date);
 
         int totalPenjualan = totalPenjualanList.stream()
                 .mapToInt(pa -> {
-                    try {
-                        return Integer.parseInt(pa.getNominal());
-                    } catch (NumberFormatException e) {
-                        // Handle the error, e.g., log it and return 0
-                        System.err.println("Invalid nominal value: " + pa.getNominal());
-                        return 0;
-                    }
+                    return Integer.parseInt(pa.getNominal());
                 })
                 .sum();
 
-        if (persediaanOpt.isPresent()) {
-            Persediaan persediaan = persediaanOpt.get();
+        if (persediaanRepository.findByTanggal(date).isPresent()) {
+            Persediaan persediaan = persediaanRepository.findByTanggal(date).get();
             persediaan.setPenjualan(String.valueOf(totalPenjualan));
             int barangSiapJual = Integer.parseInt(persediaan.getBarangSiapJual());
             int persediaanAkhir = barangSiapJual - totalPenjualan;
@@ -448,21 +439,20 @@ public class TransaksiIndentExcelcomService {
             newPersediaan.setPenjualan(String.valueOf(totalPenjualan));
             int akhir = persediaanAwal - totalPenjualan;
             newPersediaan.setPersediaanAkhir(String.valueOf(akhir));
-            newPersediaan.setDate(new Date());
+            newPersediaan.setDate(date);
 
             persediaanRepository.save(newPersediaan);
         }
     }
 
-
-    // Mengonversi nilai persediaan akhir menjadi nilai awal berdasarkan tanggal tertentu
+    // Mengubah nilai persediaan akhir menjadi nilai persediaan awal berdasarkan tanggal tertentu
     public int persediaanAkhirToAwal(Date date) {
         List<Persediaan> persediaanList = persediaanRepository.findLastBeforeDate(date);
 
         if (!persediaanList.isEmpty()) {
             // Choose the first record if multiple exist
             Persediaan persediaan = persediaanList.get(0);
-            return (int) parseDouble(persediaan.getPersediaanAkhir());
+            return Integer.parseInt(persediaan.getPersediaanAkhir());
         } else {
             return 0;
         }

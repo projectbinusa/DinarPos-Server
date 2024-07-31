@@ -43,8 +43,17 @@ public class TransaksiBeli extends DateConfig {
     @Column(name = "nominal_hutang")
     private Integer nominalHutang;
 
+    @Column(name = "hutang")
+    private String huatng;
+
     @Column(name = "total_belanja", nullable = false, length = 50)
     private String totalBelanja;
+
+    @Column(name = "total_belanja_dua",  length = 50)
+    private String totalBelanjaDua;
+
+    @Column(name = "total_beli",  length = 50)
+    private String totalBeli;
 
     @Column(name = "sisa", nullable = false, length = 50)
     private String sisa;
@@ -68,6 +77,18 @@ public class TransaksiBeli extends DateConfig {
     @Temporal(TemporalType.TIMESTAMP)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" , timezone = "Asia/Jakarta")
     private Date tanggal;
+
+    @Column(name = "total_dpp",  length = 100)
+    private String totalDpp;
+
+    @Column(name = "total_ppn",  length = 100)
+    private String totalPpn;
+
+    @Column(name = "total_dpp_dua",  length = 100)
+    private String totalDppDua;
+
+    @Column(name = "total_ppn_dua",  length = 100)
+    private String totalPpnDua;
 
     @Column(name = "del_flag", nullable = false, columnDefinition = "int default 1")
     private int delFlag;
@@ -225,5 +246,61 @@ public class TransaksiBeli extends DateConfig {
 
     public void setNominalHutang(Integer nominalHutang) {
         this.nominalHutang = nominalHutang;
+    }
+
+    public String getHuatng() {
+        return huatng;
+    }
+
+    public void setHuatng(String huatng) {
+        this.huatng = huatng;
+    }
+
+    public String getTotalBelanjaDua() {
+        return totalBelanjaDua;
+    }
+
+    public void setTotalBelanjaDua(String totalBelanjaDua) {
+        this.totalBelanjaDua = totalBelanjaDua;
+    }
+
+    public String getTotalBeli() {
+        return totalBeli;
+    }
+
+    public void setTotalBeli(String totalBeli) {
+        this.totalBeli = totalBeli;
+    }
+
+    public String getTotalDpp() {
+        return totalDpp;
+    }
+
+    public void setTotalDpp(String totalDpp) {
+        this.totalDpp = totalDpp;
+    }
+
+    public String getTotalPpn() {
+        return totalPpn;
+    }
+
+    public void setTotalPpn(String totalPpn) {
+        this.totalPpn = totalPpn;
+    }
+
+    public String getTotalDppDua() {
+        return totalDppDua;
+    }
+
+    public void setTotalDppDua(String totalDppDua) {
+        this.totalDppDua = totalDppDua;
+    }
+
+    public String getTotalPpnDua() {
+        return totalPpnDua;
+    }
+
+    public void setTotalPpnDua(String totalPpnDua) {
+        this.totalPpnDua = totalPpnDua;
     }
 }

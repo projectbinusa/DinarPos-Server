@@ -44,151 +44,158 @@ public class TransaksiBeliExcelcomService {
     @Autowired
     private PersediaanRepository persediaanRepository;
 
-    // Menambahkan transaksi beli baru
-    public TransaksiBeli addTransaksi(TransaksiBeliDTO transaksiDTO) {
-        Date now = new Date();
-        String not = getNoNotaTransaksi(); // method generateNotaNumber() menghasilkan nomor nota baru
-        Suplier suplier = suplierRepository.findById(transaksiDTO.getIdSuplier())
-                .orElseThrow(() -> new NotFoundException("Id tidak ditemukan"));
+    @Autowired
+    private PersediaanBarangRepository persediaanBarangRepository;
 
-        TransaksiBeli transaksi = new TransaksiBeli();
-        transaksi.setTotalBelanja(transaksiDTO.getTotalBelanja());
-        transaksi.setPembayaran(transaksiDTO.getPembayaran());
-        transaksi.setPotongan(transaksiDTO.getPotongan());
-        transaksi.setDiskon(transaksiDTO.getDiskon());
-        transaksi.setTotalBayarBarang(transaksiDTO.getTotalBayarBarang());
-        transaksi.setSuplier(suplier);
-        transaksi.setNamaSuplier(suplier.getNamaSuplier());
-        transaksi.setStatus("excelcom");
-        transaksi.setKekurangan(transaksiDTO.getKekurangan());
-        transaksi.setNoFaktur(not);
-        transaksi.setKeterangan(transaksiDTO.getKeterangan());
-        transaksi.setCashCredit(transaksiDTO.getCashCredit());
-        transaksi.setSisa(transaksiDTO.getSisa());
-        transaksi.setTtlBayarHemat(transaksiDTO.getTtlBayarHemat());
-        transaksi.setTanggal(now);
-        transaksi.setDelFlag(1);
-
-        // Set notification dates
-
-        TransaksiBeli savedTransaksi = transaksiBeliRepository.save(transaksi);
-
-
-        // Handle Produk details
-        List<BarangTransaksiDTO> listProduk = transaksiDTO.getProduk();
-        for (BarangTransaksiDTO barangDTO : listProduk) {
-            BarangTransaksiBeli barangTransaksi = new BarangTransaksiBeli();
-            barangTransaksi.setTransaksiBeli(savedTransaksi);
-            barangTransaksi.setBarcodeBarang(barangDTO.getBarcodeBarang());
-            barangTransaksi.setQty(barangDTO.getQty());
-            barangTransaksi.setDiskon(barangDTO.getDiskon());
-            barangTransaksi.setHargaBrng(barangDTO.getHargaBrng());
-            barangTransaksi.setTotalHarga(barangDTO.getTotalHarga());
-            Barang barang = barangRepository.findByBarcode(barangDTO.getBarcodeBarang());
-            if (barang == null) {
-                throw new BadRequestException("Barang Tidak Ada");
-            }
-            barangTransaksi.setUnit(barang.getUnit());
-            barangTransaksi.setTotalHargaBarang(barangDTO.getTotalHargaBarang());
-            barangTransaksi.setNamaBarang(barang.getNamaBarang());
-            barangTransaksi.setTanggal(now);
-            barangTransaksi.setDelFlag(1);
-            barangTransaksi.setHemat(String.valueOf(barangDTO.getHemat()));
-            barangTransaksi.setStatus("excelcom");
-            barangTransaksiBeliRepository.save(barangTransaksi);
-
-            // Update stock
-            int sisaStok = barang.getJumlahStok() + barangDTO.getQty();
-            StokAkhir stokAkhir = new StokAkhir();
-            stokAkhir.setQty(String.valueOf(barangDTO.getQty()));
-            stokAkhir.setBarcodeBarang(barangDTO.getBarcodeBarang());
-            stokAkhir.setTanggal(new Date());
-            barang.setJumlahStok(sisaStok);
-            barangRepository.save(barang);
-            stokAkhirRepository.save(stokAkhir);
-        }
-
-        // Update Hutang
-
-        if(transaksiDTO.getCashCredit().equals("Kredit")){
-            Hutang hutang = new Hutang();
-            hutang.setTransaksiBeli(transaksiBeliRepository.findById(savedTransaksi.getIdTransaksiBeli()).get());
-            hutang.setDate(new Date());
-            hutang.setHutang(savedTransaksi.getKekurangan());
-            hutangRepository.save(hutang);
-        }
-
-
-        // Insert into Persediaan Akhir
-        PersediaanAkhir persediaanAkhir = new PersediaanAkhir();
-        persediaanAkhir.setTransaksi(transaksiBeliRepository.findById(savedTransaksi.getIdTransaksiBeli()).get());
-        persediaanAkhir.setNominal(String.valueOf(transaksiDTO.getTotalBelanja()));
-        persediaanAkhir.setTanggal(new Date());
-
-        persediaanAkhirRepository.save(persediaanAkhir);
-
-        // Update Penjualan Tabel Persediaan
-        updatePenjualanTabelPersediaan(now);
-
-        return savedTransaksi;
-    }
-
-    // Mengupdate tabel persediaan penjualan
-    private void updatePenjualanTabelPersediaan(Date date) {
-
-        // Retrieve the persediaan entry for the given date
-        Optional<Persediaan> persediaanOpt = persediaanRepository.findByDate(date);
-
-        // Calculate the total penjualan
-        List<PersediaanAkhir> totalPenjualanList = persediaanAkhirRepository.findByTanggal(date);
-        int totalPenjualan = totalPenjualanList.stream()
-                .mapToInt(pa -> {
-                    try {
-                        return Integer.parseInt((pa.getNominal()));
-                    } catch (NumberFormatException e) {
-                        // Handle the error, e.g., log it and return 0
-                        System.err.println("Invalid nominal value: " + pa.getNominal());
-                        return 0;
-                    }
-                })
-                .sum();
-
-        if (!persediaanOpt.isEmpty()) {
-            Persediaan persediaan = persediaanOpt.get();
-            persediaan.setPenjualan(String.valueOf(totalPenjualan));
-            int barangSiapJual = Integer.parseInt(persediaan.getBarangSiapJual());
-            int persediaanAkhir = barangSiapJual + totalPenjualan;
-            persediaan.setPersediaanAkhir(String.valueOf(persediaanAkhir));
-
-            persediaanRepository.save(persediaan);
-        } else {
-            // Assuming persediaanService is autowired
-            int persediaanAwal =  persediaanAkhirToAwal(date);
-
-            Persediaan newPersediaan = new Persediaan();
-            newPersediaan.setPersediaanAwal(String.valueOf(persediaanAwal));
-            newPersediaan.setBarangSiapJual(String.valueOf(persediaanAwal));
-            newPersediaan.setPenjualan(String.valueOf(totalPenjualan));
-            int akhir = persediaanAwal + totalPenjualan;
-            newPersediaan.setPersediaanAkhir(String.valueOf(akhir));
-            newPersediaan.setDate(new Date());
-
-            persediaanRepository.save(newPersediaan);
-        }
-    }
-
-    // Mengambil persediaan akhir sebagai persediaan awal untuk tanggal tertentu
-    public int persediaanAkhirToAwal(Date date) {
-        List<Persediaan> persediaanList = persediaanRepository.findLastBeforeDate(date);
-
-        if (!persediaanList.isEmpty()) {
-            // Choose the first record if multiple exist
-            Persediaan persediaan = persediaanList.get(0);
-            return (int) Double.parseDouble(persediaan.getPersediaanAkhir());
-        } else {
-            return 0;
-        }
-    }
+    // Main method for adding a new transaction
+//    public TransaksiBeli addTransaksi(TransaksiBeliDTO transaksiDTO) {
+//        Date now = new Date();
+//        String not = getNoNotaTransaksi(); // Method to generate new Nota Number
+//
+//        Suplier suplier = suplierRepository.findById(transaksiDTO.getIdSuplier())
+//                .orElseThrow(() -> new NotFoundException("Id tidak ditemukan"));
+//
+//        TransaksiBeli transaksi = new TransaksiBeli();
+//        transaksi.setTotalBelanja(transaksiDTO.getTotalBelanja());
+//        transaksi.setPembayaran(transaksiDTO.getPembayaran());
+//        transaksi.setNominalHutang(transaksiDTO.get());
+//        transaksi.setNominalHutang(transaksiDTO.getHutang());
+//        transaksi.setTotalBelanjaDua(transaksiDTO.getTotalBayarDua());
+//        transaksi.setPembayaran(transaksiDTO.getPembayaran());
+//        transaksi.setPotongan(transaksiDTO.getPotongan());
+//        transaksi.setDiskon(transaksiDTO.getDiskon());
+//        transaksi.setTotalBayarBarang(transaksiDTO.getTotalBayarBarang());
+//        transaksi.setSuplier(suplier);
+//        transaksi.setNoFaktur(not);
+//        transaksi.setKeterangan(transaksiDTO.getKeterangan());
+//        transaksi.setCashCredit(transaksiDTO.getCashCredit());
+//        transaksi.setSisa(transaksiDTO.getSisa());
+//        transaksi.setTtlBayarHemat(transaksiDTO.getTtlBayarHemat());
+//        transaksi.setTanggal(now);
+//        transaksi.setDelFlag(1);
+//        transaksi.setStatus("excelcom");
+//
+//        TransaksiBeli savedTransaksi = transaksiBeliRepository.save(transaksi);
+//
+//        // Insert into Persediaan Akhir
+//        PersediaanAkhir persediaanAkhir = new PersediaanAkhir();
+//        persediaanAkhir.setTransaksi(savedTransaksi);
+//        persediaanAkhir.setNominal(String.valueOf(transaksiDTO.getTotal3()));
+//        persediaanAkhir.setTanggal(now);
+//        persediaanAkhirRepository.save(persediaanAkhir);
+//
+//        // Handle Produk details
+//        List<BarangTransaksiDTO> listProduk = transaksiDTO.getProduk();
+//        for (BarangTransaksiDTO barangDTO : listProduk) {
+//            Barang barang = barangRepository.findByBarcode(barangDTO.getBarcodeBarang());
+//            if (barang == null) {
+//                throw new BadRequestException("Barang Tidak Ada");
+//            }
+//
+//            BarangTransaksiBeli barangTransaksi = new BarangTransaksiBeli();
+//            barangTransaksi.setTransaksiBeli(savedTransaksi);
+//            barangTransaksi.setBarcodeBarang(barangDTO.getBarcodeBarang());
+//            barangTransaksi.setQty(barangDTO.getTerjual());
+//            barangTransaksi.setDiskon(barangDTO.getDiskon());
+//            barangTransaksi.setHargaBrng(barangDTO.getHargaBrng());
+//            barangTransaksi.setTotalHarga(barangDTO.getTotalHarga());
+//            barangTransaksi.setTotalHargaBarang(barangDTO.getTotalHargaBarang());
+//            barangTransaksi.setTanggal(now);
+//            barangTransaksi.setDelFlag(1);
+//            barangTransaksi.setStatus("excelcom");
+//            barangTransaksiBeliRepository.save(barangTransaksi);
+//
+//            // Update stock
+//            int sisaStok = barang.getJumlahStok() + barangDTO.getTerjual();
+//            barang.setJumlahStok(sisaStok);
+//            barangRepository.save(barang);
+//
+//            // Insert into Stok Akhir
+//            StokAkhir stokAkhir = new StokAkhir();
+//            stokAkhir.setBarcodeBarang(barangDTO.getBarcodeBarang());
+//            stokAkhir.setQty(String.valueOf(barangDTO.getTerjual()));
+//            stokAkhir.setTanggal(now);
+//            stokAkhirRepository.save(stokAkhir);
+//
+//            // Insert or Update Persediaan Barang
+//            persediaanBarangStokMasuk(now, barangDTO.getBarcodeBarang(), barangDTO.getTerjual());
+//        }
+//
+//        // Handle Hutang if Kredit
+//        if ("Kredit".equals(transaksiDTO.getCashCredit())) {
+//            Hutang hutang = new Hutang();
+//            hutang.setTransaksiBeli(savedTransaksi);
+//            hutang.setDate(now);
+//            hutang.setHutang(savedTransaksi.getHutang());
+//            hutangRepository.save(hutang);
+//        }
+//
+//        // Update Penjualan Tabel Persediaan
+//        updatePembelianTabelPersediaan(now);
+//
+//        return savedTransaksi;
+//    }
+//
+//    // Persediaan Akhir Helper Methods
+//    private void persediaanBarangStokMasuk(Date date, String barcodeBarang, int qty) {
+//        List<PersediaanBarang> persediaanList = persediaanBarangRepository.findByDateAndBarcode(date, barcodeBarang);
+//        int stokAwal = persediaanAkhirToAwalBarang(date, barcodeBarang);
+//        if (!persediaanList.isEmpty()) {
+//            PersediaanBarang persediaan = persediaanList.get(0);
+//            persediaan.setMasuk(persediaan.getMasuk() + qty);
+//            persediaan.setStokAkhir(persediaan.getStokAkhir() + qty);
+//            persediaanBarangRepository.save(persediaan);
+//        } else {
+//            PersediaanBarang newPersediaan = new PersediaanBarang();
+//            newPersediaan.setBarcodeBarang(barcodeBarang);
+//            newPersediaan.setStokAwal(stokAwal);
+//            newPersediaan.setMasuk(qty);
+//            newPersediaan.setStokAkhir(stokAwal + qty);
+//            persediaanBarangRepository.save(newPersediaan);
+//        }
+//    }
+//
+//    public int persediaanAkhirToAwalBarang(Date date, String barcodeBarang) {
+//        List<PersediaanBarang> result = persediaanBarangRepository.findLastBeforeDate(date, barcodeBarang);
+//        List<PersediaanBarang> res = persediaanBarangRepository.findFirstAfterDate(date, barcodeBarang);
+//
+//        if (!result.isEmpty()) {
+//            return result.get(0).getStokAkhir();
+//        } else if (!res.isEmpty()) {
+//            return res.get(0).getStokAwal();
+//        } else {
+//            Barang barang = barangRepository.findByBarcode(barcodeBarang);
+//            return barang != null ? barang.getJumlahStok() : 0;
+//        }
+//    }
+//
+//    private void updatePembelianTabelPersediaan(Date date) {
+//        Persediaan persediaan = persediaanRepository.findByDate(date).orElse(null);
+//        int persediaanAwal = persediaanAkhirToAwal(date);
+//
+//        List<PersediaanAkhir> totalPembelianList = persediaanAkhirRepository.findByTanggal(date);
+//        int totalPembelian = totalPembelianList.stream()
+//                .mapToInt(pa -> Integer.parseInt(pa.getNominal()))
+//                .sum();
+//
+//        if (persediaan != null) {
+//            int barangSiapJual = Integer.parseInt(persediaan.getPersediaanAwal()) + totalPembelian;
+//            int persediaanAkhir = barangSiapJual - Integer.parseInt(persediaan.getPenjualan());
+//            persediaan.setPembelian(String.valueOf(totalPembelian));
+//            persediaan.setBarangSiapJual(String.valueOf(barangSiapJual));
+//            persediaan.setPersediaanAkhir(String.valueOf(persediaanAkhir));
+//            persediaanRepository.save(persediaan);
+//        } else {
+//            int barangSiapJual = persediaanAwal + totalPembelian;
+//            Persediaan newPersediaan = new Persediaan();
+//            newPersediaan.setPersediaanAwal(String.valueOf(persediaanAwal));
+//            newPersediaan.setPembelian(String.valueOf(totalPembelian));
+//            newPersediaan.setBarangSiapJual(String.valueOf(barangSiapJual));
+//            newPersediaan.setPersediaanAkhir(String.valueOf(barangSiapJual));
+//            newPersediaan.setDate(date);
+//            persediaanRepository.save(newPersediaan);
+//        }
+//    }
 
     public String getNoNotaTransaksi() {
         try {

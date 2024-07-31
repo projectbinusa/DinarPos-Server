@@ -118,7 +118,7 @@ public class TransaksiPenjualanDinarposService {
         calendar.add(Calendar.YEAR, 1);
         transaksi.setTanggalNotif365(calendar.getTime());
 
-        Transaksi savedTransaksi = transaksiRepository.save(transaksi);
+        Transaksi savedTransaksi = transaksi;
 
         // Handle Produk details
         List<BarangTransaksiDTO> listProduk = transaksiDTO.getProduk();
@@ -129,7 +129,13 @@ public class TransaksiPenjualanDinarposService {
             barangTransaksi.setQty(barangDTO.getQty());
             barangTransaksi.setDiskon(barangDTO.getDiskon());
             barangTransaksi.setHargaBrng(barangDTO.getHargaBrng());
-            barangTransaksi.setTotalHarga(barangDTO.getTotalHarga());
+            int totalHargaBarang = 0;
+            try {
+                totalHargaBarang = Integer.parseInt(String.valueOf(barangDTO.getTotalHargaBarang()));
+            } catch (NumberFormatException e) {
+                throw new BadRequestException("Total Harga Barang should be a valid integer.");
+            }
+            barangTransaksi.setTotalHargaBarang(totalHargaBarang);
             Barang barang = barangRepository.findByBarcode(barangDTO.getBarcodeBarang());
             if (barang == null) {
                 throw new BadRequestException("Barang Tidak Ada");
@@ -149,31 +155,36 @@ public class TransaksiPenjualanDinarposService {
             barangTransaksiRepository.save(barangTransaksi);
 
             // Update stock
-            int sisaStok = barang.getJumlahStok() - barangDTO.getQty();
+            int qty = 0;
+            try {
+                qty = barangDTO.getQty();  // Assuming getQty() returns an integer
+            } catch (NumberFormatException e) {
+                throw new BadRequestException("Quantity should be a valid integer.");
+            }
+            int sisaStok = barang.getJumlahStok() - qty;
             if (sisaStok < 0) {
                 throw new BadRequestException("Stok Barang Habis");
             }
-            StokAwal stokAwal = new StokAwal();
-            stokAwal.setQty(String.valueOf(barangDTO.getQty()));
-            stokAwal.setBarcodeBarang(barangDTO.getBarcodeBarang());
-            stokAwal.setTanggal(new Date());
             barang.setJumlahStok(sisaStok);
             barangRepository.save(barang);
-            stokAwalrepository.save(stokAwal);
 
             // Insert/Update Persediaan Barang
-            tabelPersediaanBarangStokKeluar(stokAwal);
+            tabelPersediaanBarangStokKeluar(barangDTO, now);
         }
 
         // Update Kas Harian
         String cash = transaksiDTO.getCashKredit();
-        int pembayaran =  transaksiDTO.getPembayaran();
-        int kekurangan = Integer.parseInt(transaksiDTO.getKekurangan());
+        int pembayaran = transaksiDTO.getPembayaran();
+        int kekurangan = 0;
+        try {
+            kekurangan = Integer.parseInt(transaksiDTO.getKekurangan());
+        } catch (NumberFormatException e) {
+            throw new BadRequestException("Kekurangan should be a valid integer.");
+        }
         int penjualan = pembayaran + kekurangan;
 
         KasHarian kasHarian = new KasHarian();
         kasHarian.setTransaksi(savedTransaksi);
-        kasHarian.setPenjualan(String.valueOf(pembayaran));
         kasHarian.setTimestamp(new Date());
 
         if (cash.equals("Cash Uang")) {
@@ -196,52 +207,48 @@ public class TransaksiPenjualanDinarposService {
         // Update Omzet
         Omzet omzet = new Omzet();
         omzet.setOmzet(Double.valueOf(transaksiDTO.getTotalBelanja()));
-        omzet.setTransaksi(transaksiRepository.findById(savedTransaksi.getIdTransaksi()).get());
+        omzet.setTransaksi(savedTransaksi);
         omzet.setNmCustomer(customer.getNama_customer());
-        omzet.setSalesman(salesmanRepository.findById(transaksiDTO.getIdSalesman()).get());
+        omzet.setSalesman(salesman);
         omzet.setTgl(now);
         omzetRepository.save(omzet);
 
         // Insert into Persediaan Awal
         PersediaanAwal persediaanAwal = new PersediaanAwal();
-        persediaanAwal.setTransaksi(transaksiRepository.findById(savedTransaksi.getIdTransaksi()).get());
+        persediaanAwal.setTransaksi(savedTransaksi);
         persediaanAwal.setNominal(String.valueOf(transaksiDTO.getTotalBelanja()));
         persediaanAwal.setTanggal(new Date());
-
         persediaanAwalRepository.save(persediaanAwal);
+        transaksiRepository.save(transaksi);
 
         // Update Penjualan Tabel Persediaan
         updatePenjualanTabelPersediaan(now);
 
+
         return savedTransaksi;
     }
 
-    private void tabelPersediaanBarangStokKeluar(StokAwal stokAwal) {
-        Long id = stokAwal.getIdStokAwal();
-        Optional<StokAwal> stokKeluarOpt = stokAwalrepository.findById(id);
-        if (!stokKeluarOpt.isPresent()) {
-            throw new NotFoundException("Stok Awal not found");
-        }
-        StokAwal stokKeluar = stokKeluarOpt.get();
+    private void tabelPersediaanBarangStokKeluar(BarangTransaksiDTO barangDTO, Date now) {
+        String barcode = barangDTO.getBarcodeBarang();
+        int qty = barangDTO.getQty();
 
-        List<PersediaanBarang> persediaanBarangList = persediaanBarangRepository.findByTanggalAndBarangBarcode(
-                stokKeluar.getTanggal(), stokKeluar.getBarcodeBarang());
+        List<PersediaanBarang> persediaanBarangList = persediaanBarangRepository.findByTanggalAndBarangBarcode(now, barcode);
 
-        int stokAwalQty = persediaanAkhirToAwalBarang(stokKeluar.getTanggal(), stokKeluar.getBarcodeBarang());
+        int stokAwalQty = persediaanAkhirToAwalBarang(now, barcode);
 
         if (!persediaanBarangList.isEmpty()) {
-            for (PersediaanBarang persediaan : persediaanBarangList) {
-                int keluar = Integer.parseInt(persediaan.getKeluar() + Integer.parseInt(stokKeluar.getQty()));
-                persediaan.setKeluar(String.valueOf(keluar));
-                persediaan.setStok_akhir(String.valueOf(Integer.parseInt(persediaan.getStok_akhir()) - Integer.parseInt(stokKeluar.getQty())));
-                persediaanBarangRepository.save(persediaan);
-            }
+            PersediaanBarang persediaan = persediaanBarangList.get(0); // Assuming only one record per day per item
+            int keluar = Integer.parseInt(persediaan.getKeluar()) + qty;
+            persediaan.setKeluar(String.valueOf(keluar));
+            persediaan.setStok_akhir(String.valueOf(stokAwalQty - keluar));
+            persediaanBarangRepository.save(persediaan);
         } else {
             PersediaanBarang persediaanBarang = new PersediaanBarang();
-            persediaanBarang.setBarang(barangRepository.findByBarcodeBarang(stokKeluar.getBarcodeBarang()).get());
+            persediaanBarang.setBarang(barangRepository.findByBarcodeBarang(barcode).get());
             persediaanBarang.setStok_awal(String.valueOf(stokAwalQty));
-            persediaanBarang.setKeluar(stokKeluar.getQty());
-            persediaanBarang.setStok_akhir(String.valueOf(stokAwalQty - Integer.parseInt(stokKeluar.getQty())));
+            persediaanBarang.setKeluar(String.valueOf(qty));
+            persediaanBarang.setStok_akhir(String.valueOf(stokAwalQty - qty));
+            persediaanBarang.setTanggal(now);
             persediaanBarangRepository.save(persediaanBarang);
         }
     }
@@ -255,32 +262,26 @@ public class TransaksiPenjualanDinarposService {
         } else if (res.isPresent()) {
             return Integer.parseInt(res.get().getStok_awal());
         } else {
-            Optional<Barang> stokBarang = Optional.ofNullable(barangRepository.findByBarcode(barcodeBarang));
-            if (stokBarang.isPresent()) {
-                return stokBarang.get().getJumlahStok();
+            Barang barang = barangRepository.findByBarcode(barcodeBarang);
+            if (barang != null) {
+                return barang.getJumlahStok();
             }
         }
         return 0;
     }
 
     private void updatePenjualanTabelPersediaan(Date date) {
-        Optional<Persediaan> persediaanOpt = persediaanRepository.findByDate(date);
+        Optional<Persediaan> persediaanOpt = persediaanRepository.findByTanggal(date);
         List<PersediaanAwal> totalPenjualanList = persediaanAwalRepository.findByTanggal(date);
 
         int totalPenjualan = totalPenjualanList.stream()
                 .mapToInt(pa -> {
-                    try {
-                        return Integer.parseInt(pa.getNominal());
-                    } catch (NumberFormatException e) {
-                        // Handle the error, e.g., log it and return 0
-                        System.err.println("Invalid nominal value: " + pa.getNominal());
-                        return 0;
-                    }
+                    return Integer.parseInt(pa.getNominal());
                 })
                 .sum();
 
-        if (persediaanOpt.isPresent()) {
-            Persediaan persediaan = persediaanOpt.get();
+        if (persediaanRepository.findByTanggal(date).isPresent()) {
+            Persediaan persediaan = persediaanRepository.findByTanggal(date).get();
             persediaan.setPenjualan(String.valueOf(totalPenjualan));
             int barangSiapJual = Integer.parseInt(persediaan.getBarangSiapJual());
             int persediaanAkhir = barangSiapJual - totalPenjualan;
@@ -295,19 +296,20 @@ public class TransaksiPenjualanDinarposService {
             newPersediaan.setPenjualan(String.valueOf(totalPenjualan));
             int akhir = persediaanAwal - totalPenjualan;
             newPersediaan.setPersediaanAkhir(String.valueOf(akhir));
-            newPersediaan.setDate(new Date());
+            newPersediaan.setDate(date);
 
             persediaanRepository.save(newPersediaan);
         }
     }
 
+    // Mengubah nilai persediaan akhir menjadi nilai persediaan awal berdasarkan tanggal tertentu
     public int persediaanAkhirToAwal(Date date) {
         List<Persediaan> persediaanList = persediaanRepository.findLastBeforeDate(date);
 
         if (!persediaanList.isEmpty()) {
             // Choose the first record if multiple exist
             Persediaan persediaan = persediaanList.get(0);
-            return (int) Double.parseDouble(persediaan.getPersediaanAkhir());
+            return Integer.parseInt(persediaan.getPersediaanAkhir());
         } else {
             return 0;
         }
