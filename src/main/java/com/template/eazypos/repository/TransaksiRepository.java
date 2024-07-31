@@ -6,11 +6,13 @@ import com.template.eazypos.model.TransaksiBeli;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public interface TransaksiRepository extends JpaRepository<Transaksi, Long> {
     @Query(value = "SELECT no_faktur FROM tabel_transaksi  WHERE MONTH(tanggal) = :bulan AND YEAR(tanggal) = :tahun ORDER BY id_transaksi DESC LIMIT 1", nativeQuery = true)
     String findLastNotaByMonthAndYear(@Param("bulan") int bulan, @Param("tahun") int tahun);
@@ -91,4 +93,7 @@ public interface TransaksiRepository extends JpaRepository<Transaksi, Long> {
 
     @Query(value = "SELECT * FROM tabel_transaksi WHERE del_flag = 1 ", nativeQuery = true)
     List<Transaksi> findAllTransaksi();
+
+    @Query("SELECT t.noFaktur FROM Transaksi t WHERE t.serviceBarang.idTT = :id_tt")
+    Optional<String> findNoFakturByTandaTerima(@Param("id_tt") Long idTT);
 }
