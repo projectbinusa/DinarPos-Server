@@ -1,10 +1,8 @@
 package com.template.eazypos.service.eazypos.excel;
 
 import com.template.eazypos.model.*;
-import com.template.eazypos.repository.TransaksiRepository;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,16 +13,12 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Optional;
 
 @Service
-public class ExcelLaporanServiceAll {
+public class ExcelLaporanServiceInProses {
     public static final String TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-    static String[] HEADERsLAPORANSERVICE = {"NO", "TANDA TERIMA", "NO FAKTUR", "STATUS", "TAKEN", "NAMA CUSTOMER", "ALAMAT", "NO TELP", "TEKNISI", "PRODUK", "KELUHAN", "PENERIMA", "TANGGAL MASUK", "TANGGAL JADI", "TANGGAL AMBIL", "BIAYA SPAREPART", "BIAYA SERVICE", "TOTAL"};
-    private static final String SHEET_NAME = "Laporan Service";
-
-    @Autowired
-    private TransaksiRepository transaksiRepository;
+    static String[] HEADERsLAPORANSERVICEINPROSES = {"NO", "TANDA TERIMA", "NAMA CUSTOMER", "ALAMAT", "NO TELP", "TEKNISI", "PRODUK", "KELUHAN", "PENERIMA", "TANGGAL MASUK", "TANGGAL JADI", "TANGGAL AMBIL", "BIAYA SPAREPART", "BIAYA SERVICE", "TOTAL"};
+    private static final String SHEET_NAME = "Laporan Service Status Proses";
 
     private static final String SHEET = "sheet1";
 
@@ -32,7 +26,7 @@ public class ExcelLaporanServiceAll {
         return TYPE.equals(file.getContentType());
     }
 
-    public ByteArrayInputStream laporanServiceToExcel(List<ServiceBarang> serviceBarangs) {
+    public ByteArrayInputStream laporanServiceInProsesToExcel(List<ServiceBarang> serviceBarangs) {
         try (Workbook workbook = new XSSFWorkbook(); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
             Sheet sheet = workbook.createSheet(SHEET);
 
@@ -53,9 +47,9 @@ public class ExcelLaporanServiceAll {
 
             // Create Header Row
             Row headerRow = sheet.createRow(0);
-            for (int col = 0; col < HEADERsLAPORANSERVICE.length; col++) {
+            for (int col = 0; col < HEADERsLAPORANSERVICEINPROSES.length; col++) {
                 Cell cell = headerRow.createCell(col);
-                cell.setCellValue(HEADERsLAPORANSERVICE[col]);
+                cell.setCellValue(HEADERsLAPORANSERVICEINPROSES[col]);
                 cell.setCellStyle(headerStyle);
                 sheet.autoSizeColumn(col);
             }
@@ -91,85 +85,68 @@ public class ExcelLaporanServiceAll {
                 cellIdTT.setCellValue(serviceBarang.getIdTT());
                 cellIdTT.setCellStyle(dataStyle);
 
-                Optional<String> noFakturOpt = transaksiRepository.findNoFakturByTandaTerima(serviceBarang.getIdTT());
-                String noFaktur = noFakturOpt.orElse("-");
-                Cell cellNoFaktur = row.createCell(2);
-                cellNoFaktur.setCellValue(noFaktur);
-                cellNoFaktur.setCellStyle(dataStyle);
-
-                Cell cellStatusEnd = row.createCell(3);
-                cellStatusEnd.setCellValue(serviceBarang.getStatusEnd());
-                cellStatusEnd.setCellStyle(dataStyle);
-
-                Cell cellTaken = row.createCell(4);
-                cellTaken.setCellValue(serviceBarang.getTaken());
-                cellTaken.setCellStyle(dataStyle);
-
-                // Mendapatkan nama customer dari objek Customer
                 String customerName = serviceBarang.getCustomer() != null ? serviceBarang.getCustomer().getNama_customer() : "Unknown";
-                Cell cellCustomerName = row.createCell(5);
+                Cell cellCustomerName = row.createCell(2);
                 cellCustomerName.setCellValue(customerName);
                 cellCustomerName.setCellStyle(dataStyle);
 
-                Cell cellAlamat = row.createCell(6);
+                Cell cellAlamat = row.createCell(3);
                 cellAlamat.setCellValue(serviceBarang.getAlamat());
                 cellAlamat.setCellStyle(dataStyle);
 
-                // Mendapatkan nomor telepon dari objek Customer
                 String customerTelp = serviceBarang.getCustomer() != null ? serviceBarang.getCustomer().getTelp() : "Unknown";
-                Cell cellCustomerTelp = row.createCell(7);
+                Cell cellCustomerTelp = row.createCell(4);
                 cellCustomerTelp.setCellValue(customerTelp);
                 cellCustomerTelp.setCellStyle(dataStyle);
 
-                // Mendapatkan nama teknisi dari objek Teknisi
                 String teknisiName = serviceBarang.getTeknisi() != null ? serviceBarang.getTeknisi().getNama() : "Unknown";
-                Cell cellTeknisiName = row.createCell(8);
+                Cell cellTeknisiName = row.createCell(5);
                 cellTeknisiName.setCellValue(teknisiName);
                 cellTeknisiName.setCellStyle(dataStyle);
 
-                Cell cellProduk = row.createCell(9);
+                Cell cellProduk = row.createCell(6);
                 cellProduk.setCellValue(serviceBarang.getProduk());
                 cellProduk.setCellStyle(dataStyle);
 
-                Cell cellKeluhan = row.createCell(10);
+                Cell cellKeluhan = row.createCell(7);
                 cellKeluhan.setCellValue(serviceBarang.getKeluhan());
                 cellKeluhan.setCellStyle(dataStyle);
 
-                Cell cellPenerima = row.createCell(11);
+                Cell cellPenerima = row.createCell(8);
                 cellPenerima.setCellValue(serviceBarang.getPenerima());
                 cellPenerima.setCellStyle(dataStyle);
 
-                Cell cellTanggalMasuk = row.createCell(12);
+                Cell cellTanggalMasuk = row.createCell(9);
                 if (serviceBarang.getTanggalMasuk() != null) {
                     cellTanggalMasuk.setCellValue(serviceBarang.getTanggalMasuk());
                     cellTanggalMasuk.setCellStyle(dateStyle);
                 }
 
-                Cell cellTanggalJadi = row.createCell(13);
+                Cell cellTanggalJadi = row.createCell(10);
                 if (serviceBarang.getTanggalJadi() != null) {
                     cellTanggalJadi.setCellValue(serviceBarang.getTanggalJadi());
                     cellTanggalJadi.setCellStyle(dateStyle);
                 }
 
-                Cell cellTanggalAmbil = row.createCell(14);
+                Cell cellTanggalAmbil = row.createCell(11);
                 if (serviceBarang.getTanggalAmbil() != null) {
                     cellTanggalAmbil.setCellValue(serviceBarang.getTanggalAmbil());
                     cellTanggalAmbil.setCellStyle(dateStyle);
                 }
 
-                Cell cellBiayaSparepart = row.createCell(15);
+                Cell cellBiayaSparepart = row.createCell(12);
                 double biayaSparepart = serviceBarang.getBiayaSparepart();
                 cellBiayaSparepart.setCellValue(biayaSparepart);
                 cellBiayaSparepart.setCellStyle(dataStyle);
                 totalBiayaSparepart += biayaSparepart;
 
-                Cell cellBiayaService = row.createCell(16);
+                Cell cellBiayaService = row.createCell(13);
                 double biayaService = serviceBarang.getBiayaService();
                 cellBiayaService.setCellValue(biayaService);
                 cellBiayaService.setCellStyle(dataStyle);
                 totalBiayaService += biayaService;
 
-                Cell cellTotal = row.createCell(17);
+                Cell cellTotal = row.createCell(14);
                 double total = serviceBarang.getTotal();
                 cellTotal.setCellValue(total);
                 cellTotal.setCellStyle(dataStyle);
@@ -192,20 +169,20 @@ public class ExcelLaporanServiceAll {
             totalStyle.setAlignment(HorizontalAlignment.CENTER);
             totalStyle.setVerticalAlignment(VerticalAlignment.CENTER);
 
-            Cell cellTotalBiayaSparepart = totalRow.createCell(15);
+            Cell cellTotalBiayaSparepart = totalRow.createCell(12);
             cellTotalBiayaSparepart.setCellValue(totalBiayaSparepart);
             cellTotalBiayaSparepart.setCellStyle(totalStyle);
 
-            Cell cellTotalBiayaService = totalRow.createCell(16);
+            Cell cellTotalBiayaService = totalRow.createCell(13);
             cellTotalBiayaService.setCellValue(totalBiayaService);
             cellTotalBiayaService.setCellStyle(totalStyle);
 
-            Cell cellTotalBiaya = totalRow.createCell(17);
+            Cell cellTotalBiaya = totalRow.createCell(14);
             cellTotalBiaya.setCellValue(totalBiaya);
             cellTotalBiaya.setCellStyle(totalStyle);
 
             // Auto-size all columns
-            for (int col = 0; col < HEADERsLAPORANSERVICE.length; col++) {
+            for (int col = 0; col < HEADERsLAPORANSERVICEINPROSES.length; col++) {
                 sheet.autoSizeColumn(col);
             }
 
@@ -216,7 +193,7 @@ public class ExcelLaporanServiceAll {
         }
     }
 
-    public static List<ServiceBarang> excelToLaporanService(InputStream is) {
+    public static List<ServiceBarang> excelToLaporanServiceInProses(InputStream is) {
         try {
             Workbook workbook = new XSSFWorkbook(is);
             Sheet sheet = workbook.getSheetAt(0);
@@ -242,7 +219,6 @@ public class ExcelLaporanServiceAll {
 
                     switch (cellIdx) {
                         case 1:
-                            // Mengambil ID TANDA TERIMA (idTT) dari Excel
                             if (currentCell.getCellType() == CellType.NUMERIC) {
                                 serviceBarang.setIdTT((long) currentCell.getNumericCellValue());
                             } else if (currentCell.getCellType() == CellType.STRING) {
@@ -254,39 +230,33 @@ public class ExcelLaporanServiceAll {
                             }
                             break;
                         case 3:
-                            serviceBarang.setStatusEnd(currentCell.getStringCellValue());
-                            break;
-                        case 4:
-                            serviceBarang.setTaken(currentCell.getStringCellValue());
-                            break;
-                        case 6:
                             serviceBarang.setAlamat(currentCell.getStringCellValue());
                             break;
-                        case 9:
+                        case 6:
                             serviceBarang.setProduk(currentCell.getStringCellValue());
                             break;
-                        case 10:
+                        case 7:
                             serviceBarang.setKeluhan(currentCell.getStringCellValue());
                             break;
-                        case 11:
+                        case 8:
                             serviceBarang.setPenerima(currentCell.getStringCellValue());
                             break;
-                        case 12:
+                        case 9:
                             serviceBarang.setTanggalMasuk(currentCell.getDateCellValue());
                             break;
-                        case 13:
+                        case 10:
                             serviceBarang.setTanggalJadi(currentCell.getDateCellValue());
                             break;
-                        case 14:
+                        case 11:
                             serviceBarang.setTanggalAmbil(currentCell.getDateCellValue());
                             break;
-                        case 15:
+                        case 12:
                             serviceBarang.setBiayaSparepart((int) currentCell.getNumericCellValue());
                             break;
-                        case 16:
+                        case 13:
                             serviceBarang.setBiayaService((int) currentCell.getNumericCellValue());
                             break;
-                        case 17:
+                        case 14:
                             serviceBarang.setTotal((int) currentCell.getNumericCellValue());
                             break;
                         default:
