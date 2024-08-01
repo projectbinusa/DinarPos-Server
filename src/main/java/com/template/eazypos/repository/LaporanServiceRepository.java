@@ -9,4 +9,16 @@ public interface LaporanServiceRepository extends JpaRepository<ServiceBarang, L
 
     @Query(value = "SELECT * FROM service", nativeQuery = true)
     List<ServiceBarang> findAllService();
+
+    @Query(value = "SELECT * FROM service WHERE status_end = 'PROSES'", nativeQuery = true)
+    List<ServiceBarang> findAllServiceWithStatusProses();
+
+    @Query(value = "SELECT * FROM service WHERE status_end = 'CANCEL'", nativeQuery = true)
+    List<ServiceBarang> findAllServiceWithStatusCancel();
+
+    @Query(value = "SELECT * FROM service WHERE status_end = 'READY'", nativeQuery = true)
+    List<ServiceBarang> findAllServiceWithStatusReady();
+
+    @Query(value = "SELECT * FROM service WHERE taken = 'Y'", nativeQuery = true)
+    List<ServiceBarang> findAllServiceWithTakenY();
 }
