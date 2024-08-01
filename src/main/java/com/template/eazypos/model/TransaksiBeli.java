@@ -44,7 +44,7 @@ public class TransaksiBeli extends DateConfig {
     private Integer nominalHutang;
 
     @Column(name = "hutang")
-    private String huatng;
+    private String hutang;
 
     @Column(name = "total_belanja", nullable = false, length = 50)
     private String totalBelanja;
@@ -108,6 +108,8 @@ public class TransaksiBeli extends DateConfig {
 //    public void setIdSuplier(Long idSuplier) {
 //        this.idSuplier = idSuplier;
 //    }
+
+
 
 
     public Suplier getSuplier() {
@@ -248,12 +250,12 @@ public class TransaksiBeli extends DateConfig {
         this.nominalHutang = nominalHutang;
     }
 
-    public String getHuatng() {
-        return huatng;
+    public String getHutang() {
+        return hutang;
     }
 
-    public void setHuatng(String huatng) {
-        this.huatng = huatng;
+    public void setHutang(String hutang) {
+        this.hutang = hutang;
     }
 
     public String getTotalBelanjaDua() {

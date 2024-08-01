@@ -18,4 +18,12 @@ public interface PersediaanBarangRepository extends JpaRepository<PersediaanBara
 
     @Query("SELECT pb FROM PersediaanBarang pb WHERE pb.tanggal < :tanggal AND pb.barang.barcodeBarang = :barcode ORDER BY pb.tanggal DESC")
     Optional<PersediaanBarang> findFirstByTanggalBeforeAndBarangBarcodeOrderByTanggalDesc(@Param("tanggal") Date tanggal, @Param("barcode") String barcode);
+
+    // Finds the first record after the specified date for the given barcode
+    @Query("SELECT p FROM PersediaanBarang p WHERE p.barang.barcodeBarang = :barcode AND p.tanggal > :date ORDER BY p.tanggal ASC")
+    List<PersediaanBarang> findFirstAfterDate(@Param("date") Date date, @Param("barcode") String barcode);
+
+    // Finds the last record before the specified date for the given barcode
+    @Query("SELECT p FROM PersediaanBarang p WHERE p.barang.barcodeBarang = :barcode AND p.tanggal <= :date ORDER BY p.tanggal DESC")
+    List<PersediaanBarang> findLastBeforeDate(@Param("date") Date date, @Param("barcode") String barcode);
 }

@@ -4,6 +4,15 @@ import java.util.List;
 
 public class TransaksiBeliDTO {
     private String totalBelanja;
+    private int total3;
+    private String hutang;
+
+    private int totalBayar2;
+
+    private String ppn;
+    private String dpp;
+    private String dpp2;
+    private String ppn2;
     private int pembayaran;
     private String potongan;
     private int diskon;
@@ -13,7 +22,6 @@ public class TransaksiBeliDTO {
     private String cashCredit;
     private String sisa;
     private String ttlBayarHemat;
-    private String kekurangan;
     private List<BarangTransaksiDTO> produk;
 
     public String getTotalBelanja() {
@@ -28,12 +36,60 @@ public class TransaksiBeliDTO {
         return pembayaran;
     }
 
-    public String getKekurangan() {
-        return kekurangan;
+    public int getTotal3() {
+        return total3;
     }
 
-    public void setKekurangan(String kekurangan) {
-        this.kekurangan = kekurangan;
+    public void setTotal3(int total3) {
+        this.total3 = total3;
+    }
+
+    public String getHutang() {
+        return hutang;
+    }
+
+    public void setHutang(String hutang) {
+        this.hutang = hutang;
+    }
+
+    public int getTotalBayar2() {
+        return totalBayar2;
+    }
+
+    public void setTotalBayar2(int totalBayar2) {
+        this.totalBayar2 = totalBayar2;
+    }
+
+    public String getPpn() {
+        return ppn;
+    }
+
+    public void setPpn(String ppn) {
+        this.ppn = ppn;
+    }
+
+    public String getDpp() {
+        return dpp;
+    }
+
+    public void setDpp(String dpp) {
+        this.dpp = dpp;
+    }
+
+    public String getDpp2() {
+        return dpp2;
+    }
+
+    public void setDpp2(String dpp2) {
+        this.dpp2 = dpp2;
+    }
+
+    public String getPpn2() {
+        return ppn2;
+    }
+
+    public void setPpn2(String ppn2) {
+        this.ppn2 = ppn2;
     }
 
     public void setPembayaran(int pembayaran) {
