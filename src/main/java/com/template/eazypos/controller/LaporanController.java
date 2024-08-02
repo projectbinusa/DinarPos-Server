@@ -9,6 +9,7 @@ import com.template.eazypos.model.TransaksiBeli;
 import com.template.eazypos.service.eazypos.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -260,5 +261,11 @@ public class LaporanController {
     @DeleteMapping("/transaksi_beli/{id}")
     public CommonResponse<?> deleteTransaksiBeli(@PathVariable("id") Long id) {
         return ResponseHelper.ok(laporanTransaksiBeliService.delete(id));
+    }
+
+    @GetMapping("/laporan-marketing")
+    public ResponseEntity<List<Transaksi>> getLaporanMarketing() {
+        List<Transaksi> laporanMarketing = laporanCustomerService.getLaporanMarketing();
+        return ResponseEntity.ok(laporanMarketing);
     }
 }
