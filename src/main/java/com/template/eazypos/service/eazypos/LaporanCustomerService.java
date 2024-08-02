@@ -61,4 +61,8 @@ public class LaporanCustomerService {
         String status = "dinarpos";
         return transaksiRepository.findCustomerByTanggal(tanggalAwal , tanggalAkhir , idCustomer , status);
     }
+
+    public List<Transaksi> getLaporanMarketing() {
+        return transaksiRepository.findLaporanMarketing();
+    }
 }
