@@ -2,10 +2,13 @@ package com.template.eazypos.service.eazypos.excel;
 
 import com.template.eazypos.model.Barang;
 import com.template.eazypos.model.Persediaan;
+import com.template.eazypos.model.PersediaanBarang;
 import com.template.eazypos.repository.BarangRepository;
+import com.template.eazypos.repository.PersediaanBarangRepository;
 import com.template.eazypos.repository.PoinHistoryRepository;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +19,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
@@ -28,6 +32,9 @@ public class ExcelService {
 
     @Autowired
     private BarangRepository barangRepository;
+
+    @Autowired
+    private PersediaanBarangRepository persediaanBarangRepository;
 
     public void generateReport(String bulanAwal, String bulanAkhir, HttpServletResponse response) throws IOException {
         XSSFWorkbook workbook = new XSSFWorkbook();
@@ -286,122 +293,160 @@ public class ExcelService {
         return nominal != null ? nominal : 0;
     }
 
-    public void generateExcel(OutputStream outputStream, String tglAwal, String tglAkhir) throws IOException {
-//        List<Barang> barangs = barangRepository.findAllByDate(tglAkhir);
+
+    public void exportExcel(HttpServletResponse response, Date startDate, Date endDate) throws IOException {
+        List<Barang> barangs = barangRepository.findAllByDelFlagAndDateBefore(endDate);
+
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("PersediaanBarang");
 
-        // Define styles
-        CellStyle styleCol = createStyle(workbook, HorizontalAlignment.CENTER, IndexedColors.BLACK.getIndex());
-        CellStyle styleCol2 = createStyle(workbook, HorizontalAlignment.LEFT, IndexedColors.BLACK.getIndex());
-        CellStyle styleColNumber = createStyle(workbook, HorizontalAlignment.RIGHT, IndexedColors.BLACK.getIndex());
-        CellStyle combinedStyleCyan = createFillStyle(workbook, styleCol, IndexedColors.LIGHT_BLUE.getIndex());
-        CellStyle combinedStyleBlue = createFillStyle(workbook, styleCol, IndexedColors.BLUE.getIndex());
-        CellStyle combinedStyleBlueWhite = createFontStyle(workbook, combinedStyleBlue, IndexedColors.WHITE.getIndex());
-        CellStyle combinedStyleRed = createFontStyle(workbook, createFillStyle(workbook, styleCol, IndexedColors.RED.getIndex()), IndexedColors.WHITE.getIndex());
-        CellStyle combinedStyleYellow = createFillStyle(workbook, styleCol, IndexedColors.YELLOW.getIndex());
-        CellStyle lightGreen = createFillStyle(workbook, styleColNumber, IndexedColors.LIGHT_GREEN.getIndex());
+        CellStyle headerStyle = createHeaderStyle(workbook);
+        CellStyle dateHeaderStyle = createDateHeaderStyle(workbook);
+        CellStyle normalStyle = createNormalStyle(workbook);
+        CellStyle normalRightAlignStyle = createNormalRightAlignStyle(workbook);
 
-        // Define header row and merge cells
-        Row headerRow1 = sheet.createRow(0);
-        createCell(headerRow1, 0, tglAwal + " s.d " + tglAkhir, combinedStyleCyan, 3);
-        Row headerRow2 = sheet.createRow(1);
-        createCell(headerRow2, 0, "Kode Barang", combinedStyleBlue, 1, 3);
-        createCell(headerRow2, 1, "Nama Barang", combinedStyleBlue, 1, 3);
-        createCell(headerRow2, 2, "Persediaan Awal", combinedStyleCyan, 1, 2);
+        // Header
+        Row headerRow = sheet.createRow(0);
+        Cell headerCell = headerRow.createCell(0);
+        headerCell.setCellValue(formatDate(startDate) + " s.d " + formatDate(endDate));
+        headerCell.setCellStyle(headerStyle);
+        sheet.addMergedRegion(new org.apache.poi.ss.util.CellRangeAddress(0, 0, 0, 2));
 
-        // Generate dynamic date columns
-        LocalDate startDate = LocalDate.parse(tglAwal, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        LocalDate endDate = LocalDate.parse(tglAkhir, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        int dateColumnStart = 3;
-        for (LocalDate date = startDate; !date.isAfter(endDate); date = date.plusDays(1)) {
-            String formattedDate = date.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-            createCell(headerRow2, dateColumnStart, formattedDate, combinedStyleCyan, 3, 2);
-            createCell(headerRow2, dateColumnStart + 1, "MASUK", combinedStyleCyan);
-            createCell(headerRow2, dateColumnStart + 2, "KELUAR", combinedStyleCyan);
-            createCell(headerRow2, dateColumnStart + 3, "SISA", combinedStyleCyan);
-            dateColumnStart += 4;
+        // Columns
+        String[] columnHeaders = {"Kode Barang", "Nama Barang", "Persediaan Awal", "Tanggal", "Masuk", "Keluar", "Stok Akhir"};
+        Row columnRow = sheet.createRow(1);
+        for (int i = 0; i < columnHeaders.length; i++) {
+            Cell cell = columnRow.createCell(i);
+            cell.setCellValue(columnHeaders[i]);
+            cell.setCellStyle(headerStyle);
         }
 
-        // Add data rows
-//        int rowNum = 5;
-//        for (Barang barang : barangs) {
-//            Row row = sheet.createRow(rowNum++);
-//            createCell(row, 0, barang.getBarcodeBarang(), styleCol2);
-//            createCell(row, 1, barang.getNamaBarang(), styleCol2);
-//            createCell(row, 2, persediaanBarangAwal(tglAwal, barang.getBarcodeBarang()), styleCol);
-//
-//            dateColumnStart = 3;
-//            for (LocalDate date = startDate; !date.isAfter(endDate); date = date.plusDays(1)) {
-//                String dateTransaksi = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-//                Persediaan persediaan = persediaanBarang(tglAwal, barang.getBarcodeBarang(), dateTransaksi);
-//
-//                createCell(row, dateColumnStart, persediaan != null ? persediaan.getMasuk() : 0, styleCol);
-//                createCell(row, dateColumnStart + 1, persediaan != null ? persediaan.getKeluar() : 0, styleCol);
-//                createCell(row, dateColumnStart + 2, persediaan != null ? persediaan.getStokAkhir() : persediaanAkhirToAwalBarang(dateTransaksi, barang.getBarcodeBarang()), styleCol);
-//
-//                dateColumnStart += 4;
-//            }
-//        }
+        // Data rows
+        int rowCount = 2;
+        Calendar calendar = Calendar.getInstance();
+        for (Barang barang : barangs) {
+            Row row = sheet.createRow(rowCount++);
 
-        // Write the output to the response stream
-        workbook.write(outputStream);
+            row.createCell(0).setCellValue(barang.getBarcodeBarang());
+            row.createCell(1).setCellValue(barang.getNamaBarang());
+            row.createCell(2).setCellValue(persediaanBarangAwal(startDate, barang.getBarcodeBarang()));
+
+            // Insert data for each day in the range
+            calendar.setTime(startDate);
+            int cellCount = 3;
+
+            while (!calendar.getTime().after(endDate)) {
+                Date date = calendar.getTime();
+                List<PersediaanBarang> persediaanList = persediaanBarangRepository.findLatestBeforeDate(barang.getBarcodeBarang(), date);
+
+                if (!persediaanList.isEmpty()) {
+                    PersediaanBarang persediaan = persediaanList.get(0);
+                    row.createCell(cellCount++).setCellValue(formatDate(date));
+                    row.createCell(cellCount++).setCellValue(persediaan.getMasuk());
+                    row.createCell(cellCount++).setCellValue(persediaan.getKeluar());
+                    row.createCell(cellCount++).setCellValue(persediaan.getStok_akhir());
+                } else {
+                    row.createCell(cellCount++).setCellValue(formatDate(date));
+                    row.createCell(cellCount++).setCellValue(0);
+                    row.createCell(cellCount++).setCellValue(0);
+                    row.createCell(cellCount++).setCellValue(persediaanBarangAwal(startDate, barang.getBarcodeBarang()));
+                }
+
+                // Apply normal style to all cells
+                for (int i = 0; i < cellCount; i++) {
+                    row.getCell(i).setCellStyle(normalStyle);
+                }
+
+                calendar.add(Calendar.DATE, 1);
+            }
+        }
+
+        // Set column widths
+        for (int i = 0; i < columnHeaders.length; i++) {
+            sheet.autoSizeColumn(i);
+        }
+
+        // Write to response
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        response.setHeader("Content-Disposition", "attachment; filename=PersediaanBarang.xlsx");
+        workbook.write(response.getOutputStream());
         workbook.close();
     }
 
-    private void createCell(Row headerRow1, int i, String s, CellStyle combinedStyleCyan, int i1) {
-    }
-
-    private CellStyle createStyle(Workbook workbook, HorizontalAlignment alignment, short borderColor) {
+    private CellStyle createHeaderStyle(Workbook workbook) {
         CellStyle style = workbook.createCellStyle();
-        style.setAlignment(alignment);
+        style.setAlignment(HorizontalAlignment.CENTER);
         style.setVerticalAlignment(VerticalAlignment.CENTER);
-        style.setBorderTop(BorderStyle.THIN);
-        style.setTopBorderColor(borderColor);
-        style.setBorderRight(BorderStyle.THIN);
-        style.setRightBorderColor(borderColor);
-        style.setBorderBottom(BorderStyle.THIN);
-        style.setBottomBorderColor(borderColor);
-        style.setBorderLeft(BorderStyle.THIN);
-        style.setLeftBorderColor(borderColor);
-        return style;
-    }
-
-    private CellStyle createFillStyle(Workbook workbook, CellStyle baseStyle, short fillColor) {
-        CellStyle style = workbook.createCellStyle();
-        style.cloneStyleFrom(baseStyle);
-        style.setFillForegroundColor(fillColor);
+        style.setFillForegroundColor(IndexedColors.LIGHT_BLUE.getIndex());
         style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-        return style;
-    }
-
-    private CellStyle createFontStyle(Workbook workbook, CellStyle baseStyle, short fontColor) {
-        CellStyle style = workbook.createCellStyle();
-        style.cloneStyleFrom(baseStyle);
+        style.setBorderTop(BorderStyle.THIN);
+        style.setBorderBottom(BorderStyle.THIN);
+        style.setBorderLeft(BorderStyle.THIN);
+        style.setBorderRight(BorderStyle.THIN);
         Font font = workbook.createFont();
-        font.setColor(fontColor);
+        font.setColor(IndexedColors.WHITE.getIndex());
         style.setFont(font);
         return style;
     }
 
-    private void createCell(Row row, int column, String value, CellStyle style) {
-        Cell cell = row.createCell(column);
-        cell.setCellValue(value);
-        cell.setCellStyle(style);
+    private CellStyle createDateHeaderStyle(Workbook workbook) {
+        CellStyle style = workbook.createCellStyle();
+        style.setAlignment(HorizontalAlignment.CENTER);
+        style.setVerticalAlignment(VerticalAlignment.CENTER);
+        style.setFillForegroundColor(IndexedColors.LIGHT_BLUE.getIndex());
+        style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        style.setBorderTop(BorderStyle.THIN);
+        style.setBorderBottom(BorderStyle.THIN);
+        style.setBorderLeft(BorderStyle.THIN);
+        style.setBorderRight(BorderStyle.THIN);
+        Font font = workbook.createFont();
+        font.setColor(IndexedColors.WHITE.getIndex());
+        style.setFont(font);
+        return style;
     }
 
-    private void createCell(Row row, int column, String value, CellStyle style, int colSpan, int rowSpan) {
-        Cell cell = row.createCell(column);
-        cell.setCellValue(value);
-        cell.setCellStyle(style);
-        Sheet sheet = row.getSheet();
-        int rowIndex = row.getRowNum();
-        sheet.addMergedRegion(new CellRangeAddress(rowIndex, rowIndex + rowSpan - 1, column, column + colSpan - 1));
+    private CellStyle createNormalStyle(Workbook workbook) {
+        CellStyle style = workbook.createCellStyle();
+        style.setAlignment(HorizontalAlignment.LEFT);
+        style.setVerticalAlignment(VerticalAlignment.CENTER);
+        style.setBorderTop(BorderStyle.THIN);
+        style.setBorderBottom(BorderStyle.THIN);
+        style.setBorderLeft(BorderStyle.THIN);
+        style.setBorderRight(BorderStyle.THIN);
+        return style;
     }
 
-    private void createCell(Row row, int column, int value, CellStyle style) {
-        Cell cell = row.createCell(column);
-        cell.setCellValue(value);
-        cell.setCellStyle(style);
+    private CellStyle createNormalRightAlignStyle(Workbook workbook) {
+        CellStyle style = workbook.createCellStyle();
+        style.setAlignment(HorizontalAlignment.RIGHT);
+        style.setVerticalAlignment(VerticalAlignment.CENTER);
+        style.setBorderTop(BorderStyle.THIN);
+        style.setBorderBottom(BorderStyle.THIN);
+        style.setBorderLeft(BorderStyle.THIN);
+        style.setBorderRight(BorderStyle.THIN);
+        return style;
+    }
+
+    private String formatDate(Date date) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        return sdf.format(date);
+    }
+
+    public String persediaanBarangAwal(Date date, String barcodeBarang) {
+        List<PersediaanBarang> beforeDate = persediaanBarangRepository.findLatestBeforeDate(barcodeBarang, date);
+        List<PersediaanBarang> afterDate = persediaanBarangRepository.findFirstAfterDate(barcodeBarang, date);
+
+        if (!beforeDate.isEmpty()) {
+            return beforeDate.get(0).getStok_awal();
+        } else if (!afterDate.isEmpty()) {
+            return afterDate.get(0).getStok_awal();
+        } else {
+            Barang barang = barangRepository.findByBarcode(barcodeBarang);
+            if (barang != null) {
+                return Integer.toString(barang.getJumlahStok());
+            }
+        }
+
+        return "0"; // Default value if no data found
     }
 }

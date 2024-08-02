@@ -122,4 +122,15 @@ public class PoinController {
             e.printStackTrace();
         }
     }
+    @GetMapping("/export/excel")
+    public void exportToExcel(
+            HttpServletResponse response,
+            @RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
+            @RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate) {
+        try {
+            excelService.exportExcel(response, startDate, endDate);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
