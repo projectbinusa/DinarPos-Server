@@ -44,10 +44,10 @@ public class TransaksiController {
     }
 
     // Endpoint untuk menambahkan transaksi pembelian dari Excelcom
-    @PostMapping("/pembelian/excelcom")
-    public CommonResponse<TransaksiBeli> addExcelcom(@RequestBody TransaksiBeliDTO transaksiBeliDTO){
-        return ResponseHelper.ok( transaksiBeliExcelcomService.addTransaksi(transaksiBeliDTO));
-    }
+//    @PostMapping("/pembelian/excelcom")
+//    public CommonResponse<TransaksiBeli> addExcelcom(@RequestBody TransaksiBeliDTO transaksiBeliDTO){
+//        return ResponseHelper.ok( transaksiBeliExcelcomService.addTransaksi(transaksiBeliDTO));
+//    }
 
     // Endpoint untuk menambahkan transaksi pembelian dari Dinarpos
     @PostMapping("/pembelian/dinarpos")

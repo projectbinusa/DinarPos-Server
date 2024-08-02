@@ -96,4 +96,7 @@ public interface TransaksiRepository extends JpaRepository<Transaksi, Long> {
 
     @Query("SELECT t.noFaktur FROM Transaksi t WHERE t.serviceBarang.idTT = :id_tt")
     Optional<String> findNoFakturByTandaTerima(@Param("id_tt") Long idTT);
+
+    @Query(value = "SELECT * FROM tabel_transaksi WHERE del_flag = 1", nativeQuery = true)
+    List<Transaksi> findLaporanMarketing();
 }
