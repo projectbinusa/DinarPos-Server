@@ -305,15 +305,15 @@ public class ExcelService {
         CellStyle normalStyle = createNormalStyle(workbook);
         CellStyle normalRightAlignStyle = createNormalRightAlignStyle(workbook);
 
-        // Header
+        // Header Row for Date Range
         Row headerRow = sheet.createRow(0);
         Cell headerCell = headerRow.createCell(0);
         headerCell.setCellValue(formatDate(startDate) + " s.d " + formatDate(endDate));
         headerCell.setCellStyle(headerStyle);
-        sheet.addMergedRegion(new org.apache.poi.ss.util.CellRangeAddress(0, 0, 0, 2));
+        sheet.addMergedRegion(new org.apache.poi.ss.util.CellRangeAddress(0, 0, 0, 18));
 
-        // Columns
-        String[] columnHeaders = {"Kode Barang", "Nama Barang", "Persediaan Awal", "Tanggal", "Masuk", "Keluar", "Stok Akhir"};
+        // Column Headers
+        String[] columnHeaders = {"Kode Barang", "Nama Barang", "Persediaan Awal"};
         Row columnRow = sheet.createRow(1);
         for (int i = 0; i < columnHeaders.length; i++) {
             Cell cell = columnRow.createCell(i);
@@ -321,9 +321,38 @@ public class ExcelService {
             cell.setCellStyle(headerStyle);
         }
 
-        // Data rows
-        int rowCount = 2;
+        // Date-specific headers for "MASUK", "KELUAR", "SISA"
         Calendar calendar = Calendar.getInstance();
+        calendar.setTime(startDate);
+        int cellCount = 3;
+        while (!calendar.getTime().after(endDate)) {
+            Date date = calendar.getTime();
+            Row dateRow = sheet.createRow(2);
+            String formattedDate = formatDate(date);
+
+            columnRow.createCell(cellCount).setCellValue(formattedDate);
+            dateRow.createCell(cellCount).setCellValue("MASUK");
+            dateRow.createCell(cellCount + 1).setCellValue("KELUAR");
+            dateRow.createCell(cellCount + 2).setCellValue("SISA");
+
+            columnRow.getCell(cellCount).setCellStyle(dateHeaderStyle);
+            dateRow.getCell(cellCount).setCellStyle(dateHeaderStyle);
+            dateRow.getCell(cellCount + 1).setCellStyle(dateHeaderStyle);
+            dateRow.getCell(cellCount + 2).setCellStyle(dateHeaderStyle);
+
+            cellCount += 3;
+            calendar.add(Calendar.DATE, 1);
+        }
+
+        // Additional headers for "HARGA SATUAN (Rp)" and "Total (Rp)"
+        columnRow.createCell(cellCount).setCellValue("HARGA SATUAN (Rp)");
+        columnRow.createCell(cellCount + 1).setCellValue("Total (Rp)");
+
+        columnRow.getCell(cellCount).setCellStyle(headerStyle);
+        columnRow.getCell(cellCount + 1).setCellStyle(headerStyle);
+
+        // Data rows
+        int rowCount = 3;
         for (Barang barang : barangs) {
             Row row = sheet.createRow(rowCount++);
 
@@ -331,38 +360,49 @@ public class ExcelService {
             row.createCell(1).setCellValue(barang.getNamaBarang());
             row.createCell(2).setCellValue(persediaanBarangAwal(startDate, barang.getBarcodeBarang()));
 
-            // Insert data for each day in the range
             calendar.setTime(startDate);
-            int cellCount = 3;
-
+            cellCount = 3;
             while (!calendar.getTime().after(endDate)) {
                 Date date = calendar.getTime();
                 List<PersediaanBarang> persediaanList = persediaanBarangRepository.findLatestBeforeDate(barang.getBarcodeBarang(), date);
 
+                Cell cellMasuk = row.createCell(cellCount++);
+                Cell cellKeluar = row.createCell(cellCount++);
+                Cell cellSisa = row.createCell(cellCount++);
+
                 if (!persediaanList.isEmpty()) {
                     PersediaanBarang persediaan = persediaanList.get(0);
-                    row.createCell(cellCount++).setCellValue(formatDate(date));
-                    row.createCell(cellCount++).setCellValue(persediaan.getMasuk());
-                    row.createCell(cellCount++).setCellValue(persediaan.getKeluar());
-                    row.createCell(cellCount++).setCellValue(persediaan.getStok_akhir());
+                    cellMasuk.setCellValue(persediaan.getMasuk());
+                    cellKeluar.setCellValue(persediaan.getKeluar());
+                    cellSisa.setCellValue(persediaan.getStok_akhir());
                 } else {
-                    row.createCell(cellCount++).setCellValue(formatDate(date));
-                    row.createCell(cellCount++).setCellValue(0);
-                    row.createCell(cellCount++).setCellValue(0);
-                    row.createCell(cellCount++).setCellValue(persediaanBarangAwal(startDate, barang.getBarcodeBarang()));
+                    cellMasuk.setCellValue(0);
+                    cellKeluar.setCellValue(0);
+                    cellSisa.setCellValue(persediaanBarangAwal(startDate, barang.getBarcodeBarang()));
                 }
 
-                // Apply normal style to all cells
-                for (int i = 0; i < cellCount; i++) {
-                    row.getCell(i).setCellStyle(normalStyle);
-                }
+                cellMasuk.setCellStyle(normalStyle);
+                cellKeluar.setCellStyle(normalStyle);
+                cellSisa.setCellStyle(normalStyle);
 
                 calendar.add(Calendar.DATE, 1);
             }
+
+            // Add "HARGA SATUAN (Rp)" and "Total (Rp)" data
+            Cell cellHarga = row.createCell(cellCount++);
+            Cell cellTotal = row.createCell(cellCount);
+
+            // Assuming hargaBarang and total computation logic is implemented
+            double harga = Double.parseDouble(barang.getHargaBarang());
+            cellHarga.setCellValue(harga);
+            cellTotal.setCellValue(harga * Double.parseDouble(persediaanBarangAwal(startDate, barang.getBarcodeBarang())));
+
+            cellHarga.setCellStyle(normalRightAlignStyle);
+            cellTotal.setCellStyle(normalRightAlignStyle);
         }
 
         // Set column widths
-        for (int i = 0; i < columnHeaders.length; i++) {
+        for (int i = 0; i <= cellCount; i++) {
             sheet.autoSizeColumn(i);
         }
 
@@ -373,6 +413,7 @@ public class ExcelService {
         workbook.close();
     }
 
+    // Helper methods for creating CellStyles
     private CellStyle createHeaderStyle(Workbook workbook) {
         CellStyle style = workbook.createCellStyle();
         style.setAlignment(HorizontalAlignment.CENTER);
@@ -385,6 +426,7 @@ public class ExcelService {
         style.setBorderRight(BorderStyle.THIN);
         Font font = workbook.createFont();
         font.setColor(IndexedColors.WHITE.getIndex());
+        font.setBold(true);
         style.setFont(font);
         return style;
     }
@@ -393,14 +435,14 @@ public class ExcelService {
         CellStyle style = workbook.createCellStyle();
         style.setAlignment(HorizontalAlignment.CENTER);
         style.setVerticalAlignment(VerticalAlignment.CENTER);
-        style.setFillForegroundColor(IndexedColors.LIGHT_BLUE.getIndex());
+        style.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
         style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
         style.setBorderTop(BorderStyle.THIN);
         style.setBorderBottom(BorderStyle.THIN);
         style.setBorderLeft(BorderStyle.THIN);
         style.setBorderRight(BorderStyle.THIN);
         Font font = workbook.createFont();
-        font.setColor(IndexedColors.WHITE.getIndex());
+        font.setBold(true);
         style.setFont(font);
         return style;
     }
