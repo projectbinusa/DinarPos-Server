@@ -304,13 +304,14 @@ public class ExcelService {
         CellStyle dateHeaderStyle = createDateHeaderStyle(workbook);
         CellStyle normalStyle = createNormalStyle(workbook);
         CellStyle normalRightAlignStyle = createNormalRightAlignStyle(workbook);
+        CellStyle currencyStyle = createCurrencyStyle(workbook);
 
         // Header Row for Date Range
         Row headerRow = sheet.createRow(0);
         Cell headerCell = headerRow.createCell(0);
         headerCell.setCellValue(formatDate(startDate) + " s.d " + formatDate(endDate));
         headerCell.setCellStyle(headerStyle);
-        sheet.addMergedRegion(new org.apache.poi.ss.util.CellRangeAddress(0, 0, 0, 18));
+        sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 18));
 
         // Column Headers
         String[] columnHeaders = {"Kode Barang", "Nama Barang", "Persediaan Awal"};
@@ -325,20 +326,24 @@ public class ExcelService {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(startDate);
         int cellCount = 3;
+        Row dateRow = sheet.createRow(2);
         while (!calendar.getTime().after(endDate)) {
             Date date = calendar.getTime();
-            Row dateRow = sheet.createRow(2);
             String formattedDate = formatDate(date);
 
-            columnRow.createCell(cellCount).setCellValue(formattedDate);
+            Cell dateCell = columnRow.createCell(cellCount);
+            dateCell.setCellValue(formattedDate);
+            dateCell.setCellStyle(dateHeaderStyle);
+
             dateRow.createCell(cellCount).setCellValue("MASUK");
             dateRow.createCell(cellCount + 1).setCellValue("KELUAR");
             dateRow.createCell(cellCount + 2).setCellValue("SISA");
 
-            columnRow.getCell(cellCount).setCellStyle(dateHeaderStyle);
             dateRow.getCell(cellCount).setCellStyle(dateHeaderStyle);
             dateRow.getCell(cellCount + 1).setCellStyle(dateHeaderStyle);
             dateRow.getCell(cellCount + 2).setCellStyle(dateHeaderStyle);
+
+            sheet.addMergedRegion(new CellRangeAddress(1, 1, cellCount, cellCount + 2));
 
             cellCount += 3;
             calendar.add(Calendar.DATE, 1);
@@ -394,11 +399,13 @@ public class ExcelService {
 
             // Assuming hargaBarang and total computation logic is implemented
             double harga = Double.parseDouble(barang.getHargaBarang());
-            cellHarga.setCellValue(harga);
-            cellTotal.setCellValue(harga * Double.parseDouble(persediaanBarangAwal(startDate, barang.getBarcodeBarang())));
+            double total = harga * Double.parseDouble(persediaanBarangAwal(startDate, barang.getBarcodeBarang()));
 
-            cellHarga.setCellStyle(normalRightAlignStyle);
-            cellTotal.setCellStyle(normalRightAlignStyle);
+            cellHarga.setCellValue(harga);
+            cellTotal.setCellValue(total);
+
+            cellHarga.setCellStyle(currencyStyle);
+            cellTotal.setCellStyle(currencyStyle);
         }
 
         // Set column widths
@@ -469,6 +476,13 @@ public class ExcelService {
         return style;
     }
 
+    private CellStyle createCurrencyStyle(Workbook workbook) {
+        CellStyle style = createNormalRightAlignStyle(workbook);
+        DataFormat df = workbook.createDataFormat();
+        style.setDataFormat(df.getFormat("#,##0.00"));
+        return style;
+    }
+
     private String formatDate(Date date) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         return sdf.format(date);
@@ -491,4 +505,5 @@ public class ExcelService {
 
         return "0"; // Default value if no data found
     }
+
 }
