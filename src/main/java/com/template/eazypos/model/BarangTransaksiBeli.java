@@ -29,6 +29,11 @@ public class BarangTransaksiBeli extends DateConfig {
 
     @Column(name = "unit")
     private String  unit;
+    @Column(name = "total_ppn")
+    private String  totalPpn;
+
+    @Column(name = "total_dpp")
+    private String  totalDpp;
 
     @Column(name = "nama_barang", nullable = false, length = 200)
     private String namaBarang;

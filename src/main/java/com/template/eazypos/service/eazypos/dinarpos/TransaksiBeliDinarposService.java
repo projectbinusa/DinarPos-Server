@@ -104,6 +104,8 @@ public class TransaksiBeliDinarposService {
             barangTransaksi.setTotalHargaBarang(barangDTO.getTotalHargaBarang());
             barangTransaksi.setTanggal(now);
             barangTransaksi.setDelFlag(1);
+            barangTransaksi.setUnit(barang.getUnit());
+            barangTransaksi.setNamaBarang(barang.getNamaBarang());
             barangTransaksi.setStatus("dinarpos");
             barangTransaksiBeliRepository.save(barangTransaksi);
 
