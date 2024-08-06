@@ -14,7 +14,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -89,31 +88,33 @@ public class TeknisiService {
     }
 
     // Mengedit data Teknisi berdasarkan TeknisiDTO
-    public Teknisi put(TeknisiDTO teknisi , Long id){
-        Teknisi update = teknisiRepository.findById(id).orElseThrow(() -> new NotFoundException("Id Teknisi tidak dinemukan"));
-        Pengguna pengguna = penggunaRepository.findByUsername(update.getNama()).orElseThrow(() -> new NotFoundException("Username Pengguna tidak dinemukan"));
-        update.setNama(teknisi.getNama());
-        update.setAlamat(teknisi.getAlamat());
-        update.setNohp(teknisi.getNohp());
-        update.setBagian(teknisi.getBagian());
+    public Teknisi put(TeknisiDTO teknisiDTO, Long id) {
+        Teknisi update = teknisiRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Id Teknisi tidak ditemukan"));
 
-        String userPass = teknisi.getPassword().trim();
-        boolean PasswordIsNotValid = !userPass.matches("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{8,20}");
-        if (PasswordIsNotValid) throw new BadRequestException("Password not valid!");
-        String encodedPassword = encoder.encode(teknisi.getPassword());
-        pengguna.setPasswordPengguna(encodedPassword);
-        penggunaRepository.save(pengguna);
+        // Update data selain password
+        update.setNama(teknisiDTO.getNama());
+        update.setAlamat(teknisiDTO.getAlamat());
+        update.setBagian(teknisiDTO.getBagian());
+        update.setNohp(teknisiDTO.getNohp());
+        if (teknisiDTO.getPassword() != null && !teknisiDTO.getPassword().isEmpty()) {
+        }
 
         return teknisiRepository.save(update);
     }
 
     // Menghapus data Teknisi berdasarkan ID
-    @Transactional
-    public CommonResponse<String> deleteTeknisi(Long id) {
-        Teknisi update = teknisiRepository.findById(id).orElseThrow(() -> new NotFoundException("Id Teknisi tidak dinemukan"));
-        update.setStatus("N");
-        teknisiRepository.save(update);
-        return ResponseHelper.ok("Teknisi deleted successfully");
+    public Map<String, Boolean> deleteTeknisi(Long id) {
+        try {
+            Teknisi update = teknisiRepository.findById(id).orElseThrow(() -> new NotFoundException("Id tidak ditemukan"));
+            update.setDelFlag(0);
+            teknisiRepository.save(update);
+            Map<String, Boolean> res = new HashMap<>();
+            res.put("Deleted", Boolean.TRUE);
+            return res;
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     //  Mengambil halaman data Teknisi dengan pagination, sorting, dan pencarian
