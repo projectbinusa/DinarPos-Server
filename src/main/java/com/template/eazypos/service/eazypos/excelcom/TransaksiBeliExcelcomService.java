@@ -84,8 +84,8 @@ public class TransaksiBeliExcelcomService {
         persediaanAkhirRepository.save(persediaanAkhir);
 
         // Handle Produk details
-        List<BarangTransaksiDTO> listProduk = transaksiDTO.getProduk();
-        for (BarangTransaksiDTO barangDTO : listProduk) {
+        List<BarangTransaksiBeliDTO> listProduk = transaksiDTO.getProduk();
+        for (BarangTransaksiBeliDTO barangDTO : listProduk) {
             Barang barang = barangRepository.findByBarcode(barangDTO.getBarcodeBarang());
             if (barang == null) {
                 throw new BadRequestException("Barang Tidak Ada");
@@ -95,6 +95,10 @@ public class TransaksiBeliExcelcomService {
             barangTransaksi.setTransaksiBeli(savedTransaksi);
             barangTransaksi.setBarcodeBarang(barangDTO.getBarcodeBarang());
             barangTransaksi.setQty(barangDTO.getQty());
+            barangTransaksi.setDpp(barangDTO.getDpp());
+            barangTransaksi.setPpn(barangDTO.getPpn());
+            barangTransaksi.setTotalDpp(barangDTO.getTotalDpp());
+            barangTransaksi.setTotalPpn(barangDTO.getTotalPpn());
             barangTransaksi.setDiskon(barangDTO.getDiskon());
             barangTransaksi.setHargaBrng(barangDTO.getHargaBrng());
             barangTransaksi.setTotalHarga(barangDTO.getTotalHarga());

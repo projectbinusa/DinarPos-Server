@@ -1,5 +1,7 @@
 package com.template.eazypos.dto;
 
+import com.template.eazypos.model.BarangTransaksiBeliDTO;
+
 import java.util.List;
 
 public class TransaksiBeliDTO {
@@ -22,7 +24,7 @@ public class TransaksiBeliDTO {
     private String cashCredit;
     private String sisa;
     private String ttlBayarHemat;
-    private List<BarangTransaksiDTO> produk;
+    private List<BarangTransaksiBeliDTO> produk;
 
     public String getTotalBelanja() {
         return totalBelanja;
@@ -160,11 +162,11 @@ public class TransaksiBeliDTO {
         this.ttlBayarHemat = ttlBayarHemat;
     }
 
-    public List<BarangTransaksiDTO> getProduk() {
+    public List<BarangTransaksiBeliDTO> getProduk() {
         return produk;
     }
 
-    public void setProduk(List<BarangTransaksiDTO> produk) {
+    public void setProduk(List<BarangTransaksiBeliDTO> produk) {
         this.produk = produk;
     }
 }

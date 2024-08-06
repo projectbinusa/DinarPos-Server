@@ -1,6 +1,5 @@
 package com.template.eazypos.service.eazypos.dinarpos;
 
-import com.template.eazypos.dto.BarangTransaksiDTO;
 import com.template.eazypos.dto.TransaksiBeliDTO;
 import com.template.eazypos.exception.BadRequestException;
 import com.template.eazypos.exception.NotFoundException;
@@ -13,7 +12,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class TransaksiBeliDinarposService {
@@ -87,8 +85,8 @@ public class TransaksiBeliDinarposService {
         persediaanAkhirRepository.save(persediaanAkhir);
 
         // Handle Produk details
-        List<BarangTransaksiDTO> listProduk = transaksiDTO.getProduk();
-        for (BarangTransaksiDTO barangDTO : listProduk) {
+        List<BarangTransaksiBeliDTO> listProduk = transaksiDTO.getProduk();
+        for (BarangTransaksiBeliDTO barangDTO : listProduk) {
             Barang barang = barangRepository.findByBarcode(barangDTO.getBarcodeBarang());
             if (barang == null) {
                 throw new BadRequestException("Barang Tidak Ada");
@@ -96,6 +94,10 @@ public class TransaksiBeliDinarposService {
 
             BarangTransaksiBeli barangTransaksi = new BarangTransaksiBeli();
             barangTransaksi.setTransaksiBeli(savedTransaksi);
+            barangTransaksi.setDpp(barangDTO.getDpp());
+            barangTransaksi.setPpn(barangDTO.getPpn());
+            barangTransaksi.setTotalDpp(barangDTO.getTotalDpp());
+            barangTransaksi.setTotalPpn(barangDTO.getTotalPpn());
             barangTransaksi.setBarcodeBarang(barangDTO.getBarcodeBarang());
             barangTransaksi.setQty(barangDTO.getQty());
             barangTransaksi.setDiskon(barangDTO.getDiskon());

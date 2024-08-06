@@ -58,7 +58,7 @@ public class ReturnPembelianService {
         List<Barang> barangUpdateList = new ArrayList<>();
 
         for (BarangTransaksiBeli barangTransaksi : barangTransaksiList) {
-            Barang barang = barangRepository.findByBarcode(barangTransaksi.getBarcodeBarang());
+            Barang barang = barangRepository.findByBarcodeBarang(barangTransaksi.getBarcodeBarang()).orElseThrow(() -> new NotFoundException("Not Found"));
             barang.setJumlahStok(barang.getJumlahStok() - barangTransaksi.getQty());
 
             StokKeluar stokKeluar = new StokKeluar();

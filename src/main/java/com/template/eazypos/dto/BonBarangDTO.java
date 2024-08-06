@@ -3,6 +3,7 @@ package com.template.eazypos.dto;
 import java.util.Date;
 
 public class BonBarangDTO {
+
     public Long id_teknisi;
 
     public Long id_tt;

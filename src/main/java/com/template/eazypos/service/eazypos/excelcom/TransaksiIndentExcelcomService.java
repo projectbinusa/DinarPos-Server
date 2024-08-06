@@ -309,7 +309,7 @@ public class TransaksiIndentExcelcomService {
 
         KasHarian kasHarian = new KasHarian();
         kasHarian.setTransaksi(savedTransaksi);
-        kasHarian.setPenjualan(String.valueOf(pembayaran));
+        kasHarian.setPenjualan(String.valueOf(dp));
         kasHarian.setTimestamp(new Date());
 
         if ("Cash Uang".equals(cash)) {

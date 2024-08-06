@@ -35,6 +35,12 @@ public class BarangTransaksiBeli extends DateConfig {
     @Column(name = "total_dpp")
     private String  totalDpp;
 
+    @Column(name = "dpp")
+    private String  dpp;
+
+    @Column(name = "ppn")
+    private String  ppn;
+
     @Column(name = "nama_barang", nullable = false, length = 200)
     private String namaBarang;
 
@@ -99,6 +105,38 @@ public class BarangTransaksiBeli extends DateConfig {
 
     public String getStatus() {
         return status;
+    }
+
+    public String getTotalPpn() {
+        return totalPpn;
+    }
+
+    public void setTotalPpn(String totalPpn) {
+        this.totalPpn = totalPpn;
+    }
+
+    public String getTotalDpp() {
+        return totalDpp;
+    }
+
+    public void setTotalDpp(String totalDpp) {
+        this.totalDpp = totalDpp;
+    }
+
+    public String getDpp() {
+        return dpp;
+    }
+
+    public void setDpp(String dpp) {
+        this.dpp = dpp;
+    }
+
+    public String getPpn() {
+        return ppn;
+    }
+
+    public void setPpn(String ppn) {
+        this.ppn = ppn;
     }
 
     public void setStatus(String status) {
