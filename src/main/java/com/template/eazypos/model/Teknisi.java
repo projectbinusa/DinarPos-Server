@@ -31,6 +31,9 @@ public class Teknisi extends DateConfig {
     @Column(name = "status", nullable = false)
     private String status;
 
+    @Column(name = "del_flag", nullable = false, columnDefinition = "int default 1")
+    private int delFlag;
+
 
     public Teknisi() {
         super();
@@ -90,5 +93,13 @@ public class Teknisi extends DateConfig {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public int getDelFlag() {
+        return delFlag;
+    }
+
+    public void setDelFlag(int delFlag) {
+        this.delFlag = delFlag;
     }
 }
