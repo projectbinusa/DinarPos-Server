@@ -175,15 +175,16 @@ public class TransaksiBeliExcelcomService {
     }
 
     private void updatePembelianTabelPersediaan(Date date) {
-        Persediaan persediaan = persediaanRepository.findByDate(date).orElse(null);
-        int persediaanAwal = persediaanAkhirToAwal(date);
+        Optional<Persediaan> persediaanOpt = persediaanRepository.findByTanggal(date);
+
 
         List<PersediaanAkhir> totalPembelianList = persediaanAkhirRepository.findByTanggal(date);
         int totalPembelian = totalPembelianList.stream()
                 .mapToInt(pa -> Integer.parseInt(pa.getNominal()))
                 .sum();
 
-        if (persediaan != null) {
+        if (persediaanRepository.findByTanggal(date).isPresent()) {
+            Persediaan persediaan = persediaanRepository.findByTanggal(date).get();
             int barangSiapJual = Integer.parseInt(persediaan.getPersediaanAwal()) + totalPembelian;
             int persediaanAkhir = barangSiapJual - Integer.parseInt(persediaan.getPenjualan());
             persediaan.setPembelian(String.valueOf(totalPembelian));
@@ -191,6 +192,7 @@ public class TransaksiBeliExcelcomService {
             persediaan.setPersediaanAkhir(String.valueOf(persediaanAkhir));
             persediaanRepository.save(persediaan);
         } else {
+            int persediaanAwal = persediaanAkhirToAwal(date);
             int barangSiapJual = persediaanAwal + totalPembelian;
             Persediaan newPersediaan = new Persediaan();
             newPersediaan.setPersediaanAwal(String.valueOf(persediaanAwal));

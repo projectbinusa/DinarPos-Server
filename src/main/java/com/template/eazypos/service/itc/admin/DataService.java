@@ -622,11 +622,28 @@ public class DataService {
 
     // Mengedit biaya layanan berdasarkan DTO editDataDTO
     public ServiceBarang editBiayaService(EditBiayaServiceDTO editDataDTO, Long id) {
-        ServiceBarang serviceBarang = serviceRepository.findByIdTT(id).orElseThrow(() -> new NotFoundException("Id Not Found"));
+        ServiceBarang serviceBarang = serviceRepository.findByIdTT(id)
+                .orElseThrow(() -> new NotFoundException("Id Not Found"));
+
+        // Updating service and spare part costs
         serviceBarang.setBiayaService(editDataDTO.getBiaya_service());
         serviceBarang.setBiayaSparepart(editDataDTO.getBiaya_sparepart());
         serviceBarang.setTotal(editDataDTO.getTotal());
-        return serviceRepository.save(serviceBarang);
+
+        // Calculate poin
+        double calculatePoin = editDataDTO.getBiaya_service() / 90000.0;
+        String poin = String.format("%.2f", calculatePoin);
+
+        // Save changes to the service entity
+        ServiceBarang updatedServiceBarang = serviceRepository.save(serviceBarang);
+
+        // Update poin history
+        PoinHistory poinHistory = poinHistoryRepository.findByIdTT(id.toString())
+                .orElseThrow(() -> new NotFoundException("Poin history not found for Id: " + id));
+        poinHistory.setPoin(Double.parseDouble(poin));
+        poinHistoryRepository.save(poinHistory);
+
+        return updatedServiceBarang;
     }
 
     // Mengedit riwayat poin berdasarkan DTO serta menghitung kembali total poin teknisi
