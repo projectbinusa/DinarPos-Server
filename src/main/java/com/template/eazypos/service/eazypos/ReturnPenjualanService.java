@@ -24,6 +24,14 @@ public class ReturnPenjualanService {
     @Autowired
     private PersediaanRepository persediaanRepository;
 
+    @Autowired
+    private OmzetRepository omzetRepository;
+    @Autowired
+    private PiutangRepository piutangRepository;
+
+    @Autowired
+    private KasHarianRepository kasHarianRepository;
+
     // Mengambil daftar transaksi penjualan untuk produk Excelcom
     public List<Transaksi> getAllExcelcom() {
         return transaksiRepository.findTransaksiExcelcom();
@@ -46,27 +54,45 @@ public class ReturnPenjualanService {
                 .orElseThrow(() -> new NotFoundException("Id transaksi not found"));
         transaksi.setDelFlag(0);
 
-        List<BarangTransaksi> barangTransaksiList = barangTransaksiRepository.findBarangTransaksiByIdTransaksi2(idTransaksi);
+        // Update the transaksi record
+        transaksiRepository.save(transaksi);
+
+        // Delete related records
+       Omzet omzet = omzetRepository.findByIdTransaksi(idTransaksi).orElseThrow(() -> new NotFoundException("Id Not Found In Omzet"));
+        omzetRepository.deleteById(omzet.getId());
+       Piutang piutang = piutangRepository.findByIdTransaksi(idTransaksi).orElseThrow(() -> new NotFoundException("Id Not Found In Piutang"));
+        piutangRepository.deleteById(piutang.getId());
+        KasHarian kasHarian = kasHarianRepository.findByIdTransaksi(idTransaksi).orElseThrow(() -> new NotFoundException("Id Not Found In Kas harian"));
+        kasHarianRepository.deleteById(kasHarian.getId());
+
+        // Update related records with del_flag
+        List<BarangTransaksi> barangTransaksi1 = barangTransaksiRepository.findBarangTransaksiByIdTransaksi(idTransaksi);
+        for (BarangTransaksi barangTransaksi : barangTransaksi1){
+            BarangTransaksi barangTransaksi2 = barangTransaksiRepository.findById(barangTransaksi.getIdBrgTransaksi()).get();
+            barangTransaksi2.setDelFlag(0);
+            barangTransaksiRepository.save(barangTransaksi2);
+        }
+
+
+
+        // Process barang and stok updates
+        List<BarangTransaksi> barangTransaksiList = barangTransaksiRepository.findBarangTransaksiReturnByIdTransaksi(idTransaksi);
 
         List<StokMasuk> stokMasukList = new ArrayList<>();
         List<Barang> barangUpdateList = new ArrayList<>();
 
         for (BarangTransaksi barangTransaksi : barangTransaksiList) {
-            Barang barang = barangRepository.findByBarcode(barangTransaksi.getBarcodeBarang());
-            if (barang != null) {
-                barang.setJumlahStok(barang.getJumlahStok() + barangTransaksi.getQty());
-                barangUpdateList.add(barang);
+            Barang barang = barangRepository.findByBarcodeBarang(barangTransaksi.getBarcodeBarang())
+                    .orElseThrow(() -> new NotFoundException("Barcode not found: " + barangTransaksi.getBarcodeBarang()));
 
-                StokMasuk stokMasuk = new StokMasuk();
-                stokMasuk.setDelFlag(1);
-                stokMasuk.setSuplier(null);
-                stokMasuk.setBarang(barang);
-                stokMasuk.setJumlahStok(String.valueOf(barangTransaksi.getQty()));
-                stokMasuk.setKeteranganStokMasuk("Return Barang " + transaksi.getNoFaktur());
-                stokMasukList.add(stokMasuk);
-            }
-            barangTransaksi.setDelFlag(0);
-            barangTransaksiRepository.save(barangTransaksi);
+            barang.setJumlahStok(barang.getJumlahStok() + barangTransaksi.getQty());
+            barangUpdateList.add(barang);
+
+            StokMasuk stokMasuk = new StokMasuk();
+            stokMasuk.setBarang(barang);
+            stokMasuk.setJumlahStok(String.valueOf(barangTransaksi.getQty()));
+            stokMasuk.setKeteranganStokMasuk("Return barang " + transaksi.getNoFaktur());
+            stokMasukList.add(stokMasuk);
         }
 
         if (!stokMasukList.isEmpty()) {
@@ -76,8 +102,6 @@ public class ReturnPenjualanService {
         if (!barangUpdateList.isEmpty()) {
             barangRepository.saveAll(barangUpdateList);
         }
-
-        transaksiRepository.save(transaksi);
 
         updatePenjualanTabelPersediaan(transaksi.getTanggal());
 
@@ -96,14 +120,12 @@ public class ReturnPenjualanService {
 
         persediaan.setPenjualan(String.valueOf(total));
         long p = Long.parseLong(persediaan.getBarangSiapJual());
-        long p2 = p - total;
-        persediaan.setPersediaanAkhir(String.valueOf(p2));
+        persediaan.setPersediaanAkhir(String.valueOf(p - total));
 
         persediaanRepository.save(persediaan);
     }
 
     private long persediaanAkhirToAwal(Date date) {
-        // Menghitung persediaan awal berdasarkan persediaan akhir hari sebelumnya
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         calendar.add(Calendar.DATE, -1);
@@ -114,7 +136,6 @@ public class ReturnPenjualanService {
 
         return Long.parseLong(persediaanSebelumnya.getPersediaanAkhir());
     }
-
     // Menghapus transaksi penjualan berdasarkan ID
     public Map<String, Boolean> delete(Long id ) {
         try {
