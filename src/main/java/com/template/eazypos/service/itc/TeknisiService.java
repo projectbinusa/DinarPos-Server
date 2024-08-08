@@ -73,8 +73,8 @@ public class TeknisiService {
     }
 
     // Mengambil semua data Teknisi
-    public List<Teknisi> getAll(){
-        return teknisiRepository.findAll();
+    public List<Teknisi> getAll() {
+        return teknisiRepository.findAllWithStatusY();
     }
 
     // Mengambil data Teknisi berdasarkan ID
@@ -97,8 +97,6 @@ public class TeknisiService {
         update.setAlamat(teknisiDTO.getAlamat());
         update.setBagian(teknisiDTO.getBagian());
         update.setNohp(teknisiDTO.getNohp());
-        if (teknisiDTO.getPassword() != null && !teknisiDTO.getPassword().isEmpty()) {
-        }
 
         return teknisiRepository.save(update);
     }
@@ -106,20 +104,21 @@ public class TeknisiService {
     // Menghapus data Teknisi berdasarkan ID
     public Map<String, Boolean> deleteTeknisi(Long id) {
         try {
-            Teknisi update = teknisiRepository.findById(id).orElseThrow(() -> new NotFoundException("Id tidak ditemukan"));
-            update.setDelFlag(0);
-            teknisiRepository.save(update);
-            Map<String, Boolean> res = new HashMap<>();
-            res.put("Deleted", Boolean.TRUE);
-            return res;
+            Teknisi teknisi = teknisiRepository.findById(id)
+                    .orElseThrow(() -> new NotFoundException("Id tidak ditemukan"));
+            teknisi.setStatus("N");
+            teknisiRepository.save(teknisi);
+
+            Map<String, Boolean> response = new HashMap<>();
+            response.put("Deleted", Boolean.TRUE);
+            return response;
         } catch (Exception e) {
-            return null;
+            return Collections.singletonMap("Deleted", Boolean.FALSE);
         }
     }
 
     //  Mengambil halaman data Teknisi dengan pagination, sorting, dan pencarian
-   public Page<Teknisi> getAllWithPagination(Long page, Long limit, String sort, String search) {
-
+    public Page<Teknisi> getAllWithPagination(Long page, Long limit, String sort, String search) {
         Sort.Direction direction = Sort.Direction.ASC;
         if (sort.startsWith("-")) {
             sort = sort.substring(1);
@@ -130,7 +129,7 @@ public class TeknisiService {
         if (search != null && !search.isEmpty()) {
             return teknisiRepository.findAllByKeyword(search, pageable);
         } else {
-            return teknisiRepository.findAll(pageable);
+            return teknisiRepository.findAllWithStatusY(pageable);
         }
-   }
+    }
 }
