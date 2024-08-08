@@ -63,7 +63,7 @@ public class TeknisiController {
     public PaginationResponse<List<Teknisi>> getAll(
             @RequestParam(defaultValue = Pagination.page, required = false) Long page,
             @RequestParam(defaultValue = Pagination.limit, required = false) Long limit,
-            @RequestParam(defaultValue = Pagination.sort, required = false) String sort,
+            @RequestParam(defaultValue = "id_teknisi", required = false) String sort,
             @RequestParam(required = false) String search
     ) {
         Page<Teknisi> teknisiPage;

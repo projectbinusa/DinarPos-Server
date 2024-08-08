@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface TeknisiRepository extends JpaRepository<Teknisi, Long> {
@@ -15,4 +16,10 @@ public interface TeknisiRepository extends JpaRepository<Teknisi, Long> {
 
     @Query(value = "SELECT * FROM teknisi WHERE LOWER(nama) LIKE LOWER(concat('%', :keyword, '%'))", nativeQuery = true)
     Page<Teknisi> findAllByKeyword(@Param("keyword") String keyword, Pageable pageable);
+
+    @Query("SELECT t FROM Teknisi t WHERE t.status = 'Y'")
+    List<Teknisi> findAllWithStatusY();
+
+    @Query("SELECT t FROM Teknisi t WHERE t.status = 'Y'")
+    Page<Teknisi> findAllWithStatusY(Pageable pageable);
 }
