@@ -60,8 +60,10 @@ public class ReturnPenjualanService {
         // Delete related records
        Omzet omzet = omzetRepository.findByIdTransaksi(idTransaksi).orElseThrow(() -> new NotFoundException("Id Not Found In Omzet"));
         omzetRepository.deleteById(omzet.getId());
+        if (transaksi.getCashKredit() == "Kredit"){
        Piutang piutang = piutangRepository.findByIdTransaksi(idTransaksi).orElseThrow(() -> new NotFoundException("Id Not Found In Piutang"));
         piutangRepository.deleteById(piutang.getId());
+        }
         KasHarian kasHarian = kasHarianRepository.findByIdTransaksi(idTransaksi).orElseThrow(() -> new NotFoundException("Id Not Found In Kas harian"));
         kasHarianRepository.deleteById(kasHarian.getId());
 
