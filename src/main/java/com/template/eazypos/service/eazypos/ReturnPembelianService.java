@@ -46,7 +46,6 @@ public class ReturnPembelianService {
     }
 
     // Memproses pengembalian barang dari transaksi pembelian
-    @Transactional
     public TransaksiBeli returnHistoriTransaksiPembelian(Long idTransaksiBeli) {
         TransaksiBeli transaksi = transaksiBeliRepository.findById(idTransaksiBeli)
                 .orElseThrow(() -> new NotFoundException("Id transaksi tidak ditemukan"));
@@ -58,23 +57,26 @@ public class ReturnPembelianService {
         List<Barang> barangUpdateList = new ArrayList<>();
 
         for (BarangTransaksiBeli barangTransaksi : barangTransaksiList) {
-            Barang barang = barangRepository.findByBarcodeBarang(barangTransaksi.getBarcodeBarang()).orElseThrow(() -> new NotFoundException("Not Found"));
+            Barang barang = barangRepository.findByBarcodeBarang(barangTransaksi.getBarcodeBarang())
+                    .orElseThrow(() -> new NotFoundException("Barcode not found: " + barangTransaksi.getBarcodeBarang()));
+
             barang.setJumlahStok(barang.getJumlahStok() - barangTransaksi.getQty());
-
-            StokKeluar stokKeluar = new StokKeluar();
-            stokKeluar.setBarang(barangRepository.findByBarcode(barangTransaksi.getBarcodeBarang()));
-            stokKeluar.setJumlahStok(String.valueOf(barangTransaksi.getQty()));
-            stokKeluar.setKeteranganStokKeluar("Return barang " + transaksi.getNoFaktur());
-
-            stokKeluarList.add(stokKeluar);
             barangUpdateList.add(barang);
 
-            barangTransaksi.setDelFlag(0);
-            barangTransaksiBeliRepository.save(barangTransaksi);
+            StokKeluar stokKeluar = new StokKeluar();
+            stokKeluar.setBarang(barang);
+            stokKeluar.setJumlahStok(String.valueOf(barangTransaksi.getQty()));
+            stokKeluar.setKeteranganStokKeluar("Return barang " + transaksi.getNoFaktur());
+            stokKeluarList.add(stokKeluar);
         }
 
-        stokKeluarRepository.saveAll(stokKeluarList);
-        barangRepository.saveAll(barangUpdateList);
+        if (!stokKeluarList.isEmpty()) {
+            stokKeluarRepository.saveAll(stokKeluarList);
+        }
+
+        if (!barangUpdateList.isEmpty()) {
+            barangRepository.saveAll(barangUpdateList);
+        }
 
         updatePembelianTabelPersediaan(transaksi.getTanggal(), barangTransaksiList);
 
@@ -110,19 +112,12 @@ public class ReturnPembelianService {
         return Long.parseLong(persediaanSebelumnya.getPersediaanAkhir());
     }
 
-    private long tampilNominalPersediaanAwalTransaksiById(Long idTransaksi) {
-        PersediaanAwal persediaan = persediaanAwalRepository.findByIdTransaksi(idTransaksi)
-                .orElseThrow(() -> new NotFoundException("Nominal persediaan awal tidak ditemukan"));
-
-        return Long.parseLong(persediaan.getNominal());
-    }
-
     private long tampilHargaBeliBarangByBarcode(String barcode) {
-        Barang barang = barangRepository.findByBarcode(barcode);
+        Barang barang = barangRepository.findByBarcodeBarang(barcode)
+                .orElseThrow(() -> new NotFoundException("Barcode not found: " + barcode));
 
         return Long.parseLong(barang.getHargaBeli());
     }
-
     // Menghapus transaksi pembelian berdasarkan ID
     public Map<String, Boolean> delete(Long id) {
         try {

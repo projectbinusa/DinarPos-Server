@@ -66,12 +66,12 @@ public class ReturnPenjualanService {
         kasHarianRepository.deleteById(kasHarian.getId());
 
         // Update related records with del_flag
-        List<BarangTransaksi> barangTransaksi1 = barangTransaksiRepository.findBarangTransaksiByIdTransaksi(idTransaksi);
-        for (BarangTransaksi barangTransaksi : barangTransaksi1){
-            BarangTransaksi barangTransaksi2 = barangTransaksiRepository.findById(barangTransaksi.getIdBrgTransaksi()).get();
-            barangTransaksi2.setDelFlag(0);
-            barangTransaksiRepository.save(barangTransaksi2);
+        List<BarangTransaksi> barangTransaksiList1 = barangTransaksiRepository.findBarangTransaksiByIdTransaksi(idTransaksi);
+        for (BarangTransaksi barangTransaksi : barangTransaksiList1) {
+            barangTransaksi.setDelFlag(0);
         }
+// Save all the modified entities at once
+        barangTransaksiRepository.saveAll(barangTransaksiList1);
 
 
 
