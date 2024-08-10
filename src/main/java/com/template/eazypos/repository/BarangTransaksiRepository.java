@@ -37,6 +37,9 @@ public interface BarangTransaksiRepository extends JpaRepository<BarangTransaksi
     @Query("SELECT bt FROM BarangTransaksi bt WHERE bt.transaksi = :idTransaksi")
     List<BarangTransaksi> findBarangTransaksiByIdTransaksi(@Param("idTransaksi") Long idTransaksi);
 
+    @Query(value = "SELECT * FROM tabel_barang_transaksi WHERE id_transaksi = :idTransaksi" , nativeQuery = true)
+    List<BarangTransaksi> findByIdtransaksi(Long idTransaksi);
+
 
     List<BarangTransaksi> findByTanggal(Date date);
 }

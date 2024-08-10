@@ -48,7 +48,7 @@ public class ReturnPenjualanService {
     }
 
     // Memproses pengembalian transaksi penjualan
-    @Transactional
+
     public Transaksi returnHistoriTransaksi(Long idTransaksi) {
         Transaksi transaksi = transaksiRepository.findById(idTransaksi)
                 .orElseThrow(() -> new NotFoundException("Id transaksi not found"));
@@ -58,17 +58,10 @@ public class ReturnPenjualanService {
         transaksiRepository.save(transaksi);
 
         // Delete related records
-       Omzet omzet = omzetRepository.findByIdTransaksi(idTransaksi).orElseThrow(() -> new NotFoundException("Id Not Found In Omzet"));
-        omzetRepository.deleteById(omzet.getId());
-        if (transaksi.getCashKredit() == "Kredit"){
-       Piutang piutang = piutangRepository.findByIdTransaksi(idTransaksi).orElseThrow(() -> new NotFoundException("Id Not Found In Piutang"));
-        piutangRepository.deleteById(piutang.getId());
-        }
-        KasHarian kasHarian = kasHarianRepository.findByIdTransaksi(idTransaksi).orElseThrow(() -> new NotFoundException("Id Not Found In Kas harian"));
-        kasHarianRepository.deleteById(kasHarian.getId());
+
 
         // Update related records with del_flag
-        List<BarangTransaksi> barangTransaksiList1 = barangTransaksiRepository.findBarangTransaksiByIdTransaksi(idTransaksi);
+        List<BarangTransaksi> barangTransaksiList1 = barangTransaksiRepository.findByIdtransaksi(idTransaksi);
         for (BarangTransaksi barangTransaksi : barangTransaksiList1) {
             barangTransaksi.setDelFlag(0);
         }
@@ -78,7 +71,7 @@ public class ReturnPenjualanService {
 
 
         // Process barang and stok updates
-        List<BarangTransaksi> barangTransaksiList = barangTransaksiRepository.findBarangTransaksiReturnByIdTransaksi(idTransaksi);
+        List<BarangTransaksi> barangTransaksiList = barangTransaksiRepository.findByIdtransaksi(idTransaksi);
 
         List<StokMasuk> stokMasukList = new ArrayList<>();
         List<Barang> barangUpdateList = new ArrayList<>();
@@ -106,6 +99,15 @@ public class ReturnPenjualanService {
         }
 
         updatePenjualanTabelPersediaan(transaksi.getTanggal());
+        Omzet omzet = omzetRepository.findByIdTransaksi(idTransaksi).orElseThrow(() -> new NotFoundException("Id Not Found In Omzet"));
+        if (transaksi.getCashKredit() == "Kredit"){
+            Piutang piutang = piutangRepository.findByIdTransaksi(idTransaksi).orElseThrow(() -> new NotFoundException("Id Not Found In Piutang"));
+            piutangRepository.deleteById(piutang.getId());
+        }
+        KasHarian kasHarian = kasHarianRepository.findByIdTransaksi(idTransaksi).orElseThrow(() -> new NotFoundException("Id Not Found In Kas harian"));
+        kasHarianRepository.deleteById(kasHarian.getId());
+        omzetRepository.deleteById(omzet.getId());
+
 
         return transaksi;
     }
