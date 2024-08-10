@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -182,12 +183,13 @@ public class ExcelKasHarian {
         response.setHeader("Content-Disposition", "attachment; filename=KasHarian.xlsx");
 
         // Write the output to the response output stream
-        workbook.write(response.getOutputStream());
-
-        // Closing the workbook
-        workbook.close();
-        logger.info("Finished creating daily cash report");
+        try (ServletOutputStream outputStream = response.getOutputStream()) {
+            workbook.write(outputStream);
+            workbook.close();
+        }
     }
+
+    // Method to safely parse integer values
     private void createCell(Row row, int column, int value, CellStyle style) {
         Cell cell = row.createCell(column);
         cell.setCellValue(value);
@@ -292,4 +294,5 @@ public class ExcelKasHarian {
         style.setAlignment(HorizontalAlignment.LEFT);
         return style;
     }
+
 }
