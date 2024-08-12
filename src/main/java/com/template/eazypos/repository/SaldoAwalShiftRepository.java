@@ -13,5 +13,5 @@ import java.util.List;
 @Repository
 public interface SaldoAwalShiftRepository extends JpaRepository<SaldoAwalShift , Long> {
     @Query("SELECT s FROM SaldoAwalShift s WHERE s.date = :date AND s.shift = :shift")
-    SaldoAwalShift findByDateAndShift(@Param("date") Date date, @Param("shift") String shift);
+    List<SaldoAwalShift> findByDateAndShift(@Param("date") Date date, @Param("shift") String shift);
 }

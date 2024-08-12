@@ -35,7 +35,7 @@ public class ExcelKasHarian {
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("Kas Harian");
 
-        // Cell styles
+        // Styles
         CellStyle styleHeader = createHeaderStyle(workbook);
         CellStyle styleColor1 = createColor1Style(workbook);
         CellStyle styleColor2 = createColor2Style(workbook);
@@ -71,19 +71,11 @@ public class ExcelKasHarian {
         createMergedCell(headerRow3, 11, "SETOR", styleColor1, 11, 11);
 
         // Set column widths
+        for (int i = 0; i < 13; i++) {
+            sheet.setColumnWidth(i, 25 * 256);
+        }
         sheet.setColumnWidth(0, 15 * 256);
-        sheet.setColumnWidth(1, 25 * 256);
-        sheet.setColumnWidth(2, 25 * 256);
-        sheet.setColumnWidth(3, 25 * 256);
         sheet.setColumnWidth(4, 15 * 256);
-        sheet.setColumnWidth(5, 25 * 256);
-        sheet.setColumnWidth(6, 25 * 256);
-        sheet.setColumnWidth(7, 25 * 256);
-        sheet.setColumnWidth(8, 25 * 256);
-        sheet.setColumnWidth(9, 25 * 256);
-        sheet.setColumnWidth(10, 25 * 256);
-        sheet.setColumnWidth(11, 25 * 256);
-        sheet.setColumnWidth(12, 25 * 256);
 
         // Convert Date to LocalDate
         LocalDate startDate = tglAwal.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
@@ -99,8 +91,11 @@ public class ExcelKasHarian {
             Date currentDate = Date.from(startDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
 
             // Fetch data for Shift Pagi
-            SaldoAwalShift saldoAwalShiftPagi = kasHarianService.findByDateAndShift(currentDate, "Pagi");
-            List<KasHarian> kasHarianListPagi = kasHarianService.findByDate(currentDate);
+            List<KasHarian> kasHarianListPagi = kasHarianService.getDataKasHarianShiftPagi(currentDate);
+            SaldoAwalShift saldoAwalShiftPagi = kasHarianService.getSaldoShiftAwal(currentDate, "Pagi")
+                    .stream()
+                    .findFirst()
+                    .orElse(null);
 
             int saldoAwal = safeParseInt(saldoAwalShiftPagi != null ? saldoAwalShiftPagi.getSaldoAwal() : null, 0);
             int penjualan = 0;
@@ -138,8 +133,11 @@ public class ExcelKasHarian {
             rowIndex++;
 
             // Fetch data for Shift Siang
-            SaldoAwalShift saldoAwalShiftSiang = kasHarianService.findByDateAndShift(currentDate, "Siang");
-            List<KasHarian> kasHarianListSiang = kasHarianService.findByDate(currentDate);
+            List<KasHarian> kasHarianListSiang = kasHarianService.getDataKasHarianShiftSiang(currentDate);
+            SaldoAwalShift saldoAwalShiftSiang = kasHarianService.getSaldoShiftAwal(currentDate, "Siang")
+                    .stream()
+                    .findFirst()
+                    .orElse(null);
 
             int saldoAwalS = safeParseInt(saldoAwalShiftSiang != null ? saldoAwalShiftSiang.getSaldoAwal() : null, 0);
             penjualan = 0;
@@ -175,35 +173,41 @@ public class ExcelKasHarian {
             createCell(sheet.createRow(rowIndex), 5, saldoAwalS, styleColor3);
 
             rowIndex++;
+
             startDate = startDate.plusDays(1);
         }
 
-        // Set response properties
-        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-        response.setHeader("Content-Disposition", "attachment; filename=KasHarian.xlsx");
+        // Auto-size columns
+        for (int i = 0; i < 13; i++) {
+            sheet.autoSizeColumn(i);
+        }
 
-        // Write the output to the response output stream
+        // Write the output to response
+        String fileName = "KasHarian.xlsx";
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        response.setHeader("Content-Disposition", "attachment; filename=" + fileName);
+
         try (ServletOutputStream outputStream = response.getOutputStream()) {
             workbook.write(outputStream);
-            workbook.close();
+            outputStream.flush();
+        } catch (Exception e) {
+            logger.error("Error while writing Excel file", e);
+            throw new IOException("Error while writing Excel file", e);
         }
     }
 
-    // Method to safely parse integer values
-    private void createCell(Row row, int column, int value, CellStyle style) {
-        Cell cell = row.createCell(column);
-        cell.setCellValue(value);
-        cell.setCellStyle(style);
-    }
     private int safeParseInt(String value, int defaultValue) {
-        if (value == null || value.isEmpty()) {
-            return defaultValue;
-        }
         try {
             return Integer.parseInt(value);
         } catch (NumberFormatException e) {
             return defaultValue;
         }
+    }
+
+    private void createCell(Row row, int column, int value, CellStyle style) {
+        Cell cell = row.createCell(column);
+        cell.setCellValue(value);
+        cell.setCellStyle(style);
     }
 
     private void createMergedCell(Row row, int cellIndex, String value, CellStyle style, int startCol, int endCol) {

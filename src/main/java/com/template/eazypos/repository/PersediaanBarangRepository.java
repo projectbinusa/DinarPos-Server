@@ -33,4 +33,6 @@ public interface PersediaanBarangRepository extends JpaRepository<PersediaanBara
 
     @Query("SELECT pb FROM PersediaanBarang pb WHERE pb.barang.barcodeBarang = :barcode AND pb.tanggal > :date ORDER BY pb.tanggal DESC")
     List<PersediaanBarang> findFirstAfterDate(@Param("barcode") String barcode, @Param("date") Date date);
+    @Query(value = "SELECT * FROM tabel_persediaan_barang WHERE id_barcode_barang = :id", nativeQuery = true)
+    List<PersediaanBarang> findByIdTransaksi(Long id);
 }
