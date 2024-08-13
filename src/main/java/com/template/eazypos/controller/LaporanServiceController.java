@@ -27,6 +27,9 @@ public class LaporanServiceController {
     @Autowired
     private ExcelLaporanServiceTaken excelLaporanServiceTaken;
 
+    @Autowired
+    private ExcelLaporanStatusService excelLaporanStatusService;
+
     @GetMapping("/export/laporanServiceAll")
     public void exportLaporanServiceAll(
             @RequestParam(name = "tanggal_awal") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggalAwal,
@@ -65,5 +68,13 @@ public class LaporanServiceController {
             @RequestParam(name = "tanggal_akhir") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggalAkhir,
             HttpServletResponse response) throws IOException {
         excelLaporanServiceTaken.excelLaporanServiceWithTaken(tanggalAwal, tanggalAkhir, response);
+    }
+
+    @GetMapping("/export/laporanStatus")
+    public void exportLaporanStatus(
+            @RequestParam(name = "tanggal_awal") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggalAwal,
+            @RequestParam(name = "tanggal_akhir") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggalAkhir,
+            HttpServletResponse response) throws IOException {
+        excelLaporanStatusService.excelLaporanStatus(tanggalAwal, tanggalAkhir, response);
     }
 }
