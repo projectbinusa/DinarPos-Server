@@ -22,8 +22,19 @@ public class Salesman extends DateConfig {
     @Column(name = "no_telp_salesman", nullable = false, length = 20)
     private String noTelpSalesman;
 
+    @Column(name = "target")
+    private String target;
+
     @Column(name = "del_flag", nullable = false, columnDefinition = "int default 1")
     private int delFlag;
+
+    public String getTarget() {
+        return target;
+    }
+
+    public void setTarget(String target) {
+        this.target = target;
+    }
 
     public Long getId() {
         return id;

@@ -19,14 +19,16 @@ public class Kunjungan extends DateConfig {
 //    private Long idMarketting;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
-    @JoinColumn(name = "id_marketting", nullable = false, updatable = false)
-    private Marketting marketting;
+    @JoinColumn(name = "id_salesman", nullable = false, updatable = false)
+    private Salesman salesman;
 
-    @Column(name = "id_plan")
-    private Long idPlan;
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @JoinColumn(name = "id_planning", nullable = false, updatable = false)
+    private Planning planning;
 
-    @Column(name = "id_customer")
-    private String idCustomer;
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @JoinColumn(name = "id_customer", nullable = false, updatable = false)
+    private Customer customer;
 
     @Column(name = "tgl_kunjungan")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" , timezone = "Asia/Jakarta")
@@ -101,28 +103,28 @@ public class Kunjungan extends DateConfig {
 //    }
 
 
-    public Marketting getMarketting() {
-        return marketting;
+    public Salesman getSalesman() {
+        return salesman;
     }
 
-    public void setMarketting(Marketting marketting) {
-        this.marketting = marketting;
+    public void setSalesman(Salesman salesman) {
+        this.salesman = salesman;
     }
 
-    public Long getIdPlan() {
-        return idPlan;
+    public Planning getPlanning() {
+        return planning;
     }
 
-    public void setIdPlan(Long idPlan) {
-        this.idPlan = idPlan;
+    public void setPlanning(Planning planning) {
+        this.planning = planning;
     }
 
-    public String getIdCustomer() {
-        return idCustomer;
+    public Customer getCustomer() {
+        return customer;
     }
 
-    public void setIdCustomer(String idCustomer) {
-        this.idCustomer = idCustomer;
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
 
     public Date getTanggalKunjungan() {

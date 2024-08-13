@@ -18,12 +18,12 @@ public class Planning extends DateConfig {
 //    private Long idMarketting;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
-    @JoinColumn(name = "id_marketting", nullable = false, updatable = false)
-    private Marketting marketting;
+    @JoinColumn(name = "id_salesman", nullable = false, updatable = false)
+    private Salesman salesman;
 
-    @Column(name = "id_customer", nullable = false, length = 15)
-    private String idCustomer;
-
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @JoinColumn(name = "id_customer", nullable = false, updatable = false)
+    private Customer customer;
     @Column(name = "tgl", nullable = false)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" , timezone = "Asia/Jakarta")
     private Date tgl;
@@ -55,20 +55,20 @@ public class Planning extends DateConfig {
 //    }
 
 
-    public Marketting getMarketting() {
-        return marketting;
+    public Salesman getSalesman() {
+        return salesman;
     }
 
-    public void setMarketting(Marketting marketting) {
-        this.marketting = marketting;
+    public void setSalesman(Salesman salesman) {
+        this.salesman = salesman;
     }
 
-    public String getIdCustomer() {
-        return idCustomer;
+    public Customer getCustomer() {
+        return customer;
     }
 
-    public void setIdCustomer(String idCustomer) {
-        this.idCustomer = idCustomer;
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
 
     public Date getTgl() {
