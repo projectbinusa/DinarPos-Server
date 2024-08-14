@@ -2,11 +2,13 @@ package com.template.eazypos.controller;
 
 import com.template.eazypos.auditing.Pagination;
 import com.template.eazypos.dto.CustomerDTO;
+import com.template.eazypos.dto.CustomerITCDTO;
 import com.template.eazypos.exception.CommonResponse;
 import com.template.eazypos.exception.PaginationResponse;
 import com.template.eazypos.exception.ResponseHelper;
 import com.template.eazypos.model.Customer;
 import com.template.eazypos.service.eazypos.CustomerService;
+import com.template.eazypos.service.itc.CustomerITCService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
@@ -22,11 +24,17 @@ public class CustomerController {
 
     @Autowired
     private CustomerService customerService;
+    @Autowired
+    private CustomerITCService customerITCService;
 
     // Menambahkan Customer Baru
     @PostMapping("/add")
     public CommonResponse<Customer> add(@RequestBody CustomerDTO customerDTO) {
         return ResponseHelper.ok(customerService.add(customerDTO));
+    }
+    @PostMapping("/itc")
+    public CommonResponse<Customer> addITC(@RequestBody CustomerITCDTO customerDTO) {
+        return ResponseHelper.ok(customerITCService.add(customerDTO));
     }
 
     // Mendapatkan Customer Berdasarkan ID

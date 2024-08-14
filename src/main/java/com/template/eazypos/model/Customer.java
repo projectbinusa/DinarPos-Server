@@ -24,12 +24,17 @@ public class Customer extends DateConfig {
     @Column(name = "jenis")
     private String jenis;
 
-    @Column(name = "id_kabkot")
-    private Long id_kabkot;
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @JoinColumn(name = "id_prov", nullable = false, updatable = false)
+    private Prov prov;
 
-    @Lob
-    @Column(name = "id_kec")
-    private Long id_kec;
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @JoinColumn(name = "id_kabkot", nullable = false, updatable = false)
+    private KabKot kabKot;
+
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @JoinColumn(name = "id_kec", nullable = false, updatable = false)
+    private Kec kec;
 
     @Column(name = "alamat")
     private String alamat;
@@ -149,16 +154,28 @@ public class Customer extends DateConfig {
         this.telp = telp;
     }
 
-    public Long getId_kabkot() {
-        return id_kabkot;
+    public KabKot getKabKot() {
+        return kabKot;
     }
 
-    public void setId_kabkot(Long id_kabkot) {
-        this.id_kabkot = id_kabkot;
+    public void setKabKot(KabKot kabKot) {
+        this.kabKot = kabKot;
     }
 
-    public Long getId_kec() {
-        return id_kec;
+    public Kec getKec() {
+        return kec;
+    }
+
+    public void setKec(Kec kec) {
+        this.kec = kec;
+    }
+
+    public Prov getProv() {
+        return prov;
+    }
+
+    public void setProv(Prov prov) {
+        this.prov = prov;
     }
 
     public int getPoin() {
@@ -167,10 +184,6 @@ public class Customer extends DateConfig {
 
     public void setPoin(int poin) {
         this.poin = poin;
-    }
-
-    public void setId_kec(Long id_kec) {
-        this.id_kec = id_kec;
     }
 
     public String getPrinter() {

@@ -12,15 +12,18 @@ public interface KunjunganRepository extends JpaRepository<Kunjungan , Long> {
     @Query(value = "SELECT * FROM kunjungan WHERE deal < 100" , nativeQuery = true)
     List<Kunjungan> findDealPo();
 
-    @Query(value = "SELECT * FROM kunjungan WHERE deal < 100 AND id_customer = :id ", nativeQuery = true)
-    List<Kunjungan> findDealPoAndCustomer(Long id);
+    @Query(value = "SELECT * FROM kunjungan WHERE deal < 100 AND deal >= 80 AND id_salesman = :id ", nativeQuery = true)
+    List<Kunjungan> findDealPoAndSalesman(Long id);
 
     @Query(value = "SELECT * FROM kunjungan WHERE deal = 100" , nativeQuery = true)
     List<Kunjungan> findDealFinish();
 
-    @Query(value = "SELECT * FROM kunjungan WHERE deal = 100 AND id_customer = :id ", nativeQuery = true)
+    @Query(value = "SELECT * FROM kunjungan WHERE deal = 100 AND id_salesman = :id ", nativeQuery = true)
     List<Kunjungan> findDealFinishAndCustomer(Long id);
 
     @Query(value = "SELECT * FROM kunjungan WHERE tgl_kunjungan BETWEEN :tglAwal AND :tglAkhir" , nativeQuery = true)
     List<Kunjungan> findByDate(Date tglAwal , Date tglAkhir);
+    @Query(value = "SELECT * FROM kunjungan WHERE tgl_kunjungan = :tgl" , nativeQuery = true)
+    List<Kunjungan> findByTanggal(Date tgl);
+
 }

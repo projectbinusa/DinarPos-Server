@@ -1,13 +1,17 @@
 package com.template.eazypos.controller;
 
+import com.template.eazypos.dto.PlanningDTO;
+import com.template.eazypos.dto.SalesmanDTO;
 import com.template.eazypos.exception.CommonResponse;
 import com.template.eazypos.exception.ResponseHelper;
 import com.template.eazypos.model.Kunjungan;
 import com.template.eazypos.model.Planning;
+import com.template.eazypos.model.Salesman;
 import com.template.eazypos.model.Transaksi;
 import com.template.eazypos.service.itc.PlanningService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -34,5 +38,34 @@ public class PlanningController {
     @GetMapping("/customer")
     public CommonResponse<List<Planning>> getByCustomer(@RequestParam(name = "id_customer") Long idCustomer){
         return ResponseHelper.ok(planningService.getByCustomer(idCustomer));
+    }
+    @PostMapping("/add")
+    public CommonResponse<Planning> add(@RequestBody PlanningDTO planningDTO){
+        return ResponseHelper.ok( planningService.add(planningDTO));
+    }
+
+    // Mendapatkan Bon Barang Berdasarkan ID
+    @GetMapping("/{id}")
+    public CommonResponse <Planning> get(@PathVariable("id") Long id){
+        return ResponseHelper.ok( planningService.getById(id));
+    }
+
+
+
+    // Mengedit Bon Barang Berdasarkan ID
+    @PutMapping("/{id}")
+    public CommonResponse<Planning> put(@PathVariable("id") Long id , @RequestBody PlanningDTO planningDTO){
+        return ResponseHelper.ok( planningService.edit( id , planningDTO));
+    }
+
+    // Menghapus Bon Barang Berdasarkan ID
+    @DeleteMapping("/{id}")
+    public CommonResponse<?> delete(@PathVariable("id")  Long id ) {
+        return ResponseHelper.ok( planningService.delete(id));
+    }
+    @GetMapping("/marketting/date")
+    public CommonResponse<List<Planning>> getByDate(
+            @RequestParam(name = "tanggal") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggal) {
+        return ResponseHelper.ok(planningService.getByTgl(tanggal));
     }
 }

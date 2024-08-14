@@ -13,4 +13,6 @@ public interface PlanningRepository extends JpaRepository<Planning , Long> {
 
     @Query(value = "SELECT * FROM planning WHERE id_customer = :id", nativeQuery = true)
     List<Planning> findByIdCustomer(Long id);
+    @Query(value = "SELECT * FROM planning WHERE tgl = :tgl", nativeQuery = true)
+    List<Planning> findByTglPlanning(Date tgl);
 }

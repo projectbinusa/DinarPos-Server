@@ -40,7 +40,7 @@ public class ITCService {
         Pengguna pengguna = new Pengguna();
         pengguna.setRoleToko("itc");
         pengguna.setNamaPengguna(salesmanDTO.getNama());
-        pengguna.setLevelPengguna("marketting");
+        pengguna.setLevelPengguna("Marketting");
         pengguna.setUsernamePengguna(salesmanDTO.getUsername());
         pengguna.setDelFlag(1);
         String userPass = salesmanDTO.getPassword().trim();
