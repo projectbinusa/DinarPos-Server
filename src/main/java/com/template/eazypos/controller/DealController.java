@@ -1,9 +1,11 @@
 package com.template.eazypos.controller;
 
+import com.template.eazypos.dto.DealGudangDTO;
 import com.template.eazypos.exception.CommonResponse;
 import com.template.eazypos.exception.ResponseHelper;
 import com.template.eazypos.model.Deal;
 import com.template.eazypos.model.Finish;
+import com.template.eazypos.model.Pengguna;
 import com.template.eazypos.model.Planning;
 import com.template.eazypos.service.itc.DealService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,5 +35,9 @@ public class DealController {
     @GetMapping("/finish/customer")
     public CommonResponse<List<Finish>> getDealFinishByCustomer(@RequestParam(name = "id_customer") Long idCustomer){
         return ResponseHelper.ok(dealService.getDealFinishByCustomer(idCustomer));
+    }
+    @PutMapping("/{id}")
+    public CommonResponse<Deal> put(@PathVariable("id") Long id, @RequestBody DealGudangDTO dto) {
+        return ResponseHelper.ok(dealService.edit(id, dto));
     }
 }

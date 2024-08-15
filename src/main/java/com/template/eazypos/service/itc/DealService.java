@@ -1,5 +1,7 @@
 package com.template.eazypos.service.itc;
 
+import com.template.eazypos.dto.DealGudangDTO;
+import com.template.eazypos.exception.NotFoundException;
 import com.template.eazypos.model.Deal;
 import com.template.eazypos.model.Finish;
 import com.template.eazypos.model.Kunjungan;
@@ -31,5 +33,12 @@ public class DealService {
     }
     public List<Finish> getDealFinishByCustomer(Long id){
         return finishRepository.findByCustomerId(id);
+    }
+
+    public Deal edit(Long id,DealGudangDTO gudangDTO){
+        Deal deal = dealRepository.findById(id).orElseThrow(() -> new NotFoundException("Id Not Found"));
+        deal.setStatus(gudangDTO.getStatus());
+        deal.setKet_status(gudangDTO.getStatus_ket());
+        return dealRepository.save(deal);
     }
 }

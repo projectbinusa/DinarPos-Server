@@ -8,8 +8,7 @@ import com.template.eazypos.repository.SalesmanRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class KunjunganService {
@@ -20,9 +19,6 @@ public class KunjunganService {
 
     public List<Kunjungan> getAll(){
         return kunjunganRepository.findAll();
-    }
-    public Kunjungan getById(Long id) {
-        return kunjunganRepository.findById(id).orElseThrow(() -> new NotFoundException("Id Not Found"));
     }
     public List<Kunjungan> getDealPO(){
         return kunjunganRepository.findDealPo();
@@ -43,6 +39,26 @@ public class KunjunganService {
     }
     public List<Kunjungan> getByDate(Date date){
         return kunjunganRepository.findByTanggal(date);
+    }
+
+    public List<Kunjungan> getByCustomer(Long id){
+        return kunjunganRepository.findByIdCustomer(id);
+    }
+    public List<Kunjungan> getByBulan(int bulan){
+        return kunjunganRepository.findByBulan(bulan);
+    }
+    public Kunjungan getById(Long id) {
+        return kunjunganRepository.findById(id).orElseThrow(() -> new NotFoundException("Id Not Found"));
+    }
+    public Map<String, Boolean> delete(Long id) {
+        try {
+            kunjunganRepository.deleteById(id);
+            Map<String, Boolean> response = new HashMap<>();
+            response.put("Deleted", Boolean.TRUE);
+            return response;
+        } catch (Exception e) {
+            return Collections.singletonMap("Deleted", Boolean.FALSE);
+        }
     }
 
 }

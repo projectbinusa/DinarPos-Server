@@ -333,7 +333,7 @@ public class TransaksiIndentExcelcomService {
         Omzet omzet = new Omzet();
         omzet.setOmzet(parseDouble(transaksiIndent.getTotalBelanja()));
         omzet.setTransaksi(transaksiRepository.findById(savedTransaksi.getIdTransaksi()).get());
-        omzet.setNmCustomer(customer.getNama_customer());
+        omzet.setCustomer(customer);
         omzet.setSalesman(transaksiIndent.getSalesman());
         omzet.setTgl(now);
         omzetRepository.save(omzet);

@@ -55,5 +55,17 @@ public class KunjunganController {
             @RequestParam(name = "tanggal_akhir") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggalAkhir) {
         return ResponseHelper.ok(kunjunganService.getByDateBetween(tanggalAwal, tanggalAkhir));
     }
+    @GetMapping("/customer")
+    public CommonResponse<List<Kunjungan>> getByCustomer(@RequestParam(name = "id_customer") Long id_customer){
+        return ResponseHelper.ok(kunjunganService.getByCustomer(id_customer));
+    }
+    @GetMapping("/bulan")
+    public CommonResponse<List<Kunjungan>> getByBulan(@RequestParam(name = "bulan") int bulan){
+        return ResponseHelper.ok(kunjunganService.getByBulan(bulan));
+    }
+    @DeleteMapping("/{id}")
+    public CommonResponse<?> delete(@PathVariable("id")  Long id ) {
+        return ResponseHelper.ok( kunjunganService.delete(id));
+    }
 
 }

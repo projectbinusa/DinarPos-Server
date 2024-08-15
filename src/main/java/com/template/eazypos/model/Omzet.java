@@ -29,11 +29,12 @@ public class Omzet extends DateConfig {
     @Column(name = "omzet", nullable = false)
     private Double omzet;
 
-    @Column(name = "nm_customer", nullable = false)
-    private String nmCustomer;
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @JoinColumn(name = "id_customer", nullable = false, updatable = false)
+    private Customer customer;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
-    @JoinColumn(name = "id_transaksi", nullable = false, updatable = false)
+    @JoinColumn(name = "id_transaksi", updatable = false)
     private Transaksi transaksi;
 
     public Long getId() {
@@ -77,12 +78,12 @@ public class Omzet extends DateConfig {
         this.omzet = omzet;
     }
 
-    public String getNmCustomer() {
-        return nmCustomer;
+    public Customer getCustomer() {
+        return customer;
     }
 
-    public void setNmCustomer(String nmCustomer) {
-        this.nmCustomer = nmCustomer;
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
 
     public Transaksi getTransaksi() {

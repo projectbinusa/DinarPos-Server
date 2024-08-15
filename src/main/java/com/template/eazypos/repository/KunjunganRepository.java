@@ -25,5 +25,10 @@ public interface KunjunganRepository extends JpaRepository<Kunjungan , Long> {
     List<Kunjungan> findByDate(Date tglAwal , Date tglAkhir);
     @Query(value = "SELECT * FROM kunjungan WHERE tgl_kunjungan = :tgl" , nativeQuery = true)
     List<Kunjungan> findByTanggal(Date tgl);
+    @Query(value = "SELECT * FROM kunjungan WHERE id_customer = :id" , nativeQuery = true)
+    List<Kunjungan> findByIdCustomer(Long id);
+
+    @Query(value = "SELECT * FROM kunjungan WHERE MONTH(tgl_kunjungan) = :bulan" , nativeQuery = true)
+    List<Kunjungan> findByBulan(int bulan);
 
 }

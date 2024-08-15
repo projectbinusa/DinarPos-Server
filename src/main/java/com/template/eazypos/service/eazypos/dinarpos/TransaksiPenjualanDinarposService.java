@@ -208,7 +208,7 @@ public class TransaksiPenjualanDinarposService {
         Omzet omzet = new Omzet();
         omzet.setOmzet(Double.valueOf(transaksiDTO.getTotalBelanja()));
         omzet.setTransaksi(savedTransaksi);
-        omzet.setNmCustomer(customer.getNama_customer());
+        omzet.setCustomer(customer);
         omzet.setSalesman(salesman);
         omzet.setTgl(now);
         omzetRepository.save(omzet);
