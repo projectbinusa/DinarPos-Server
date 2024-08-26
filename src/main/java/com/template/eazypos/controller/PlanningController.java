@@ -1,19 +1,17 @@
 package com.template.eazypos.controller;
 
 import com.template.eazypos.dto.PlanningDTO;
-import com.template.eazypos.dto.SalesmanDTO;
 import com.template.eazypos.exception.CommonResponse;
 import com.template.eazypos.exception.ResponseHelper;
-import com.template.eazypos.model.Kunjungan;
 import com.template.eazypos.model.Planning;
-import com.template.eazypos.model.Salesman;
-import com.template.eazypos.model.Transaksi;
+import com.template.eazypos.service.eazypos.excel.ExcelPlanningAllService;
 import com.template.eazypos.service.itc.PlanningService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -23,6 +21,9 @@ import java.util.List;
 public class PlanningController {
     @Autowired
     private PlanningService planningService;
+
+    @Autowired
+    private ExcelPlanningAllService excelPlanningAllService;
 
     @GetMapping
     public CommonResponse<List<Planning>> getAll() {
@@ -67,5 +68,14 @@ public class PlanningController {
     public CommonResponse<List<Planning>> getByDate(
             @RequestParam(name = "tanggal") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggal) {
         return ResponseHelper.ok(planningService.getByTgl(tanggal));
+    }
+
+    @GetMapping("/export/excel/planningAll")
+    public void exportExcelPlanningAll(
+            @RequestParam("tglAwal") @DateTimeFormat(pattern = "yyy-MM-dd") Date tglAwal,
+            @RequestParam("tglAkhir") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tglAkhir,
+            HttpServletResponse response) throws IOException {
+
+        excelPlanningAllService.excelLaporanPlanning(tglAwal, tglAkhir, response);
     }
 }
