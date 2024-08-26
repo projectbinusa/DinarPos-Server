@@ -5,11 +5,14 @@ import com.template.eazypos.dto.OmzetDTO;
 import com.template.eazypos.exception.CommonResponse;
 import com.template.eazypos.exception.ResponseHelper;
 import com.template.eazypos.model.*;
+import com.template.eazypos.service.eazypos.excel.ExcelKunjunganAllService;
 import com.template.eazypos.service.itc.KunjunganService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.util.Date;
@@ -21,6 +24,9 @@ import java.util.List;
 public class KunjunganController {
     @Autowired
     private KunjunganService kunjunganService;
+
+    @Autowired
+    private ExcelKunjunganAllService excelKunjunganAllService;
 
     @GetMapping
     public CommonResponse<List<Kunjungan>> getAll() {
@@ -81,4 +87,12 @@ public class KunjunganController {
     }
 
 
+    @GetMapping("/export/kunjungan")
+    public void exportExcelKunjungan(
+            @RequestParam("tglAwal") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tglAwal,
+            @RequestParam("tglAkhir") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tglAkhir,
+            HttpServletResponse response) throws IOException {
+
+        excelKunjunganAllService.excelLaporanKunjungan(tglAwal, tglAkhir, response);
+    }
 }
