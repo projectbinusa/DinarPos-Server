@@ -31,7 +31,7 @@ public class Kunjungan extends DateConfig {
     private Customer customer;
 
     @Column(name = "tgl_kunjungan")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" , timezone = "Asia/Jakarta")
+    @JsonFormat(pattern = "yyyy-MM-dd" , timezone = "Asia/Jakarta")
     private Date tanggalKunjungan;
 
     @Lob
@@ -66,7 +66,7 @@ public class Kunjungan extends DateConfig {
     private String waktuPengadaan;
 
     @Column(name = "tgl_deal")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" , timezone = "Asia/Jakarta")
+    @JsonFormat(pattern = "yyyy-MM-dd" , timezone = "Asia/Jakarta")
     private Date tanggalDeal;
 
     @Lob

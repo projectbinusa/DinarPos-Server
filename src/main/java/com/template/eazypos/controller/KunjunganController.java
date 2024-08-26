@@ -1,5 +1,7 @@
 package com.template.eazypos.controller;
 
+import com.template.eazypos.dto.KunjunganDTO;
+import com.template.eazypos.dto.OmzetDTO;
 import com.template.eazypos.exception.CommonResponse;
 import com.template.eazypos.exception.ResponseHelper;
 import com.template.eazypos.model.*;
@@ -7,7 +9,9 @@ import com.template.eazypos.service.itc.KunjunganService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -67,5 +71,14 @@ public class KunjunganController {
     public CommonResponse<?> delete(@PathVariable("id")  Long id ) {
         return ResponseHelper.ok( kunjunganService.delete(id));
     }
+    @PostMapping(path = "/add" , consumes = "multipart/form-data")
+    public CommonResponse<Kunjungan> add(KunjunganDTO kunjunganDTO , @RequestPart("foto")MultipartFile multipartFile) throws IOException {
+        return ResponseHelper.ok( kunjunganService.add(kunjunganDTO, multipartFile));
+    }
+    @PutMapping(path = "/{id}" , consumes = "multipart/form-data")
+    public CommonResponse<Kunjungan> edit(KunjunganDTO kunjunganDTO , @PathVariable("id") Long id , @RequestPart("foto")MultipartFile multipartFile) throws IOException {
+        return ResponseHelper.ok( kunjunganService.edit(id, kunjunganDTO, multipartFile));
+    }
+
 
 }
