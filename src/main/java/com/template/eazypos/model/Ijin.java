@@ -18,7 +18,7 @@ public class Ijin extends DateConfig {
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     @JoinColumn(name = "id_marketting", nullable = false, updatable = false)
-    private Marketting marketting;
+    private Salesman salesman;
 
     @Column(name = "jenis")
     private String jenis;
@@ -56,12 +56,12 @@ public class Ijin extends DateConfig {
 //    }
 
 
-    public Marketting getMarketting() {
-        return marketting;
+    public Salesman getSalesman() {
+        return salesman;
     }
 
-    public void setMarketting(Marketting marketting) {
-        this.marketting = marketting;
+    public void setSalesman(Salesman salesman) {
+        this.salesman = salesman;
     }
 
     public String getJenis() {
