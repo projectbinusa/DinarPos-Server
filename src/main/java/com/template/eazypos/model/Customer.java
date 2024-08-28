@@ -15,6 +15,7 @@ public class Customer extends DateConfig {
     private String nama_customer;
 
 //    @Column(name = "id_salesman")
+
 //    private Long salesman;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})

@@ -1,16 +1,16 @@
 package com.template.eazypos.controller;
 
 import com.template.eazypos.dto.DealGudangDTO;
+import com.template.eazypos.dto.DealPODTO;
 import com.template.eazypos.exception.CommonResponse;
 import com.template.eazypos.exception.ResponseHelper;
-import com.template.eazypos.model.Deal;
-import com.template.eazypos.model.Finish;
-import com.template.eazypos.model.Pengguna;
-import com.template.eazypos.model.Planning;
+import com.template.eazypos.model.*;
 import com.template.eazypos.service.itc.DealService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -39,5 +39,9 @@ public class DealController {
     @PutMapping("/{id}")
     public CommonResponse<Deal> put(@PathVariable("id") Long id, @RequestBody DealGudangDTO dto) {
         return ResponseHelper.ok(dealService.edit(id, dto));
+    }
+    @PostMapping(path = "/add" , consumes = "multipart/form-data")
+    public CommonResponse<Deal> add(DealPODTO dealpo , @RequestPart("foto") MultipartFile foto , @RequestPart("file") MultipartFile file) throws IOException {
+        return ResponseHelper.ok( dealService.add(dealpo, foto ,file));
     }
 }
