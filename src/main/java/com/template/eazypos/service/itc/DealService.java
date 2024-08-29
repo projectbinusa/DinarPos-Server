@@ -2,6 +2,7 @@ package com.template.eazypos.service.itc;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.template.eazypos.dto.DealFinishDTO;
 import com.template.eazypos.dto.DealGudangDTO;
 import com.template.eazypos.dto.DealPODTO;
 import com.template.eazypos.exception.NotFoundException;
@@ -21,6 +22,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -35,18 +37,41 @@ public class DealService {
     private KunjunganRepository kunjunganRepository;
 
     private static final String BASE_URL = "https://s3.lynk2.co/api/s3/pos/marketting";
+    private static final long MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB in bytes
 
-    public  Deal add(DealPODTO dealPODTO , MultipartFile foto ,MultipartFile file) throws IOException {
+    public  Deal addDealPO(DealPODTO dealPODTO , MultipartFile foto ,MultipartFile file) throws IOException {
         String image = uploadFoto(foto);
         String file_po = uploadFoto(file);
         Deal deal =new Deal();
         deal.setKet(dealPODTO.getKet());
         deal.setAdministrasi(dealPODTO.getAdministrasi());
-        deal.setTanggal_input(dealPODTO.getTgl_input());
+        deal.setTanggal_input(new Date());
         deal.setKunjungan(kunjunganRepository.findById(dealPODTO.getId_kunjungan()).orElseThrow(() -> new NotFoundException("Id Kunjungan Not Found")));
         deal.setFoto(image);
         deal.setFile_po(file_po);
         return dealRepository.save(deal);
+    }
+    public Finish addDealFinish(DealFinishDTO dealFinishDTO , MultipartFile bast , MultipartFile baut , MultipartFile baso ,  MultipartFile spk , MultipartFile ev_dtg , MultipartFile ev_pro , MultipartFile ev_fin ,MultipartFile file_spk) throws IOException {
+        Finish finish = new Finish();
+        String bast1 = uploadFoto(bast);
+        String baut1 = uploadFoto(baut);
+        String baso1 = uploadFoto(baso);
+        String spk1 = uploadFoto(spk);
+        String ev_dtg1 = uploadFoto(ev_dtg);
+        String ev_pro1 = uploadFoto(ev_pro);
+        String ev_fin1 = uploadFoto(ev_fin);
+        String file_spk1 = uploadFoto(file_spk);
+        finish.setKunjungan(kunjunganRepository.findById(dealFinishDTO.getId_kunjungan()).orElseThrow(() -> new NotFoundException("Id Kunjungan Not Found")));
+        finish.setBAST(bast1);
+        finish.setBASP(baso1);
+        finish.setBAUT(baut1);
+        finish.setSPK(spk1);
+        finish.setEv_dtg(ev_dtg1);
+        finish.setEv_pro(ev_pro1);
+        finish.setEv_fin(ev_fin1);
+        finish.setFile_spk(file_spk1);
+        return finishRepository.save(finish);
+
     }
 
     public List<Deal> getDealPO(){
@@ -69,6 +94,10 @@ public class DealService {
         return dealRepository.save(deal);
     }
     private String uploadFoto(MultipartFile multipartFile) throws IOException {
+        if (multipartFile.getSize() > MAX_FILE_SIZE) {
+            throw new IOException("File size exceeds the limit of 2MB");
+        }
+
         RestTemplate restTemplate = new RestTemplate();
 
         HttpHeaders headers = new HttpHeaders();
@@ -81,7 +110,6 @@ public class DealService {
         String fileUrl = extractFileUrlFromResponse(response.getBody());
         return fileUrl;
     }
-
     private String extractFileUrlFromResponse(String responseBody) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         JsonNode jsonResponse = mapper.readTree(responseBody);

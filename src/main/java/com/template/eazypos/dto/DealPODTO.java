@@ -5,8 +5,6 @@ import java.util.Date;
 public class DealPODTO {
     private Long id_kunjungan;
 
-    private Date tgl_input;
-
     private String ket;
 
     private String administrasi;
@@ -19,13 +17,6 @@ public class DealPODTO {
         this.id_kunjungan = id_kunjungan;
     }
 
-    public Date getTgl_input() {
-        return tgl_input;
-    }
-
-    public void setTgl_input(Date tgl_input) {
-        this.tgl_input = tgl_input;
-    }
 
     public String getKet() {
         return ket;

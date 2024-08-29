@@ -24,6 +24,8 @@ import java.util.*;
 @Service
 public class KunjunganService {
     private static final String BASE_URL = "https://s3.lynk2.co/api/s3/pos/marketting";
+
+    private static final long MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB in bytes
     @Autowired
     private KunjunganRepository kunjunganRepository;
     @Autowired
@@ -134,6 +136,10 @@ public class KunjunganService {
     }
 
     private String uploadFoto(MultipartFile multipartFile) throws IOException {
+        if (multipartFile.getSize() > MAX_FILE_SIZE) {
+            throw new IOException("File size exceeds the limit of 2MB");
+        }
+
         RestTemplate restTemplate = new RestTemplate();
 
         HttpHeaders headers = new HttpHeaders();

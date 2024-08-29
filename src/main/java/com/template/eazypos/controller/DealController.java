@@ -1,5 +1,6 @@
 package com.template.eazypos.controller;
 
+import com.template.eazypos.dto.DealFinishDTO;
 import com.template.eazypos.dto.DealGudangDTO;
 import com.template.eazypos.dto.DealPODTO;
 import com.template.eazypos.exception.CommonResponse;
@@ -40,8 +41,12 @@ public class DealController {
     public CommonResponse<Deal> put(@PathVariable("id") Long id, @RequestBody DealGudangDTO dto) {
         return ResponseHelper.ok(dealService.edit(id, dto));
     }
-    @PostMapping(path = "/add" , consumes = "multipart/form-data")
-    public CommonResponse<Deal> add(DealPODTO dealpo , @RequestPart("foto") MultipartFile foto , @RequestPart("file") MultipartFile file) throws IOException {
-        return ResponseHelper.ok( dealService.add(dealpo, foto ,file));
+    @PostMapping(path = "/add/deal_po" , consumes = "multipart/form-data")
+    public CommonResponse<Deal> addPO(DealPODTO dealpo , @RequestPart("foto") MultipartFile foto , @RequestPart("file") MultipartFile file) throws IOException {
+        return ResponseHelper.ok( dealService.addDealPO(dealpo, foto ,file));
+    }
+    @PostMapping(path = "/add/deal_finish" , consumes = "multipart/form-data")
+    public CommonResponse<Finish> addFinish(DealFinishDTO dealFinishDTO , @RequestPart("bast") MultipartFile bast , @RequestPart("baut") MultipartFile baut , @RequestPart("baso") MultipartFile baso ,  @RequestPart("spk") MultipartFile spk , @RequestPart("ev_dtg") MultipartFile dtg ,  @RequestPart("ev_pro") MultipartFile pro , @RequestPart("ev_fin") MultipartFile fin ,  @RequestPart("file_spk") MultipartFile file) throws IOException {
+        return ResponseHelper.ok( dealService.addDealFinish( dealFinishDTO,bast,baut ,baso ,spk ,dtg , pro , fin ,file));
     }
 }
