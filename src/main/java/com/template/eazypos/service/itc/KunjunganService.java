@@ -58,6 +58,9 @@ public class KunjunganService {
     public List<Kunjungan> getByDateBetween(Date tglAwal , Date tglAkhir){
         return kunjunganRepository.findByDate(tglAwal ,tglAkhir);
     }
+    public List<Kunjungan> getByDateBetweenAndSalesman(Date tglAwal , Date tglAkhir , Long id){
+        return kunjunganRepository.findByDateAndSalesman(tglAwal ,tglAkhir , id);
+    }
     public List<Kunjungan> getByDate(Date date){
         return kunjunganRepository.findByTanggal(date);
     }
