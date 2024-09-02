@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,4 +19,7 @@ public interface OmzetRepository extends JpaRepository<Omzet , Long> {
     List<Omzet> findByBulanTahun(@Param("bulan") int bulan , @Param("tahun") int tahun);
     @Query(value = "SELECT * FROM omzet WHERE  MONTH(tgl) = :bulan AND YEAR(tgl) = :tahun AND id_salesman = :id", nativeQuery = true)
     List<Omzet> findByBulanTahunSalesman(@Param("bulan") int bulan , @Param("tahun") int tahun , @Param("id") Long id);
+
+    @Query(value = "SELECT * FROM omzet WHERE tgl BETWEEN :tglAwal AND :tglAkhir AND id_salesman = :id" , nativeQuery = true)
+    List<Omzet> findByDateAndSalesman(Date tglAwal , Date tglAkhir , Long id);
 }
