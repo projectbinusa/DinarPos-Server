@@ -28,6 +28,17 @@ public class Salesman extends DateConfig {
     @Column(name = "del_flag", nullable = false, columnDefinition = "int default 1")
     private int delFlag;
 
+    @Column(name = "username")
+    private String username;
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
     public String getTarget() {
         return target;
     }

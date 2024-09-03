@@ -35,13 +35,16 @@ public class ITCService {
         salesman.setNoTelpSalesman(salesmanDTO.getNo_hp());
         salesman.setNamaSalesman(salesmanDTO.getNama());
         salesman.setAlamatSalesman(salesmanDTO.getAlamat());
+        salesman.setUsername(salesmanDTO.getUsername());
         salesman.setDelFlag(1);
 
         Pengguna pengguna = new Pengguna();
         pengguna.setRoleToko("itc");
         pengguna.setNamaPengguna(salesmanDTO.getNama());
         pengguna.setLevelPengguna("Marketting");
-        pengguna.setUsernamePengguna(salesmanDTO.getUsername());
+        if (penggunaRepository.findByUsername(salesmanDTO.getUsername()).isPresent()){
+            throw new BadRequestException("Username Pengguna sudah digunakan");
+        }
         pengguna.setDelFlag(1);
         String userPass = salesmanDTO.getPassword().trim();
         boolean PasswordIsNotValid = !userPass.matches("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{8,20}");
@@ -66,7 +69,9 @@ public class ITCService {
         update.setNoTelpSalesman(salesman.getNoTelpSalesman());
         return salesmanRepository.save(update);
     }
-
+    public Salesman getByNama(String nama){
+        return salesmanRepository.findByNama(nama).orElseThrow(() -> new NotFoundException("Nama Not Found"));
+    }
     public Map<String, Boolean> delete(Long id) {
         try {
             Salesman salesman = salesmanRepository.findById(id)

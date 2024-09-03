@@ -28,6 +28,11 @@ public class ITCController {
         return ResponseHelper.ok( itcService.getById(id));
     }
 
+    @GetMapping("/nama")
+    public CommonResponse <Salesman> getByNama(@RequestParam("nama") String  nama){
+        return ResponseHelper.ok( itcService.getByNama(nama));
+    }
+
     // Mendapatkan Semua Bon Barang
     @GetMapping
     public CommonResponse<List<Salesman>> getAll(){

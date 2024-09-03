@@ -64,6 +64,9 @@ public class ExcelOmzet {
         styleColor4.setFillForegroundColor(IndexedColors.GREEN.getIndex());
         styleColor4.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 
+Row judul = sheet.createRow(3);
+Cell cellJudul = judul.createCell(0);
+cellJudul.setCellValue("Periode Tanggal");
 
 
         // Header
@@ -88,9 +91,6 @@ public class ExcelOmzet {
             row.createCell(3).setCellValue(omzet.getOmzet());
             no++;
         }
-
-
-
 
         // Auto size columns
         for (int i = 0; i < headers.length; i++) {
