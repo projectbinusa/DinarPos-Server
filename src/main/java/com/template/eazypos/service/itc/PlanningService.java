@@ -71,6 +71,9 @@ public class PlanningService {
     public List<Planning> getByTgl(Date date){
         return planningRepository.findByTglPlanning(date);
     }
+    public List<Planning> getByTglAndSalesman(Date date , Long id){
+        return planningRepository.findByTglPlanningAndSalesman(date , id);
+    }
 
 
 }
