@@ -83,4 +83,13 @@ public class PlanningController {
 
         excelPlanningAllService.excelLaporanPlanning(tglAwal, tglAkhir, response);
     }
+    @GetMapping("/export/excel/salesman")
+    public void exportExcelPlanningPerSalesman(
+            @RequestParam("tglAwal") @DateTimeFormat(pattern = "yyy-MM-dd") Date tglAwal,
+            @RequestParam("tglAkhir") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tglAkhir,
+            @RequestParam("id_salesman") Long id,
+            HttpServletResponse response) throws IOException {
+
+        excelPlanningAllService.excelLaporanPlanningPerSalesman(tglAwal, tglAkhir , id, response);
+    }
 }

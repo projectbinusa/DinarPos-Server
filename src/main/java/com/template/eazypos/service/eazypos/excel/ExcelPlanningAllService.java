@@ -20,13 +20,23 @@ public class ExcelPlanningAllService {
     @Autowired
     private ExcelPlanningAll excelPlanningAll;
 
-    public ByteArrayInputStream loadPlanning() throws IOException {
-        List<Planning> plannings = planningRepository.findAll();
+    public ByteArrayInputStream loadPlanning(Date tglAwal , Date tglAKhir) throws IOException {
+        List<Planning> plannings = planningRepository.findByTgl(tglAwal , tglAKhir);
+        return excelPlanningAll.laporanPlanningToExcel(plannings);
+    }
+    public ByteArrayInputStream loadPlanningBYSalesman(Date tglAwal , Date tglAKhir , Long id) throws IOException {
+        List<Planning> plannings = planningRepository.findByTglAndSalesman(tglAwal , tglAKhir , id);
         return excelPlanningAll.laporanPlanningToExcel(plannings);
     }
 
     public void excelLaporanPlanning(Date tglAwal, Date tglAkhir, HttpServletResponse response) throws IOException {
-        ByteArrayInputStream bais = loadPlanning();
+        ByteArrayInputStream bais = loadPlanning(tglAwal ,tglAkhir);
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        response.setHeader("Content-Disposition", "attachment; filename=LAPORAN PLANNING ALL.xlsx");
+        response.getOutputStream().write(bais.readAllBytes());
+    }
+    public void excelLaporanPlanningPerSalesman(Date tglAwal, Date tglAkhir , Long id, HttpServletResponse response) throws IOException {
+        ByteArrayInputStream bais = loadPlanningBYSalesman(tglAwal ,tglAkhir , id);
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         response.setHeader("Content-Disposition", "attachment; filename=LAPORAN PLANNING ALL.xlsx");
         response.getOutputStream().write(bais.readAllBytes());
