@@ -93,7 +93,6 @@ public class KunjunganController {
         return ResponseHelper.ok( kunjunganService.edit(id, kunjunganDTO, multipartFile));
     }
 
-
     @GetMapping("/export/kunjungan")
     public void exportExcelKunjungan(
             @RequestParam("tglAwal") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tglAwal,
@@ -101,5 +100,14 @@ public class KunjunganController {
             HttpServletResponse response) throws IOException {
 
         excelKunjunganAllService.excelLaporanKunjungan(tglAwal, tglAkhir, response);
+    }
+    @GetMapping("/export/kunjungan/salesman")
+    public void exportExcelKunjunganBySelsman(
+            @RequestParam("tglAwal") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tglAwal,
+            @RequestParam("tglAkhir") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tglAkhir,
+            @RequestParam("id_selesman") Long id,
+            HttpServletResponse response) throws IOException {
+
+        excelKunjunganAllService.excelLaporanKunjunganBySalesman(tglAwal, tglAkhir,id, response);
     }
 }

@@ -25,10 +25,21 @@ public class ExcelKunjunganAllService {
         return excelKunjunganAll.laporanKunjunganToExcel(kunjungans);
     }
 
+    public ByteArrayInputStream loadKunjunganBySelesman(Date tglAwal , Date tglAkhir , Long id) throws IOException {
+        List<Kunjungan> kunjungans = kunjunganRepository.findByDateAndSalesman(tglAwal, tglAkhir, id);
+        return excelKunjunganAll.laporanKunjunganToExcel(kunjungans);
+    }
     public void excelLaporanKunjungan(Date tglAwal, Date tglAkhir, HttpServletResponse response) throws IOException {
         ByteArrayInputStream bais = loadKunjungan();
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         response.setHeader("Content-Disposition", "attachment; filename=LAPORAN KUNJUNGAN ALL.xlsx");
+        response.getOutputStream().write(bais.readAllBytes());
+    }
+
+    public void excelLaporanKunjunganBySalesman(Date tglAwal, Date tglAkhir , Long id, HttpServletResponse response) throws IOException {
+        ByteArrayInputStream bais = loadKunjunganBySelesman(tglAwal, tglAkhir, id);
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        response.setHeader("Content-Disposition", "attachment; filename=LAPORAN KUNJUNGAN.xlsx");
         response.getOutputStream().write(bais.readAllBytes());
     }
 }
