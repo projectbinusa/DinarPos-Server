@@ -67,6 +67,9 @@ public class Customer extends DateConfig {
     @Column(name = "pc")
     private Integer pc;
 
+    @Column(name = "murid")
+    private String murid;
+
     @Column(name = "unbk")
     private String unbk;
 
@@ -114,6 +117,14 @@ public class Customer extends DateConfig {
 //        this.salesman = salesman;
 //    }
 
+
+    public String getMurid() {
+        return murid;
+    }
+
+    public void setMurid(String murid) {
+        this.murid = murid;
+    }
 
     public Salesman getSalesman() {
         return salesman;

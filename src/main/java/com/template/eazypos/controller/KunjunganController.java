@@ -59,6 +59,12 @@ public class KunjunganController {
             @RequestParam(name = "tanggal") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggal) {
         return ResponseHelper.ok(kunjunganService.getByDate(tanggal));
     }
+    @GetMapping("/date/salesman")
+    public CommonResponse<List<Kunjungan>> getByDateSalesman(
+            @RequestParam(name = "tanggal") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggal ,
+            @RequestParam(name = "id_salesman") Long id) {
+        return ResponseHelper.ok(kunjunganService.getByDateSalesman(tanggal , id));
+    }
     @GetMapping("/date/between")
     public CommonResponse<List<Kunjungan>> getByDateBetween(
             @RequestParam(name = "tanggal_awal") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggalAwal,

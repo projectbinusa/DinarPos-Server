@@ -27,6 +27,8 @@ public interface KunjunganRepository extends JpaRepository<Kunjungan , Long> {
     List<Kunjungan> findByDateAndSalesman(Date tglAwal , Date tglAkhir , Long id);
     @Query(value = "SELECT * FROM kunjungan WHERE tgl_kunjungan = :tgl" , nativeQuery = true)
     List<Kunjungan> findByTanggal(Date tgl);
+    @Query(value = "SELECT * FROM kunjungan WHERE tgl_kunjungan = :tgl AND id_salesman = :id" , nativeQuery = true)
+    List<Kunjungan> findByTanggalSalesman(Date tgl , Long id);
     @Query(value = "SELECT * FROM kunjungan WHERE id_customer = :id" , nativeQuery = true)
     List<Kunjungan> findByIdCustomer(Long id);
 

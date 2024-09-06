@@ -51,6 +51,9 @@ public class KunjunganService {
         Salesman salesman = salesmanRepository.findByNama(nama).orElseThrow(() -> new NotFoundException("Nama Not Found"));
         return kunjunganRepository.findDealPoAndSalesman(salesman.getId());
     }
+    public List<Kunjungan> getByDateSalesman(Date date , Long id){
+        return kunjunganRepository.findByTanggalSalesman(date , id);
+    }
     public List<Kunjungan> getDealFinishAndSalesman(String nama){
         Salesman salesman = salesmanRepository.findByNama(nama).orElseThrow(() -> new NotFoundException("Nama Not Found"));
         return kunjunganRepository.findDealPoAndSalesman(salesman.getId());

@@ -35,6 +35,11 @@ public class CustomerITCService {
         customer.setProyektor(itcdto.getProyektor());
         customer.setInternet(itcdto.getInternet());
         customer.setWeb(itcdto.getWeb());
+        customer.setMurid(itcdto.getMurid());
+        customer.setKls3(itcdto.getKls3());
+        customer.setPc(itcdto.getPc());
+        customer.setUnbk(itcdto.getUnbk());
+        customer.setJurusan(itcdto.getJurusan());
         if (customerRepository.findByEmailOrTelp(itcdto.getEmail(), itcdto.getNo_tlp()).isPresent()){
             throw new BadRequestException("Customer sudah ada");
         }

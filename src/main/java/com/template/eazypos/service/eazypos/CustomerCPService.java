@@ -10,6 +10,10 @@ import com.template.eazypos.repository.CustomerCPRepository;
 import com.template.eazypos.repository.CustomerRepository;
 import com.template.eazypos.repository.SalesmanRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -50,6 +54,18 @@ public class CustomerCPService {
     // Mendapatkan semua contact person
     public List<CustomerCP> getAll(){
         return customerCPRepository.findAll();
+    }
+
+    public Page<CustomerCP> getAllWithPagination(Long page, Long limit, String sort, Long id) {
+
+        Sort.Direction direction = Sort.Direction.ASC;
+        if (sort.startsWith("-")) {
+            sort = sort.substring(1);
+            direction = Sort.Direction.DESC;
+        }
+
+        Pageable pageable = PageRequest.of(Math.toIntExact(page - 1), Math.toIntExact(limit), direction, sort);
+      return customerCPRepository.findByIdCustomer(id,pageable);
     }
 
     // Mengedit contact person berdasarkan ID

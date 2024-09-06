@@ -40,7 +40,7 @@ public class PlanningService {
         planning.setBertemu(dto.getBertemu());
         planning.setCustomer(customerRepository.findById(dto.getId_customer()).orElseThrow(() -> new NotFoundException("Id Customer Not Found")));
         planning.setKet(dto.getKet());
-        planning.setSalesman(salesmanRepository.findByNama(dto.getNama()).orElseThrow(() -> new NotFoundException("Id Salesman Not Found")));
+        planning.setSalesman(salesmanRepository.findByNama(dto.getNama()).orElseThrow(() -> new NotFoundException("Nama Salesman Not Found")));
         planning.setTgl(dto.getTgl());
         planning.setTimestamp(new Date());
         return planningRepository.save(planning);
@@ -73,6 +73,9 @@ public class PlanningService {
     }
     public List<Planning> getByTglAndSalesman(Date date , Long id){
         return planningRepository.findByTglPlanningAndSalesman(date , id);
+    }
+    public List<Planning> getPlanning(Date date , Long id){
+        return planningRepository.findPlanningsWithoutKunjungan(date , id);
     }
 
 

@@ -1,14 +1,20 @@
 package com.template.eazypos.controller;
 
+import com.template.eazypos.auditing.Pagination;
 import com.template.eazypos.dto.CustomerCPDTO;
 import com.template.eazypos.exception.CommonResponse;
+import com.template.eazypos.exception.PaginationResponse;
 import com.template.eazypos.exception.ResponseHelper;
+import com.template.eazypos.model.Customer;
 import com.template.eazypos.model.CustomerCP;
 import com.template.eazypos.service.eazypos.CustomerCPService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("api/customer/cp")
@@ -46,5 +52,27 @@ public class CustomerCPController {
     @DeleteMapping("/{id}")
     public CommonResponse<?> delete(@PathVariable("id") Long id) {
         return ResponseHelper.ok(customerCPService.delete(id));
+    }
+    @GetMapping(path = "/pagination")
+    public PaginationResponse<List<CustomerCP>> getAllPagination(
+            @RequestParam(defaultValue = Pagination.page, required = false) Long page,
+            @RequestParam(defaultValue = Pagination.limit, required = false) Long limit,
+            @RequestParam(defaultValue = Pagination.sort, required = false) String sort,
+          @RequestParam("id_salesman") Long id
+    ) {
+
+        Page<CustomerCP> customerPage;
+            customerPage = customerCPService.getAllWithPagination(page, limit, sort, id);
+
+        List<CustomerCP> customers = customerPage.getContent();
+        long totalItems = customerPage.getTotalElements();
+        int totalPages = customerPage.getTotalPages();
+
+        Map<String, Integer> pagination = new HashMap<>();
+        pagination.put("total", (int) totalItems);
+        pagination.put("page", Math.toIntExact(page));
+        pagination.put("total_page", totalPages);
+
+        return ResponseHelper.okWithPagination(customers, pagination);
     }
 }

@@ -74,6 +74,11 @@ public class PlanningController {
             @RequestParam(name = "tanggal") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggal , @RequestParam(name = "id_salesman") Long id) {
         return ResponseHelper.ok(planningService.getByTglAndSalesman(tanggal , id));
     }
+    @GetMapping("/notinkunjungan")
+    public CommonResponse<List<Planning>> getPlaning(
+            @RequestParam(name = "tanggal") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggal , @RequestParam(name = "id_salesman") Long id) {
+        return ResponseHelper.ok(planningService.getPlanning(tanggal , id));
+    }
 
     @GetMapping("/export/excel/planningAll")
     public void exportExcelPlanningAll(

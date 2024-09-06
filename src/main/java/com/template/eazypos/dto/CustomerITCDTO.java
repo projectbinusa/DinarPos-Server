@@ -16,6 +16,56 @@ public class CustomerITCDTO {
     private String internet;
     private String web;
 
+    private String murid;
+
+    private int kls3;
+
+    private int pc;
+
+    private String unbk;
+
+    private String jurusan;
+
+    public String getMurid() {
+        return murid;
+    }
+
+    public void setMurid(String murid) {
+        this.murid = murid;
+    }
+
+    public int getKls3() {
+        return kls3;
+    }
+
+    public void setKls3(int kls3) {
+        this.kls3 = kls3;
+    }
+
+    public int getPc() {
+        return pc;
+    }
+
+    public void setPc(int pc) {
+        this.pc = pc;
+    }
+
+    public String getUnbk() {
+        return unbk;
+    }
+
+    public void setUnbk(String unbk) {
+        this.unbk = unbk;
+    }
+
+    public String getJurusan() {
+        return jurusan;
+    }
+
+    public void setJurusan(String jurusan) {
+        this.jurusan = jurusan;
+    }
+
     public Long getId_salesman() {
         return id_salesman;
     }
