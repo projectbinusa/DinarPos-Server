@@ -24,8 +24,8 @@ public interface PlanningRepository extends JpaRepository<Planning , Long> {
     List<Planning> findByTglPlanningAndSalesman(Date tgl , Long id);
 
     @Query("SELECT p FROM Planning p JOIN p.customer c WHERE p.tgl = :tanggal " +
-            "AND p.salesman.idSalesman = :salesmanId " +
-            "AND p.idPlan NOT IN (SELECT k.idPlan FROM Kunjungan k)")
+            "AND p.salesman.id = :salesmanId " +
+            "AND p.idPlan NOT IN (SELECT k.planning FROM Kunjungan k)")
     List<Planning> findPlanningsWithoutKunjungan(
             @Param("tanggal") Date tanggal,
             @Param("salesmanId") Long salesmanId
