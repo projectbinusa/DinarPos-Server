@@ -58,7 +58,7 @@ public class CustomerCPController {
             @RequestParam(defaultValue = Pagination.page, required = false) Long page,
             @RequestParam(defaultValue = Pagination.limit, required = false) Long limit,
             @RequestParam(defaultValue = Pagination.sort, required = false) String sort,
-          @RequestParam("id_salesman") Long id
+          @RequestParam("id_customer") Long id
     ) {
 
         Page<CustomerCP> customerPage;
