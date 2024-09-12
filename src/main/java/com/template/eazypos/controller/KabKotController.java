@@ -1,7 +1,9 @@
 package com.template.eazypos.controller;
 
+import com.template.eazypos.auditing.Pagination;
 import com.template.eazypos.dto.KabKotDTO;
 import com.template.eazypos.exception.CommonResponse;
+import com.template.eazypos.exception.PaginationResponse;
 import com.template.eazypos.exception.ResponseHelper;
 import com.template.eazypos.exception.ResponseMessage;
 import com.template.eazypos.model.KabKot;
@@ -11,6 +13,7 @@ import com.template.eazypos.service.itc.KabKotService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -19,7 +22,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("api/kab_kot")
@@ -46,6 +51,28 @@ public class KabKotController {
     @GetMapping
     public CommonResponse<List<KabKot>> getAll() {
         return ResponseHelper.ok(kabKotService.getAll());
+    }
+    @GetMapping(path = "/pagination")
+    public PaginationResponse<List<KabKot>> getAll(
+            @RequestParam(defaultValue = Pagination.page, required = false) Long page,
+            @RequestParam(defaultValue = Pagination.limit, required = false) Long limit,
+            @RequestParam(defaultValue = Pagination.sort, required = false) String sort,
+            @RequestParam(name = "id_prov") Long id
+    ) {
+
+        Page<KabKot> customerPage;
+            customerPage = kabKotService.getAllWithPagination(page, limit, sort, id);
+
+        List<KabKot> customers = customerPage.getContent();
+        long totalItems = customerPage.getTotalElements();
+        int totalPages = customerPage.getTotalPages();
+
+        Map<String, Integer> pagination = new HashMap<>();
+        pagination.put("total", (int) totalItems);
+        pagination.put("page", Math.toIntExact(page));
+        pagination.put("total_page", totalPages);
+
+        return ResponseHelper.okWithPagination(customers, pagination);
     }
 
     // Endpoint Untuk Mengedit KabKot Berdasarkan ID

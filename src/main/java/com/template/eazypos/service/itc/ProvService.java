@@ -1,9 +1,14 @@
 package com.template.eazypos.service.itc;
 
 import com.template.eazypos.exception.NotFoundException;
+import com.template.eazypos.model.Customer;
 import com.template.eazypos.model.Prov;
 import com.template.eazypos.repository.ProvRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -21,6 +26,17 @@ public class ProvService {
 
     public List<Prov> getAll(){
         return provRepository.findAll();
+    }
+    public Page<Prov> getAllWithPagination(Long page, Long limit, String sort) {
+
+        Sort.Direction direction = Sort.Direction.ASC;
+        if (sort.startsWith("-")) {
+            sort = sort.substring(1);
+            direction = Sort.Direction.DESC;
+        }
+
+        Pageable pageable = PageRequest.of(Math.toIntExact(page - 1), Math.toIntExact(limit), direction, sort);
+            return provRepository.findAll(pageable);
     }
 
     public Prov getById(Long id){

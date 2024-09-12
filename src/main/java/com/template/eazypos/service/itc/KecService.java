@@ -7,6 +7,10 @@ import com.template.eazypos.repository.KabKotRepository;
 import com.template.eazypos.repository.KecRepository;
 import com.template.eazypos.repository.ProvRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -33,6 +37,19 @@ public class KecService {
 
     public List<Kec> getAll(){
         return kecRepository.findAll();
+    }
+
+    public Page<Kec> getAllWithPagination(Long page, Long limit, String sort, Long id) {
+
+        Sort.Direction direction = Sort.Direction.ASC;
+        if (sort.startsWith("-")) {
+            sort = sort.substring(1);
+            direction = Sort.Direction.DESC;
+        }
+
+        Pageable pageable = PageRequest.of(Math.toIntExact(page - 1), Math.toIntExact(limit), direction, sort);
+            return kecRepository.findByIdKabkot(id,pageable);
+
     }
 
     public Kec getById(Long id){
