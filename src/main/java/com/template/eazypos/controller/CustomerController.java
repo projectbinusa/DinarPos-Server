@@ -8,11 +8,16 @@ import com.template.eazypos.exception.PaginationResponse;
 import com.template.eazypos.exception.ResponseHelper;
 import com.template.eazypos.model.Customer;
 import com.template.eazypos.service.eazypos.CustomerService;
+import com.template.eazypos.service.eazypos.excel.ExcelCustomerService;
 import com.template.eazypos.service.itc.CustomerITCService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +31,9 @@ public class CustomerController {
     private CustomerService customerService;
     @Autowired
     private CustomerITCService customerITCService;
+
+    @Autowired
+    private ExcelCustomerService excelCustomerService;
 
     // Menambahkan Customer Baru
     @PostMapping("/add")
@@ -87,5 +95,13 @@ public class CustomerController {
     @DeleteMapping("/{id}")
     public CommonResponse<?> delete(@PathVariable("id") Long id) {
         return ResponseHelper.ok(customerService.delete(id));
+    }
+    @GetMapping("/export/excel")
+    public void exportExcelPlanningPerCustomer(
+            @RequestParam("tglAwal") @DateTimeFormat(pattern = "yyy-MM-dd") Date tglAwal,
+            @RequestParam("tglAkhir") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tglAkhir,
+            HttpServletResponse response) throws IOException {
+
+        excelCustomerService.excelLaporanCustomer(tglAwal, tglAkhir , response);
     }
 }

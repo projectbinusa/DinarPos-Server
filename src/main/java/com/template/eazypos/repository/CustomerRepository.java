@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Date;
 import java.util.Optional;
 import java.util.List;
 
@@ -24,4 +25,7 @@ public interface CustomerRepository extends JpaRepository<Customer , Long> {
 
     @Query(value = "SELECT * FROM customer WHERE del_flag = 1 ", nativeQuery = true)
     List<Customer> findAllCustomer();
+
+    @Query(value = "SELECT * FROM customer WHERE DATE(created_date) BETWEEN :startDate AND :endDate ORDER BY DATE(created_date) ASC", nativeQuery = true)
+    List<Customer> findCustomersByTimestampBetween(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
 }

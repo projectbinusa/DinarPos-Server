@@ -1,6 +1,8 @@
 package com.template.eazypos.repository;
 
 import com.template.eazypos.model.Planning;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -22,6 +24,8 @@ public interface PlanningRepository extends JpaRepository<Planning , Long> {
 
     @Query(value = "SELECT * FROM planning WHERE timestamp = :tgl AND id_salesman = :id", nativeQuery = true)
     List<Planning> findByTglPlanningAndSalesman(Date tgl , Long id);
+    @Query(value = "SELECT * FROM planning WHERE timestamp = :tgl AND id_salesman = :id", nativeQuery = true)
+    Page<Planning> findByTglPlanningAndSalesman(Date tgl , Long id , Pageable pageable);
 
     @Query("SELECT p FROM Planning p JOIN p.customer c WHERE p.timestamp = :tanggal " +
             "AND p.salesman.id = :salesmanId " +

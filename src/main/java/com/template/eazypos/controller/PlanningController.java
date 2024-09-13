@@ -1,19 +1,25 @@
 package com.template.eazypos.controller;
 
+import com.template.eazypos.auditing.Pagination;
 import com.template.eazypos.dto.PlanningDTO;
 import com.template.eazypos.exception.CommonResponse;
+import com.template.eazypos.exception.PaginationResponse;
 import com.template.eazypos.exception.ResponseHelper;
+import com.template.eazypos.model.Customer;
 import com.template.eazypos.model.Planning;
 import com.template.eazypos.service.eazypos.excel.ExcelPlanningAllService;
 import com.template.eazypos.service.itc.PlanningService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("api/planning")
@@ -73,6 +79,29 @@ public class PlanningController {
     public CommonResponse<List<Planning>> getByDateAndSalesman(
             @RequestParam(name = "tanggal") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggal , @RequestParam(name = "id_salesman") Long id) {
         return ResponseHelper.ok(planningService.getByTglAndSalesman(tanggal , id));
+    }
+    @GetMapping(path = "salesman/date/pagination")
+    public PaginationResponse<List<Planning>> getAll(
+            @RequestParam(defaultValue = Pagination.page, required = false) Long page,
+            @RequestParam(defaultValue = Pagination.limit, required = false) Long limit,
+            @RequestParam(defaultValue = Pagination.sort, required = false) String sort,
+            @RequestParam(name = "id_salesman") Long  id,
+            @RequestParam(name = "tanggal") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggal
+    ) {
+
+        Page<Planning> customerPage;
+            customerPage = planningService.getAllWithPagination(page, limit, sort, tanggal , id);
+
+        List<Planning> customers = customerPage.getContent();
+        long totalItems = customerPage.getTotalElements();
+        int totalPages = customerPage.getTotalPages();
+
+        Map<String, Integer> pagination = new HashMap<>();
+        pagination.put("total", (int) totalItems);
+        pagination.put("page", Math.toIntExact(page));
+        pagination.put("total_page", totalPages);
+
+        return ResponseHelper.okWithPagination(customers, pagination);
     }
     @GetMapping("/notinkunjungan")
     public CommonResponse<List<Planning>> getPlaning(

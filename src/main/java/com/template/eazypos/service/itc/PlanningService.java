@@ -2,12 +2,17 @@ package com.template.eazypos.service.itc;
 
 import com.template.eazypos.dto.PlanningDTO;
 import com.template.eazypos.exception.NotFoundException;
+import com.template.eazypos.model.Customer;
 import com.template.eazypos.model.Planning;
 import com.template.eazypos.model.Teknisi;
 import com.template.eazypos.repository.CustomerRepository;
 import com.template.eazypos.repository.PlanningRepository;
 import com.template.eazypos.repository.SalesmanRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.xml.crypto.Data;
@@ -73,6 +78,18 @@ public class PlanningService {
     }
     public List<Planning> getByTglAndSalesman(Date date , Long id){
         return planningRepository.findByTglPlanningAndSalesman(date , id);
+    }
+    public Page<Planning> getAllWithPagination(Long page, Long limit, String sort , Date date , Long id) {
+
+        Sort.Direction direction = Sort.Direction.ASC;
+        if (sort.startsWith("-")) {
+            sort = sort.substring(1);
+            direction = Sort.Direction.DESC;
+        }
+
+        Pageable pageable = PageRequest.of(Math.toIntExact(page - 1), Math.toIntExact(limit), direction, sort);
+            return planningRepository.findByTglPlanningAndSalesman(date , id,pageable);
+
     }
     public List<Planning> getPlanning(Date date , Long id){
         return planningRepository.findPlanningsWithoutKunjungan(date , id);
