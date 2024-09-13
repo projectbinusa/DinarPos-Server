@@ -12,6 +12,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -80,7 +81,7 @@ public class ExcelLaporanServiceAll {
             double totalBiayaSparepart = 0;
             double totalBiayaService = 0;
             double totalBiaya = 0;
-
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
             for (ServiceBarang serviceBarang : serviceBarangs) {
                 Row row = sheet.createRow(rowIdx++);
                 Cell cellNo = row.createCell(0);
@@ -141,19 +142,19 @@ public class ExcelLaporanServiceAll {
 
                 Cell cellTanggalMasuk = row.createCell(12);
                 if (serviceBarang.getTanggalMasuk() != null) {
-                    cellTanggalMasuk.setCellValue(serviceBarang.getTanggalMasuk());
+                    cellTanggalMasuk.setCellValue(dateFormat.format(serviceBarang.getTanggalMasuk()));
                     cellTanggalMasuk.setCellStyle(dateStyle);
                 }
 
                 Cell cellTanggalJadi = row.createCell(13);
                 if (serviceBarang.getTanggalJadi() != null) {
-                    cellTanggalJadi.setCellValue(serviceBarang.getTanggalJadi());
+                    cellTanggalJadi.setCellValue(dateFormat.format(serviceBarang.getTanggalJadi()));
                     cellTanggalJadi.setCellStyle(dateStyle);
                 }
 
                 Cell cellTanggalAmbil = row.createCell(14);
                 if (serviceBarang.getTanggalAmbil() != null) {
-                    cellTanggalAmbil.setCellValue(serviceBarang.getTanggalAmbil());
+                    cellTanggalAmbil.setCellValue(dateFormat.format(serviceBarang.getTanggalAmbil()));
                     cellTanggalAmbil.setCellStyle(dateStyle);
                 }
 

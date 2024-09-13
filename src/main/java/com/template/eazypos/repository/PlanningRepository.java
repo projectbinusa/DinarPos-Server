@@ -17,13 +17,13 @@ public interface PlanningRepository extends JpaRepository<Planning , Long> {
 
     @Query(value = "SELECT * FROM planning WHERE id_customer = :id", nativeQuery = true)
     List<Planning> findByIdCustomer(Long id);
-    @Query(value = "SELECT * FROM planning WHERE tgl = :tgl", nativeQuery = true)
+    @Query(value = "SELECT * FROM planning WHERE timestamp = :tgl", nativeQuery = true)
     List<Planning> findByTglPlanning(Date tgl);
 
-    @Query(value = "SELECT * FROM planning WHERE tgl = :tgl AND id_salesman = :id", nativeQuery = true)
+    @Query(value = "SELECT * FROM planning WHERE timestamp = :tgl AND id_salesman = :id", nativeQuery = true)
     List<Planning> findByTglPlanningAndSalesman(Date tgl , Long id);
 
-    @Query("SELECT p FROM Planning p JOIN p.customer c WHERE p.tgl = :tanggal " +
+    @Query("SELECT p FROM Planning p JOIN p.customer c WHERE p.timestamp = :tanggal " +
             "AND p.salesman.id = :salesmanId " +
             "AND p.idPlan NOT IN (SELECT k.planning FROM Kunjungan k)")
     List<Planning> findPlanningsWithoutKunjungan(

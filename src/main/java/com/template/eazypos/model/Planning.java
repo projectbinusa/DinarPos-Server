@@ -25,7 +25,7 @@ public class Planning extends DateConfig {
     @JoinColumn(name = "id_customer", nullable = false, updatable = false)
     private Customer customer;
     @Column(name = "tgl", nullable = false)
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" , timezone = "Asia/Jakarta")
+    @JsonFormat(pattern = "yyyy-MM-dd" , timezone = "Asia/Jakarta")
     private Date tgl;
 
     @Column(name = "bertemu", nullable = false, length = 50)

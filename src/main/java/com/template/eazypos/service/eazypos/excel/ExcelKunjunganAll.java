@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 @Service
@@ -62,7 +63,7 @@ public class ExcelKunjunganAll {
 
             int rowIdx = 1;
             int no = 1;
-
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
             for (Kunjungan kunjungan : kunjungans) {
                 Row row = sheet.createRow(rowIdx++);
                 Cell cellNo = row.createCell(0);
@@ -104,11 +105,11 @@ public class ExcelKunjunganAll {
                 cellPembayaran.setCellStyle(dataStyle);
 
                 Cell cellTglDeal = row.createCell(9);
-                cellTglDeal.setCellValue(kunjungan.getTanggalDeal());
+                cellTglDeal.setCellValue(dateFormat.format(kunjungan.getTanggalDeal()));
                 cellTglDeal.setCellStyle(dateStyle);
 
                 Cell cellTglKunjungan = row.createCell(10);
-                cellTglKunjungan.setCellValue(kunjungan.getTanggalKunjungan());
+                cellTglKunjungan.setCellValue(dateFormat.format(kunjungan.getTanggalKunjungan()));
                 cellTglKunjungan.setCellStyle(dateStyle);
 
                 Cell cellTujuan = row.createCell(11);

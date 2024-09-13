@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 public class ExcelIjin {
@@ -47,14 +48,15 @@ public class ExcelIjin {
 
             int rowIdx = 1;
             int no = 0;
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
             for (Ijin ijin : ijins) {
                 Row row = sheet.createRow(rowIdx++);
                 row.createCell(0).setCellValue(no);
-                row.createCell(1).setCellValue(ijin.getTgl_a());
+                row.createCell(1).setCellValue(dateFormat.format(ijin.getTgl_a()));
                 if (ijin.getTgl_b().equals(null)){
-                row.createCell(2).setCellValue(ijin.getTgl_a());
+                row.createCell(2).setCellValue(dateFormat.format(ijin.getTgl_a()));
                 }else {
-                 row.createCell(2).setCellValue(ijin.getTgl_b());
+                 row.createCell(2).setCellValue(dateFormat.format(ijin.getTgl_b()));
                 }
                 row.createCell(3).setCellValue(ijin.getSalesman().getNamaSalesman());
                 row.createCell(4).setCellValue(ijin.getKet());
