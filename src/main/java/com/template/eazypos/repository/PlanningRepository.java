@@ -19,15 +19,17 @@ public interface PlanningRepository extends JpaRepository<Planning , Long> {
 
     @Query(value = "SELECT * FROM planning WHERE id_customer = :id", nativeQuery = true)
     List<Planning> findByIdCustomer(Long id);
-    @Query(value = "SELECT * FROM planning WHERE timestamp = :tgl", nativeQuery = true)
-    List<Planning> findByTglPlanning(Date tgl);
+    @Query(value = "SELECT * FROM planning WHERE DATE(timestamp) = :tgl", nativeQuery = true)
+    List<Planning> findByTglPlanning(@Param("tgl") Date tgl);
 
-    @Query(value = "SELECT * FROM planning WHERE timestamp = :tgl AND id_salesman = :id", nativeQuery = true)
-    List<Planning> findByTglPlanningAndSalesman(Date tgl , Long id);
-    @Query(value = "SELECT * FROM planning WHERE timestamp = :tgl AND id_salesman = :id", nativeQuery = true)
-    Page<Planning> findByTglPlanningAndSalesman(Date tgl , Long id , Pageable pageable);
+    @Query(value = "SELECT * FROM planning WHERE DATE(timestamp) = :tgl AND id_salesman = :id", nativeQuery = true)
+    List<Planning> findByTglPlanningAndSalesman(@Param("tgl") Date tgl, @Param("id") Long id);
 
-    @Query("SELECT p FROM Planning p JOIN p.customer c WHERE p.timestamp = :tanggal " +
+    @Query(value = "SELECT * FROM planning WHERE DATE(timestamp) = :tgl AND id_salesman = :id", nativeQuery = true)
+    Page<Planning> findByTglPlanningAndSalesman(@Param("tgl") Date tgl, @Param("id") Long id, Pageable pageable);
+
+
+    @Query("SELECT p FROM Planning p JOIN p.customer c WHERE DATE(p.timestamp) = :tanggal " +
             "AND p.salesman.id = :salesmanId " +
             "AND p.idPlan NOT IN (SELECT k.planning FROM Kunjungan k)")
     List<Planning> findPlanningsWithoutKunjungan(

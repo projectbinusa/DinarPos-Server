@@ -8,10 +8,15 @@ import com.template.eazypos.exception.ResponseHelper;
 import com.template.eazypos.model.Customer;
 import com.template.eazypos.model.CustomerCP;
 import com.template.eazypos.service.eazypos.CustomerCPService;
+import com.template.eazypos.service.eazypos.excel.ExcelCustomerCPService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +28,9 @@ public class CustomerCPController {
 
     @Autowired
     private CustomerCPService customerCPService;
+
+    @Autowired
+    private ExcelCustomerCPService excelCustomerCPService;
 
     // Menambahkan Customer CP Baru
     @PostMapping("/add")
@@ -74,5 +82,13 @@ public class CustomerCPController {
         pagination.put("total_page", totalPages);
 
         return ResponseHelper.okWithPagination(customers, pagination);
+    }
+    @GetMapping("/export/excel")
+    public void exportExcelCustomer(
+            @RequestParam("tglAwal") @DateTimeFormat(pattern = "yyy-MM-dd") Date tglAwal,
+            @RequestParam("tglAkhir") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tglAkhir,
+            HttpServletResponse response) throws IOException {
+
+        excelCustomerCPService.excelLaporanCustomer(tglAwal, tglAkhir , response);
     }
 }
