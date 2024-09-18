@@ -39,6 +39,7 @@ public class CustomerITCService {
         customer.setKls3(itcdto.getKls3());
         customer.setPc(itcdto.getPc());
         customer.setUnbk(itcdto.getUnbk());
+        customer.setJenis(itcdto.getJenis());
         customer.setJurusan(itcdto.getJurusan());
         if (customerRepository.findByEmailOrTelp(itcdto.getEmail(), itcdto.getNo_tlp()).isPresent()){
             throw new BadRequestException("Customer sudah ada");

@@ -95,5 +95,8 @@ public class PlanningService {
         return planningRepository.findPlanningsWithoutKunjungan(date , id);
     }
 
+    public List<Planning> getBySalesmanGroupByDate(Long id) {
+        return planningRepository.findBySalesmanGroupByDate(id);
+    }
 
 }

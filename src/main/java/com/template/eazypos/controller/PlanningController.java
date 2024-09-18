@@ -126,4 +126,10 @@ public class PlanningController {
 
         excelPlanningAllService.excelLaporanPlanningPerSalesman(tglAwal, tglAkhir , id, response);
     }
+
+    @GetMapping("/by-date/salesman")
+    public CommonResponse<List<Planning>> getBySalesmanGroupByDate(
+            @RequestParam(name = "id_salesman") Long id) {
+        return ResponseHelper.ok(planningService.getBySalesmanGroupByDate(id));
+    }
 }

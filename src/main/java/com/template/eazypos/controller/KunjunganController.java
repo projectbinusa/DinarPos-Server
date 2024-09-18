@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("api/kunjungan")
@@ -115,5 +116,11 @@ public class KunjunganController {
             HttpServletResponse response) throws IOException {
 
         excelKunjunganAllService.excelLaporanKunjunganBySalesman(tglAwal, tglAkhir,id, response);
+    }
+
+    @GetMapping("/by_date/salesman")
+    public CommonResponse<List<Kunjungan>> getBySalesmanGroupedByDate(
+            @RequestParam(name = "id_salesman") Long idSalesman) {
+        return ResponseHelper.ok(kunjunganService.getBySalesmanGroupedByDate(idSalesman));
     }
 }
