@@ -58,6 +58,9 @@ public interface KunjunganRepository extends JpaRepository<Kunjungan , Long> {
             @Param("tgl1") Date tgl1,
             @Param("tgl2") Date tgl2,
             @Param("idm") Long idm);
+    @Query("SELECT k FROM Kunjungan k WHERE k.salesman.id = :idSalesman GROUP BY k.tanggalKunjungan")
+    List<Kunjungan> findBySalesmanGroupedByDate(@Param("idSalesman") Long idSalesman);
+
 }
 
 

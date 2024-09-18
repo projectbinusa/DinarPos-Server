@@ -43,4 +43,6 @@ public interface PlanningRepository extends JpaRepository<Planning , Long> {
             @Param("tglKunjungan") Date tglKunjungan,
             @Param("idSalesman") Long idSalesman);
 
+    @Query(value = "SELECT * FROM planning WHERE id_salesman = :id GROUP BY DATE(tgl) ORDER BY DATE(tgl) DESC", nativeQuery = true)
+    List<Planning> findBySalesmanGroupByDate(@Param("id") Long id);
 }

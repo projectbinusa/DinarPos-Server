@@ -17,8 +17,9 @@ public interface OmzetRepository extends JpaRepository<Omzet , Long> {
 
     @Query(value = "SELECT * FROM omzet WHERE  MONTH(tgl) = :bulan AND YEAR(tgl) = :tahun", nativeQuery = true)
     List<Omzet> findByBulanTahun(@Param("bulan") int bulan , @Param("tahun") int tahun);
-    @Query(value = "SELECT * FROM omzet WHERE  MONTH(tgl) = :bulan AND YEAR(tgl) = :tahun AND id_salesman = :id", nativeQuery = true)
-    List<Omzet> findByBulanTahunSalesman(@Param("bulan") int bulan , @Param("tahun") int tahun , @Param("id") Long id);
+
+    @Query(value = "SELECT * FROM omzet WHERE MONTH(tgl) = :bulan AND YEAR(tgl) = :tahun AND id_salesman = :id", nativeQuery = true)
+    List<Omzet> findByBulanTahunSalesman(@Param("bulan") int bulan, @Param("tahun") int tahun, @Param("id") Long id);
 
     @Query(value = "SELECT * FROM omzet WHERE tgl BETWEEN :tglAwal AND :tglAkhir AND id_salesman = :id" , nativeQuery = true)
     List<Omzet> findByDateAndSalesman(Date tglAwal , Date tglAkhir , Long id);

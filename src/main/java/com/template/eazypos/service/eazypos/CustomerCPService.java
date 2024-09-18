@@ -89,4 +89,8 @@ public class CustomerCPService {
             return null;
         }
     }
+
+    public List<CustomerCP> getAllByCustomerId(Long idCustomer) {
+        return customerCPRepository.findByCustomerId(idCustomer);
+    }
 }

@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class KunjunganService {
@@ -175,6 +176,10 @@ public class KunjunganService {
         String urlFile = dataNode.path("url_file").asText();
 
         return urlFile;
+    }
+
+    public List<Kunjungan> getBySalesmanGroupedByDate(Long idSalesman) {
+        return kunjunganRepository.findBySalesmanGroupedByDate(idSalesman);
     }
 
 }

@@ -98,5 +98,8 @@ public class PlanningService {
         return planningRepository.findByTglAndSalesman(tglKunjungan, idSalesman);
     }
 
+    public List<Planning> getBySalesmanGroupByDate(Long id) {
+        return planningRepository.findBySalesmanGroupByDate(id);
+    }
 
 }

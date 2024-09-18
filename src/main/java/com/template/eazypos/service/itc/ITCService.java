@@ -13,10 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class ITCService {
@@ -30,6 +27,9 @@ public class ITCService {
     PasswordEncoder encoder;
 
     public Salesman add(SalesmanDTO salesmanDTO){
+        if (salesmanDTO.getUsername() == null || salesmanDTO.getUsername().trim().isEmpty()) {
+            throw new BadRequestException("Username tidak boleh kosong!");
+        }
         Salesman salesman = new Salesman();
         salesman.setTarget(salesmanDTO.getTarget());
         salesman.setNoTelpSalesman(salesmanDTO.getNo_hp());
@@ -42,10 +42,12 @@ public class ITCService {
         pengguna.setRoleToko("itc");
         pengguna.setNamaPengguna(salesmanDTO.getNama());
         pengguna.setLevelPengguna("Marketting");
+        pengguna.setUsernamePengguna(salesmanDTO.getUsername());
         if (penggunaRepository.findByUsername(salesmanDTO.getUsername()).isPresent()){
             throw new BadRequestException("Username Pengguna sudah digunakan");
         }
         pengguna.setDelFlag(1);
+        pengguna.setLastLogin(new Date());
         String userPass = salesmanDTO.getPassword().trim();
         boolean PasswordIsNotValid = !userPass.matches("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{8,20}");
         if (PasswordIsNotValid) throw new BadRequestException("Password not valid!");

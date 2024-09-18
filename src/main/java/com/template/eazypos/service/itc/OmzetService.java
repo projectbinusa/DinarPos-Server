@@ -51,7 +51,8 @@ public class OmzetService {
     public List<Omzet> getByBulanTahun(int bulan , int tahun){
         return omzetRepository.findByBulanTahun(bulan,tahun);
     }
-    public List<Omzet> getByBulanTahunSalesman(int bulan , int tahun , Long id){
+
+    public List<Omzet> getByBulanTahunSalesman(int bulan, int tahun, Long id) {
         return omzetRepository.findByBulanTahunSalesman(bulan, tahun, id);
     }
 }
