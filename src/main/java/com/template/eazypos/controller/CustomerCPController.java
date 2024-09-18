@@ -91,4 +91,9 @@ public class CustomerCPController {
 
         excelCustomerCPService.excelLaporanCustomer(tglAwal, tglAkhir , response);
     }
+
+    @GetMapping("/by-customer/{idCustomer}")
+    public CommonResponse<List<CustomerCP>> getAllByCustomerId(@PathVariable("idCustomer") Long idCustomer) {
+        return ResponseHelper.ok(customerCPService.getAllByCustomerId(idCustomer));
+    }
 }

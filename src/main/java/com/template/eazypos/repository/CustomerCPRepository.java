@@ -31,4 +31,6 @@ public interface CustomerCPRepository extends JpaRepository<CustomerCP , Long> {
             @Param("endDate") Date endDate);
 
 
+    @Query(value = "SELECT * FROM cp WHERE id_customer = :idCustomer", nativeQuery = true)
+    List<CustomerCP> findByCustomerId(Long idCustomer);
 }

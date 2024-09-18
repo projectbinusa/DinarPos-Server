@@ -3,6 +3,7 @@ package com.template.eazypos.repository;
 import com.template.eazypos.model.Kunjungan;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import javax.xml.crypto.Data;
 import java.util.Date;
@@ -34,5 +35,8 @@ public interface KunjunganRepository extends JpaRepository<Kunjungan , Long> {
 
     @Query(value = "SELECT * FROM kunjungan WHERE MONTH(tgl_kunjungan) = :bulan" , nativeQuery = true)
     List<Kunjungan> findByBulan(int bulan);
+
+    @Query("SELECT k FROM Kunjungan k WHERE k.salesman.id = :idSalesman GROUP BY k.tanggalKunjungan")
+    List<Kunjungan> findBySalesmanGroupedByDate(@Param("idSalesman") Long idSalesman);
 
 }
