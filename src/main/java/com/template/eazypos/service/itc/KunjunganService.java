@@ -74,6 +74,15 @@ public class KunjunganService {
     public List<Kunjungan> getByBulan(int bulan){
         return kunjunganRepository.findByBulan(bulan);
     }
+    public List<Kunjungan> getKunjunganSync(){
+        return kunjunganRepository.findKunjunganGroupedByTanggalAndSalesman();
+    }
+    public List<Kunjungan> getKunjunganSyncBetweenDate(Date tgl1 , Date tgl2){
+        return kunjunganRepository.findKunjunganByDateRangeGroupedBySalesman(tgl1,tgl2);
+    }
+    public List<Kunjungan> findKunjunganByDateRangeAndSalesman(Date tgl1, Date tgl2, Long idm) {
+        return kunjunganRepository.findKunjunganByDateRangeAndSalesman(tgl1, tgl2, idm);
+    }
     public Kunjungan getById(Long id) {
         return kunjunganRepository.findById(id).orElseThrow(() -> new NotFoundException("Id Not Found"));
     }

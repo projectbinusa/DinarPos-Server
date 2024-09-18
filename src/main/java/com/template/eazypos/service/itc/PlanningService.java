@@ -94,6 +94,9 @@ public class PlanningService {
     public List<Planning> getPlanning(Date date , Long id){
         return planningRepository.findPlanningsWithoutKunjungan(date , id);
     }
+    public List<Planning> getPlanningByDateAndSalesman(Date tglKunjungan, Long idSalesman) {
+        return planningRepository.findByTglAndSalesman(tglKunjungan, idSalesman);
+    }
 
 
 }

@@ -36,5 +36,11 @@ public interface PlanningRepository extends JpaRepository<Planning , Long> {
             @Param("tanggal") Date tanggal,
             @Param("salesmanId") Long salesmanId
     );
+    @Query("SELECT p FROM Planning p JOIN p.customer c " +
+            "WHERE p.tgl = :tglKunjungan " +
+            "AND p.salesman.id = :idSalesman")
+    List<Planning> findByTglAndSalesman(
+            @Param("tglKunjungan") Date tglKunjungan,
+            @Param("idSalesman") Long idSalesman);
 
 }

@@ -108,6 +108,11 @@ public class PlanningController {
             @RequestParam(name = "tanggal") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggal , @RequestParam(name = "id_salesman") Long id) {
         return ResponseHelper.ok(planningService.getPlanning(tanggal , id));
     }
+    @GetMapping("/sync")
+    public CommonResponse<List<Planning>> getPlaningSync(
+            @RequestParam(name = "tanggal") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggal , @RequestParam(name = "id_salesman") Long id) {
+        return ResponseHelper.ok(planningService.getPlanningByDateAndSalesman(tanggal , id));
+    }
 
     @GetMapping("/export/excel/planningAll")
     public void exportExcelPlanningAll(
