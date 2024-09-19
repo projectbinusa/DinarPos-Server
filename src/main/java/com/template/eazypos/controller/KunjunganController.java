@@ -98,12 +98,25 @@ public class KunjunganController {
     public CommonResponse<List<Kunjungan>> getKunjunganSyncTanggal(@RequestParam("tglAwal") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tglAwal, @RequestParam("tglAkhir") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tglAkhir) {
         return ResponseHelper.ok(kunjunganService.getKunjunganSyncBetweenDate(tglAwal ,tglAkhir));
     }
+    @GetMapping("/foto/not_null")
+    public CommonResponse<List<Kunjungan>> getFoto(
+            @RequestParam("tgl_awal") Date tgl1,
+            @RequestParam("tgl_akhir") Date tgl2,
+            @RequestParam("id_salesman") Long idm) {
+        return ResponseHelper.ok( kunjunganService.getFotoNotNull(idm , tgl1 , tgl2));
+    }
+    @GetMapping("/sync/tanggal_beetwen/salesman")
+    public CommonResponse<List<Kunjungan>> getKunjunganByDateBetweenAndSalesman(
+            @RequestParam("tgl_awal") Date tgl1,
+            @RequestParam("tgl_akhir") Date tgl2,
+            @RequestParam("id_salesman") Long idm) {
+        return ResponseHelper.ok( kunjunganService.findKunjunganByDateRangeAndSalesman(tgl1, tgl2, idm));
+    }
     @GetMapping("/sync/tanggal/salesman")
     public CommonResponse<List<Kunjungan>> getKunjunganByDateAndSalesman(
-            @RequestParam("tgl1") Date tgl1,
-            @RequestParam("tgl2") Date tgl2,
-            @RequestParam("idm") Long idm) {
-        return ResponseHelper.ok( kunjunganService.findKunjunganByDateRangeAndSalesman(tgl1, tgl2, idm));
+            @RequestParam("tgl") Date tgl1,
+            @RequestParam("id_salesman") Long idm) {
+        return ResponseHelper.ok( kunjunganService.getSyncKunjunganBytgl(tgl1, idm));
     }
 
     @DeleteMapping("/{id}")

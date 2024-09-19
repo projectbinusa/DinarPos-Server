@@ -4,6 +4,7 @@ import com.template.eazypos.dto.IjinDTO;
 import com.template.eazypos.exception.CommonResponse;
 import com.template.eazypos.exception.ResponseHelper;
 import com.template.eazypos.model.Ijin;
+import com.template.eazypos.model.Kunjungan;
 import com.template.eazypos.service.eazypos.excel.IjinExcelService;
 import com.template.eazypos.service.itc.IjinService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,5 +54,12 @@ public class IjinController {
             HttpServletResponse response) throws IOException {
 
         ijinExcelService.excelLaporanIjin(tglAwal, tglAkhir, response);
+    }
+    @GetMapping("/tanggal_beetwen/salesman")
+    public CommonResponse<List<Ijin>> getIjinBetweenTgl(
+            @RequestParam("tgl_awal") Date tgl1,
+            @RequestParam("tgl_akhir") Date tgl2,
+            @RequestParam("id_salesman") Long idm) {
+        return ResponseHelper.ok( ijinService.getIjinBetweenTanggal(idm,tgl1, tgl2));
     }
 }

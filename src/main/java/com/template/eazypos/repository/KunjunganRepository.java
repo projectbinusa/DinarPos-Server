@@ -1,5 +1,6 @@
 package com.template.eazypos.repository;
 
+import com.template.eazypos.model.Ijin;
 import com.template.eazypos.model.Kunjungan;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -60,6 +61,27 @@ public interface KunjunganRepository extends JpaRepository<Kunjungan , Long> {
             @Param("idm") Long idm);
     @Query("SELECT k FROM Kunjungan k WHERE k.salesman.id = :idSalesman GROUP BY k.tanggalKunjungan")
     List<Kunjungan> findBySalesmanGroupedByDate(@Param("idSalesman") Long idSalesman);
+
+    @Query("SELECT k FROM Kunjungan k " +
+            "JOIN FETCH k.planning p " +
+            "JOIN FETCH p.customer c " +
+            "JOIN FETCH k.salesman m " +
+            "WHERE k.tanggalKunjungan = :tglKunjungan " +
+            "AND k.salesman.id = :idSalesman")
+    List<Kunjungan> findKunjunganByTglAndSalesman(
+            @Param("tglKunjungan") Date tglKunjungan,
+            @Param("idSalesman") Long idSalesman);
+
+    @Query("SELECT k FROM Kunjungan k " +
+            "WHERE k.salesman.id = :idSalesman " +
+            "AND k.tanggalKunjungan BETWEEN :tglMulai AND :tglSelesai " +
+            "AND k.foto <> ''")
+    List<Kunjungan> findKunjunganBySalesmanAndDateRangeWithFoto(
+            @Param("idSalesman") Long idSalesman,
+            @Param("tglMulai") Date tglMulai,
+            @Param("tglSelesai") Date tglSelesai);
+
+
 
 }
 

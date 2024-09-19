@@ -181,5 +181,11 @@ public class KunjunganService {
     public List<Kunjungan> getBySalesmanGroupedByDate(Long idSalesman) {
         return kunjunganRepository.findBySalesmanGroupedByDate(idSalesman);
     }
+    public List<Kunjungan> getSyncKunjunganBytgl(Date date ,Long idSalesman) {
+        return kunjunganRepository.findKunjunganByTglAndSalesman(date,idSalesman);
+    }
+    public List<Kunjungan> getFotoNotNull(Long idSalesman ,Date tgl_m , Date tgl_s) {
+        return kunjunganRepository.findKunjunganBySalesmanAndDateRangeWithFoto(idSalesman,tgl_m ,tgl_s);
+    }
 
 }
