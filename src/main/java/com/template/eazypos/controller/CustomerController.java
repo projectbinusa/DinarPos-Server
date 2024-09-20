@@ -104,4 +104,10 @@ public class CustomerController {
 
         excelCustomerService.excelLaporanCustomer(tglAwal, tglAkhir , response);
     }
+    @GetMapping("/export/customer/google")
+    public void exportExcelCustomerGoogle(
+            HttpServletResponse response) throws IOException {
+
+        excelCustomerService.excelLaporanCustomerGoogle(response);
+    }
 }

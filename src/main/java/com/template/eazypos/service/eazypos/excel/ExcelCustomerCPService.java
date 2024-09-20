@@ -21,11 +21,21 @@ public class ExcelCustomerCPService {
         List<CustomerCP> customers = customerRepository.findCustomerCPBetweenDates(tglAwal , tglAkhir);
         return ExcelCustomerCP.customerToExcel(customers);
     }
+    public ByteArrayInputStream loadCustomergoogle() throws IOException {
+        List<CustomerCP> customers = customerRepository.findAll();
+        return ExcelCustomerCP.customerToExcel(customers);
+    }
 
     public void excelLaporanCustomer(Date tglAwal, Date tglAkhir, HttpServletResponse response) throws IOException {
         ByteArrayInputStream bais = loadCustomer(tglAwal ,tglAkhir);
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         response.setHeader("Content-Disposition", "attachment; filename=REPORT CUSTOMER CP.xlsx");
+        response.getOutputStream().write(bais.readAllBytes());
+    }
+    public void excelLaporanCustomerGoogle( HttpServletResponse response) throws IOException {
+        ByteArrayInputStream bais = loadCustomergoogle();
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        response.setHeader("Content-Disposition", "attachment; filename=REPORT GOOGLE CONTACT CUSTOMER CP.xlsx");
         response.getOutputStream().write(bais.readAllBytes());
     }
 }

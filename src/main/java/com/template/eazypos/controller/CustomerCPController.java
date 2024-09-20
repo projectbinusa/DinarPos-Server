@@ -91,6 +91,12 @@ public class CustomerCPController {
 
         excelCustomerCPService.excelLaporanCustomer(tglAwal, tglAkhir , response);
     }
+    @GetMapping("/export/customer_cp/google")
+    public void exportExcelCustomerGoogle(
+            HttpServletResponse response) throws IOException {
+
+        excelCustomerCPService.excelLaporanCustomerGoogle(response);
+    }
 
     @GetMapping("/by-customer/{idCustomer}")
     public CommonResponse<List<CustomerCP>> getAllByCustomerId(@PathVariable("idCustomer") Long idCustomer) {
