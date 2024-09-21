@@ -87,16 +87,7 @@ public class KunjunganService {
     public Kunjungan getById(Long id) {
         return kunjunganRepository.findById(id).orElseThrow(() -> new NotFoundException("Id Not Found"));
     }
-    public Map<String, Boolean> delete(Long id) {
-        try {
-            kunjunganRepository.deleteById(id);
-            Map<String, Boolean> response = new HashMap<>();
-            response.put("Deleted", Boolean.TRUE);
-            return response;
-        } catch (Exception e) {
-            return Collections.singletonMap("Deleted", Boolean.FALSE);
-        }
-    }
+
     public Kunjungan add(KunjunganDTO kunjunganDTO , MultipartFile multipartFile) throws IOException {
         String image = uploadFoto(multipartFile);
         Kunjungan kunjungan = new Kunjungan();
@@ -186,6 +177,38 @@ public class KunjunganService {
     }
     public List<Kunjungan> getFotoNotNull(Long idSalesman ,Date tgl_m , Date tgl_s) {
         return kunjunganRepository.findKunjunganBySalesmanAndDateRangeWithFoto(idSalesman,tgl_m ,tgl_s);
+    }
+    public Map<String , Long> calculateVisit(Long idSalesman, Long idCustomer, String visitType) {
+        // Menghitung jumlah kunjungan
+        Long rowCount = kunjunganRepository.countKunjunganBySalesmanAndCustomer(idSalesman, idCustomer);
+
+        Long nVisit = 0L; // Default nilai n
+
+        if (rowCount > 0) {
+            // Jika ada kunjungan sebelumnya, ambil max n_visit
+            Optional<Long> maxNVisit = kunjunganRepository.findMaxNVisitBySalesmanAndCustomer(idSalesman, idCustomer);
+            if (visitType.equals("V") && maxNVisit.isPresent()) {
+                nVisit = maxNVisit.get() + 1;
+            }
+        } else {
+            // Jika tidak ada kunjungan sebelumnya
+            if (visitType.equals("V")) {
+                nVisit = 1L;
+            }
+        }
+        Map<String, Long> response = new HashMap<>();
+        response.put("NVisit",nVisit);
+        return response;
+    }
+    public Map<String, Boolean> delete(Long id) {
+        try {
+            kunjunganRepository.deleteById(id);
+            Map<String, Boolean> response = new HashMap<>();
+            response.put("Deleted", Boolean.TRUE);
+            return response;
+        } catch (Exception e) {
+            return Collections.singletonMap("Deleted", Boolean.FALSE);
+        }
     }
 
 }

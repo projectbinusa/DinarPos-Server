@@ -34,6 +34,10 @@ public class KunjunganController {
         return ResponseHelper.ok(kunjunganService.getAll());
     }
 
+    @PostMapping("/add-n_visit")
+    public CommonResponse<?> calculateVisit(@RequestParam Long idSalesman, @RequestParam Long idCustomer, @RequestParam String visitType) {
+        return ResponseHelper.ok(kunjunganService.calculateVisit(idSalesman, idCustomer, visitType));
+    }
     @GetMapping("/{id}")
     public CommonResponse<Kunjungan> get(@PathVariable("id") Long id) {
         return ResponseHelper.ok(kunjunganService.getById(id));

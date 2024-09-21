@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import javax.xml.crypto.Data;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 public interface KunjunganRepository extends JpaRepository<Kunjungan , Long> {
     @Query(value = "SELECT * FROM kunjungan WHERE deal < 100" , nativeQuery = true)
@@ -81,7 +82,12 @@ public interface KunjunganRepository extends JpaRepository<Kunjungan , Long> {
             @Param("tglMulai") Date tglMulai,
             @Param("tglSelesai") Date tglSelesai);
 
+    @Query("SELECT MAX(k.nVisit) FROM Kunjungan k WHERE k.salesman.id = :idSalesman AND k.customer.id = :idCustomer AND k.visit = 'V'")
+    Optional<Long> findMaxNVisitBySalesmanAndCustomer(@Param("idSalesman") Long idSalesman, @Param("idCustomer") Long idCustomer);
 
+    // Query untuk menghitung jumlah baris yang sesuai kriteria
+    @Query("SELECT COUNT(k) FROM Kunjungan k WHERE k.salesman.id = :idSalesman AND k.customer.id = :idCustomer AND k.visit = 'V'")
+    Long countKunjunganBySalesmanAndCustomer(@Param("idSalesman") Long idSalesman, @Param("idCustomer") Long idCustomer);
 
 }
 
