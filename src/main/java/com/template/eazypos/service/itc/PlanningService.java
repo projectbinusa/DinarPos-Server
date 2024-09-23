@@ -76,8 +76,8 @@ public class PlanningService {
     public List<Planning> getByTgl(Date date){
         return planningRepository.findByTglPlanning(date);
     }
-    public List<Planning> getByTglAndSalesman(Date date , Long id){
-        return planningRepository.findByTglPlanningAndSalesman(date , id);
+    public List<Planning> getByTglAndSalesman(Date date, Long id) {
+        return planningRepository.findByTglPlanningAndSalesman(date, id);
     }
     public Page<Planning> getAllWithPagination(Long page, Long limit, String sort , Date date , Long id) {
 

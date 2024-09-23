@@ -22,7 +22,7 @@ public interface PlanningRepository extends JpaRepository<Planning , Long> {
     @Query(value = "SELECT * FROM planning WHERE DATE(timestamp) = :tgl", nativeQuery = true)
     List<Planning> findByTglPlanning(@Param("tgl") Date tgl);
 
-    @Query(value = "SELECT * FROM planning WHERE DATE(timestamp) = :tgl AND id_salesman = :id", nativeQuery = true)
+    @Query(value = "SELECT * FROM planning WHERE DATE(tgl) = :tgl AND id_salesman = :id", nativeQuery = true)
     List<Planning> findByTglPlanningAndSalesman(@Param("tgl") Date tgl, @Param("id") Long id);
 
     @Query(value = "SELECT * FROM planning WHERE DATE(timestamp) = :tgl AND id_salesman = :id", nativeQuery = true)
