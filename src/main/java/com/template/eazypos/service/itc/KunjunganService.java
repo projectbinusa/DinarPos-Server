@@ -210,5 +210,8 @@ public class KunjunganService {
             return Collections.singletonMap("Deleted", Boolean.FALSE);
         }
     }
+    public List<Object[]> getKunjunganGroupedBySalesman() {
+        return kunjunganRepository.findKunjunganGroupedBySalesman();
+    }
 
 }

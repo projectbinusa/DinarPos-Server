@@ -150,9 +150,14 @@ public class KunjunganController {
         excelKunjunganAllService.excelLaporanKunjunganBySalesman(tglAwal, tglAkhir, id, response);
     }
 
+
     @GetMapping("/by_date/salesman")
     public CommonResponse<List<Kunjungan>> getBySalesmanGroupedByDate(
             @RequestParam(name = "id_salesman") Long idSalesman) {
         return ResponseHelper.ok(kunjunganService.getBySalesmanGroupedByDate(idSalesman));
+    }
+    @GetMapping("/group/salesman")
+    public CommonResponse<List<Object[]>> getBySalesmanGrouped() {
+        return ResponseHelper.ok(kunjunganService.getKunjunganGroupedBySalesman());
     }
 }

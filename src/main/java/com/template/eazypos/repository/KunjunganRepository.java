@@ -89,6 +89,14 @@ public interface KunjunganRepository extends JpaRepository<Kunjungan , Long> {
     @Query("SELECT COUNT(k) FROM Kunjungan k WHERE k.salesman.id = :idSalesman AND k.customer.id = :idCustomer AND k.visit = 'V'")
     Long countKunjunganBySalesmanAndCustomer(@Param("idSalesman") Long idSalesman, @Param("idCustomer") Long idCustomer);
 
+    @Query("SELECT s.id AS idMarketting, s.target AS target, s.namaSalesman AS nama, MAX(k.tanggalKunjungan) AS upDate, s.foto AS fotopp " +
+            "FROM Kunjungan k " +
+            "JOIN k.salesman s " +
+            "WHERE s.status != '0' " +
+            "GROUP BY s.id " +
+            "ORDER BY MAX(k.tanggalKunjungan) DESC")
+    List<Object[]> findKunjunganGroupedBySalesman();
+
 }
 
 
