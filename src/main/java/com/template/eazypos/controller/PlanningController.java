@@ -75,10 +75,12 @@ public class PlanningController {
             @RequestParam(name = "tanggal") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggal) {
         return ResponseHelper.ok(planningService.getByTgl(tanggal));
     }
+
     @GetMapping("/salesman/date")
     public CommonResponse<List<Planning>> getByDateAndSalesman(
-            @RequestParam(name = "tanggal") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggal , @RequestParam(name = "id_salesman") Long id) {
-        return ResponseHelper.ok(planningService.getByTglAndSalesman(tanggal , id));
+            @RequestParam(name = "tanggal") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tanggal,
+            @RequestParam(name = "id_salesman") Long id) {
+        return ResponseHelper.ok(planningService.getByTglAndSalesman(tanggal, id));
     }
     @GetMapping(path = "salesman/date/pagination")
     public PaginationResponse<List<Planning>> getAll(
