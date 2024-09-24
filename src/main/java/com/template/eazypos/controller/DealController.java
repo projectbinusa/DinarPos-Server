@@ -25,6 +25,14 @@ public class DealController {
     public CommonResponse<List<Deal>> getDealPO(){
         return ResponseHelper.ok(dealService.getDealPO());
     }
+    @GetMapping("/po/salesman")
+    public CommonResponse<List<Deal>> getDealPOBySalesman(@RequestParam(name = "id_salesman") Long idSalesman){
+        return ResponseHelper.ok(dealService.getDealsBySalesmanId(idSalesman));
+    }
+    @GetMapping("/finish/salesman")
+    public CommonResponse<List<Finish>> getDealFinishBySalesman(@RequestParam(name = "id_salesman") Long idSalesman){
+        return ResponseHelper.ok(dealService.getAllFinishBySalesmanId(idSalesman));
+    }
     @GetMapping("/finish")
     public CommonResponse<List<Finish>> getDealFinish(){
         return ResponseHelper.ok(dealService.getDealFinish());

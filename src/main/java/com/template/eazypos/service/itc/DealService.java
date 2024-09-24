@@ -118,5 +118,11 @@ public class DealService {
 
         return urlFile;
     }
+    public List<Deal> getDealsBySalesmanId(Long idSalesman) {
+        return dealRepository.findDealsBySalesmanId(idSalesman);
+    }
+    public List<Finish> getAllFinishBySalesmanId(Long idSalesman) {
+        return finishRepository.findAllFinishBySalesmanId(idSalesman);
+    }
 
 }

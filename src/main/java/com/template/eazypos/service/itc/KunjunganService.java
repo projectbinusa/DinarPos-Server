@@ -213,5 +213,11 @@ public class KunjunganService {
     public List<Object[]> getKunjunganGroupedBySalesman() {
         return kunjunganRepository.findKunjunganGroupedBySalesman();
     }
+    public List<Object[]> getKunjunganReport(Date startDate, Date endDate, Long salesmanId) {
+        return kunjunganRepository.findKunjunganExportLaporanSync(startDate, endDate, salesmanId);
+    }
+    public Salesman getSalesmanById(Long salesmanId) {
+        return salesmanRepository.findById(salesmanId).orElseThrow(() -> new RuntimeException("Salesman not found with id: " + salesmanId));
+    }
 
 }

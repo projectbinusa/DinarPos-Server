@@ -5,6 +5,7 @@ import com.template.eazypos.dto.OmzetDTO;
 import com.template.eazypos.exception.CommonResponse;
 import com.template.eazypos.exception.ResponseHelper;
 import com.template.eazypos.model.*;
+import com.template.eazypos.service.eazypos.SalesmanService;
 import com.template.eazypos.service.eazypos.excel.ExcelKunjunganAllService;
 import com.template.eazypos.service.itc.KunjunganService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +30,7 @@ public class KunjunganController {
 
     @Autowired
     private ExcelKunjunganAllService excelKunjunganAllService;
+
 
     @GetMapping
     public CommonResponse<List<Kunjungan>> getAll() {
@@ -159,5 +162,22 @@ public class KunjunganController {
     @GetMapping("/group/salesman")
     public CommonResponse<List<Object[]>> getBySalesmanGrouped() {
         return ResponseHelper.ok(kunjunganService.getKunjunganGroupedBySalesman());
+    }
+    @GetMapping("/export/laporan/sync")
+    public void exportKunjunganToExcel(
+            @RequestParam("tglAwal") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tglAwal,
+            @RequestParam("tglAkhir") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tglAkhir,
+            @RequestParam("id_selesman") Long id,
+            HttpServletResponse response) throws IOException {
+
+        // Fetch salesman details from the database
+        Salesman salesman = kunjunganService.getSalesmanById(id);
+        String salesmanName = salesman.getNamaSalesman();  // Assuming Salesman entity has a `getNama()` method.
+
+        // Fetch kunjungan data from the database
+        List<Object[]> kunjunganData = kunjunganService.getKunjunganReport(tglAwal, tglAkhir, id);
+
+        // Call service to export data to Excel
+        excelKunjunganAllService.exportExcel(kunjunganData, response, salesmanName, tglAwal.toString(), tglAkhir.toString());
     }
 }

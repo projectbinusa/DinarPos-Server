@@ -89,13 +89,24 @@ public interface KunjunganRepository extends JpaRepository<Kunjungan , Long> {
     @Query("SELECT COUNT(k) FROM Kunjungan k WHERE k.salesman.id = :idSalesman AND k.customer.id = :idCustomer AND k.visit = 'V'")
     Long countKunjunganBySalesmanAndCustomer(@Param("idSalesman") Long idSalesman, @Param("idCustomer") Long idCustomer);
 
-    @Query("SELECT s.id AS idMarketting, s.target AS target, s.namaSalesman AS nama, MAX(k.tanggalKunjungan) AS upDate, s.foto AS fotopp " +
-            "FROM Kunjungan k " +
-            "JOIN k.salesman s " +
-            "WHERE s.status != '0' " +
-            "GROUP BY s.id " +
-            "ORDER BY MAX(k.tanggalKunjungan) DESC")
+    @Query(value = "SELECT b.id_salesman, b.target, b.nama_salesman, MAX(a.tgl_kunjungan) AS up_date, b.fotopp " +
+            "FROM kunjungan a, marketting b " +
+            "WHERE a.id_salesman = b.id_salesman " +
+            "AND b.status != '0' " +
+            "GROUP BY b.id_salesman, b.target, b.nama, b.fotopp " +
+            "ORDER BY up_date DESC",
+            nativeQuery = true)
     List<Object[]> findKunjunganGroupedBySalesman();
+
+    @Query("SELECT k, c FROM Kunjungan k " +
+            "JOIN k.customer c " +
+            "WHERE k.tanggalKunjungan BETWEEN :startDate AND :endDate " +
+            "AND k.salesman.id = :salesmanId " +
+            "ORDER BY k.tanggalKunjungan ASC")
+    List<Object[]> findKunjunganExportLaporanSync(
+            @Param("startDate") Date startDate,
+            @Param("endDate") Date endDate,
+            @Param("salesmanId") Long salesmanId);
 
 }
 
