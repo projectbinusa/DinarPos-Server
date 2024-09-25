@@ -180,4 +180,19 @@ public class KunjunganController {
         // Call service to export data to Excel
         excelKunjunganAllService.exportExcel(kunjunganData, response, salesmanName, tglAwal.toString(), tglAkhir.toString());
     }
+
+    @GetMapping("/between51and80")
+    public List<Kunjungan> getAllKunjunganBetween51And80() {
+        return kunjunganService.getKunjunganBetween51And80();
+    }
+
+    @GetMapping("/between0and50")
+    public List<Kunjungan> getAllKunjunganBetween0And50() {
+        return kunjunganService.getKunjunganBetween0And50();
+    }
+
+    @GetMapping("/max-visit")
+    public CommonResponse<List<Kunjungan>> getMaxVisitBySalesmanAndCustomer(@RequestParam Long idSalesman, @RequestParam Long idCustomer) {
+        return ResponseHelper.ok(kunjunganService.getMaxVisitBySalesmanAndCustomer(idSalesman, idCustomer));
+    }
 }

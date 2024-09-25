@@ -116,6 +116,14 @@ public interface KunjunganRepository extends JpaRepository<Kunjungan , Long> {
     @Query("SELECT COUNT(k) FROM Kunjungan k WHERE k.salesman.id = :salesmanId AND FUNCTION('MONTH', k.tanggalKunjungan) = :month AND FUNCTION('YEAR', k.tanggalKunjungan) = :year")
     int countPresensiBySalesmanId(@Param("salesmanId") Long salesmanId, @Param("month") int month, @Param("year") int year);
 
+    @Query("SELECT k FROM Kunjungan k WHERE k.deal >= 51 AND k.deal <= 80")
+    List<Kunjungan> findAllKunjunganBetween51And80();
+
+    @Query("SELECT k FROM Kunjungan k WHERE k.deal >= 0 AND k.deal <= 50")
+    List<Kunjungan> findAllKunjunganBetween0And50();
+
+    @Query(value = "SELECT *, MAX(n_visit) AS max FROM kunjungan WHERE id_salesman = :idSalesman AND id_customer = :idCustomer AND visit = 'V'", nativeQuery = true)
+    List<Kunjungan> findMaxVisitBySalesmanAndCustomer(@Param("idSalesman") Long idSalesman, @Param("idCustomer") Long idCustomer);
 }
 
 

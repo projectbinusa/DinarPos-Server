@@ -231,4 +231,15 @@ public class KunjunganService {
         return kunjunganRepository.countPresensiBySalesmanId(salesman.getId(), month, year);
     }
 
+    public List<Kunjungan> getKunjunganBetween51And80() {
+        return kunjunganRepository.findAllKunjunganBetween51And80();
+    }
+
+    public List<Kunjungan> getKunjunganBetween0And50() {
+        return kunjunganRepository.findAllKunjunganBetween0And50();
+    }
+
+    public List<Kunjungan> getMaxVisitBySalesmanAndCustomer(Long idSalesman, Long idCustomer) {
+        return kunjunganRepository.findMaxVisitBySalesmanAndCustomer(idSalesman, idCustomer);
+    }
 }
