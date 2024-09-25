@@ -227,4 +227,8 @@ public class KunjunganService {
     public List<Kunjungan> getKunjunganBetween0And50() {
         return kunjunganRepository.findAllKunjunganBetween0And50();
     }
+
+    public List<Kunjungan> getMaxVisitBySalesmanAndCustomer(Long idSalesman, Long idCustomer) {
+        return kunjunganRepository.findMaxVisitBySalesmanAndCustomer(idSalesman, idCustomer);
+    }
 }

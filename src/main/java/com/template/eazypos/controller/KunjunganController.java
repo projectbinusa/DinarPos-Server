@@ -190,4 +190,9 @@ public class KunjunganController {
     public List<Kunjungan> getAllKunjunganBetween0And50() {
         return kunjunganService.getKunjunganBetween0And50();
     }
+
+    @GetMapping("/max-visit")
+    public CommonResponse<List<Kunjungan>> getMaxVisitBySalesmanAndCustomer(@RequestParam Long idSalesman, @RequestParam Long idCustomer) {
+        return ResponseHelper.ok(kunjunganService.getMaxVisitBySalesmanAndCustomer(idSalesman, idCustomer));
+    }
 }
