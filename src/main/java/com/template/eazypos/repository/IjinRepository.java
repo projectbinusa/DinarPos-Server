@@ -17,4 +17,7 @@ public interface IjinRepository extends JpaRepository<Ijin,Long> {
             @Param("idSalesman") Long idSalesman,
             @Param("tglMulai") Date tglMulai,
             @Param("tglSelesai") Date tglSelesai);
+
+    @Query("SELECT i FROM Ijin i WHERE i.salesman.id = :idSalesman")
+    List<Ijin> findBySalesmanId(@Param("idSalesman") Long idSalesman);
 }

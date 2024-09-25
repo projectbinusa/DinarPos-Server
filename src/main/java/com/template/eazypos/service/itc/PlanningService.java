@@ -106,4 +106,7 @@ public class PlanningService {
         return planningRepository.findPlanningAndSalesmanWithMaxTgl();
     }
 
+    public List<Planning> getTglBetweenAndSalesman(Date tglAwal, Date tglAkhir, Long idSalesman) {
+        return planningRepository.findByTglBetweenAndSalesman(tglAwal, tglAkhir, idSalesman);
+    }
 }

@@ -62,4 +62,9 @@ public class IjinController {
             @RequestParam("id_salesman") Long idm) {
         return ResponseHelper.ok( ijinService.getIjinBetweenTanggal(idm,tgl1, tgl2));
     }
+
+    @GetMapping("/salesman/{id_salesman}")
+    public CommonResponse<List<Ijin>> getIjinBySalesman(@PathVariable("id_salesman") Long idSalesman) {
+        return ResponseHelper.ok(ijinService.getIjinBySalesman(idSalesman));
+    }
 }

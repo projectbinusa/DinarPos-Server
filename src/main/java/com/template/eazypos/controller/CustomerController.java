@@ -110,4 +110,9 @@ public class CustomerController {
 
         excelCustomerService.excelLaporanCustomerGoogle(response);
     }
+
+    @PutMapping("/itc/{id}")
+    public CommonResponse<Customer> edit(@PathVariable("id") Long id, @RequestBody CustomerITCDTO customerITCDTO) {
+        return ResponseHelper.ok(customerITCService.put(customerITCDTO, id));
+    }
 }

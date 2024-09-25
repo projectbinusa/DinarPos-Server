@@ -94,4 +94,8 @@ public class IjinService {
 
         return urlFile;
     }
+
+    public List<Ijin> getIjinBySalesman(Long idSalesman) {
+        return ijinRepository.findBySalesmanId(idSalesman);
+    }
 }

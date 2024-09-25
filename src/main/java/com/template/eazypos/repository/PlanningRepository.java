@@ -54,4 +54,11 @@ public interface PlanningRepository extends JpaRepository<Planning , Long> {
             "ORDER BY up_date DESC",
             nativeQuery = true)
     List<Object[]> findPlanningAndSalesmanWithMaxTgl();
+
+    @Query("SELECT p FROM Planning p WHERE p.tgl BETWEEN :tglAwal AND :tglAkhir AND p.salesman.id = :id_salesman")
+    List<Planning> findByTglBetweenAndSalesman(
+            @Param("tglAwal") Date tglAwal,
+            @Param("tglAkhir") Date tglAkhir,
+            @Param("id_salesman") Long id
+    );
 }

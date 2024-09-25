@@ -46,4 +46,22 @@ public class CustomerITCService {
         }
         return customerRepository.save(customer);
     }
+
+    public Customer put(CustomerITCDTO customerITCDTO , Long id) {
+        Customer update = customerRepository.findById(id).orElseThrow(() -> new NotFoundException("Id tidak ditemukan"));
+        update.setAlamat(customerITCDTO.getAlamat());
+        update.setEmail(customerITCDTO.getEmail());
+        update.setTelp(customerITCDTO.getNo_tlp());
+        update.setJml(customerITCDTO.getJml_printer());
+        update.setProyektor(customerITCDTO.getProyektor());
+        update.setInternet(customerITCDTO.getInternet());
+        update.setWeb(customerITCDTO.getWeb());
+        update.setMurid(customerITCDTO.getMurid());
+        update.setKls3(customerITCDTO.getKls3());
+        update.setPc(customerITCDTO.getPc());
+        update.setUnbk(customerITCDTO.getUnbk());
+        update.setJenis(customerITCDTO.getJenis());
+        update.setJurusan(customerITCDTO.getJurusan());
+        return customerRepository.save(update);
+    }
 }
