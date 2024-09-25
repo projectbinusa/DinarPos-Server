@@ -33,4 +33,7 @@ public interface CustomerCPRepository extends JpaRepository<CustomerCP , Long> {
 
     @Query(value = "SELECT * FROM cp WHERE id_customer = :idCustomer", nativeQuery = true)
     List<CustomerCP> findByCustomerId(Long idCustomer);
+
+    @Query("SELECT COUNT(cp) FROM CustomerCP cp WHERE cp.salesman.id = :salesmanId")
+    int countNewCustomerCPBySalesmanId(@Param("salesmanId") Long salesmanId);
 }

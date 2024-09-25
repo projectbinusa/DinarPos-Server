@@ -1,5 +1,6 @@
 package com.template.eazypos.repository;
 
+import com.template.eazypos.model.Kunjungan;
 import com.template.eazypos.model.Planning;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -61,4 +62,5 @@ public interface PlanningRepository extends JpaRepository<Planning , Long> {
             @Param("tglAkhir") Date tglAkhir,
             @Param("id_salesman") Long id
     );
+    List<Planning> findBySalesmanId(Long salesmanId);
 }

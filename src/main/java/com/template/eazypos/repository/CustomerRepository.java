@@ -28,4 +28,7 @@ public interface CustomerRepository extends JpaRepository<Customer , Long> {
 
     @Query(value = "SELECT * FROM customer WHERE DATE(created_date) BETWEEN :startDate AND :endDate ORDER BY DATE(created_date) ASC", nativeQuery = true)
     List<Customer> findCustomersByTimestampBetween(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
+
+    @Query("SELECT COUNT(c) FROM Customer c WHERE c.salesman.id = :salesmanId AND c.del_flag = 1")
+    int countNewCustomersBySalesmanId(@Param("salesmanId") Long salesmanId);
 }

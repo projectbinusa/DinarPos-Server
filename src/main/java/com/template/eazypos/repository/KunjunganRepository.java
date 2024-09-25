@@ -108,6 +108,14 @@ public interface KunjunganRepository extends JpaRepository<Kunjungan , Long> {
             @Param("endDate") Date endDate,
             @Param("salesmanId") Long salesmanId);
 
+    List<Kunjungan> findBySalesmanId(Long salesmanId);
+
+    @Query("SELECT COUNT(DISTINCT k.tanggalKunjungan) FROM Kunjungan k WHERE k.salesman.id = :salesmanId")
+    int countWorkdaysBySalesmanId(@Param("salesmanId") Long salesmanId);
+
+    @Query("SELECT COUNT(k) FROM Kunjungan k WHERE k.salesman.id = :salesmanId AND FUNCTION('MONTH', k.tanggalKunjungan) = :month AND FUNCTION('YEAR', k.tanggalKunjungan) = :year")
+    int countPresensiBySalesmanId(@Param("salesmanId") Long salesmanId, @Param("month") int month, @Param("year") int year);
+
 }
 
 

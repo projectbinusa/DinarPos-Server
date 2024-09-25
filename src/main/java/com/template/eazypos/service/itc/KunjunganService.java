@@ -220,4 +220,15 @@ public class KunjunganService {
         return salesmanRepository.findById(salesmanId).orElseThrow(() -> new RuntimeException("Salesman not found with id: " + salesmanId));
     }
 
+    public int calculateWorkdays(Salesman salesman) {
+        // Menghitung jumlah hari unik di mana salesman melakukan kunjungan
+        return kunjunganRepository.countWorkdaysBySalesmanId(salesman.getId());
+    }
+
+    // Menghitung Presensi
+    public int calculatePresensi(Salesman salesman, int month, int year) {
+        // Menghitung jumlah kunjungan berdasarkan bulan dan tahun
+        return kunjunganRepository.countPresensiBySalesmanId(salesman.getId(), month, year);
+    }
+
 }
