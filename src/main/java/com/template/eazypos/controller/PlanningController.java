@@ -143,4 +143,14 @@ public class PlanningController {
     public CommonResponse<List<Object[]>> getBySalesmanGroup() {
         return ResponseHelper.ok(planningService.getPlanningAndSalesmanWithMaxTgl());
     }
+
+    @GetMapping("/tgl_between/salesman")
+    public CommonResponse<List<Planning>> getTglBetweenAndSalesman(
+            @RequestParam("tglAwal") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tglAwal,
+            @RequestParam("tglAkhir") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tglAkhir,
+            @RequestParam("id_salesman") Long id,
+            HttpServletResponse response) {
+
+        return ResponseHelper.ok(planningService.getTglBetweenAndSalesman(tglAwal, tglAkhir, id));
+    }
 }
