@@ -14,7 +14,7 @@ public interface FinishRepository extends JpaRepository<Finish,Long> {
     @Query(value = "SELECT f.* " +
             "FROM finish f " +
             "JOIN kunjungan k ON f.id_report = k.id_report " +
-            "JOIN salesman s ON k.id_salesman = s.id_salesman " +
+            "JOIN tabel_salesman s ON k.id_salesman = s.id_salesman " +
             "WHERE s.id_salesman = :idSalesman",
             nativeQuery = true)
     List<Finish> findAllFinishBySalesmanId(@Param("idSalesman") Long idSalesman);

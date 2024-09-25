@@ -14,7 +14,7 @@ public interface DealRepository extends JpaRepository<Deal,Long> {
     @Query(value = "SELECT d.* " +
             "FROM deal d " +
             "JOIN kunjungan k ON d.id_report = k.id_report " +
-            "JOIN salesman s ON k.id_salesman = s.id_salesman " +
+            "JOIN tabel_salesman s ON k.id_salesman = s.id_salesman " +
             "WHERE s.id_salesman = :idSalesman",
             nativeQuery = true)
     List<Deal> findDealsBySalesmanId(@Param("idSalesman") Long idSalesman);
