@@ -108,6 +108,11 @@ public interface KunjunganRepository extends JpaRepository<Kunjungan , Long> {
             @Param("endDate") Date endDate,
             @Param("salesmanId") Long salesmanId);
 
+    @Query("SELECT k FROM Kunjungan k WHERE k.deal >= 51 AND k.deal <= 80")
+    List<Kunjungan> findAllKunjunganBetween51And80();
+
+    @Query("SELECT k FROM Kunjungan k WHERE k.deal >= 0 AND k.deal <= 50")
+    List<Kunjungan> findAllKunjunganBetween0And50();
 }
 
 
