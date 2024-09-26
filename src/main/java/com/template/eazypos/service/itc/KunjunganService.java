@@ -220,15 +220,26 @@ public class KunjunganService {
         return salesmanRepository.findById(salesmanId).orElseThrow(() -> new RuntimeException("Salesman not found with id: " + salesmanId));
     }
 
-    public int calculateWorkdays(Salesman salesman) {
-        // Menghitung jumlah hari unik di mana salesman melakukan kunjungan
-        return kunjunganRepository.countWorkdaysBySalesmanId(salesman.getId());
+    public int calculateWorkdays(Salesman salesman, Date startDate, Date endDate) {
+        // Ambil semua kunjungan salesman dalam rentang tanggal
+        List<Kunjungan> kunjungans = kunjunganRepository.findByDateAndSalesman( startDate, endDate, salesman.getId());
+
+        // Gunakan Set untuk menghitung jumlah hari unik (tidak menduplikasi hari)
+        Set<Date> uniqueWorkdays = kunjungans.stream()
+                .map(k -> k.getTanggalKunjungan())  // Ambil tanggal kunjungan
+                .collect(Collectors.toSet());       // Masukkan ke dalam Set untuk mendapatkan hari-hari unik
+
+        // Jumlah workdays adalah ukuran dari Set tersebut
+        return uniqueWorkdays.size();
     }
 
     // Menghitung Presensi
-    public int calculatePresensi(Salesman salesman, int month, int year) {
-        // Menghitung jumlah kunjungan berdasarkan bulan dan tahun
-        return kunjunganRepository.countPresensiBySalesmanId(salesman.getId(), month, year);
+    public int calculatePresensi(Salesman salesman, Date startDate, Date endDate) {
+        // Ambil semua kunjungan salesman dalam rentang tanggal
+        List<Kunjungan> kunjungans = kunjunganRepository.findByDateAndSalesman( startDate, endDate , salesman.getId());
+
+        // Jumlah presensi adalah jumlah kunjungan
+        return kunjungans.size();
     }
 
     public List<Kunjungan> getKunjunganBetween51And80() {

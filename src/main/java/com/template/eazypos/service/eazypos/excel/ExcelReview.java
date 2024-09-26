@@ -10,11 +10,16 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -40,7 +45,7 @@ public class ExcelReview {
     @Autowired
     private KunjunganService kunjunganService;
 
-    public void generateExcelReport(Integer bulan , Integer tahun, HttpServletResponse response) throws IOException {
+    public void generateExcelReport( Date tanggalAwal,Date tanggalAkhir  , HttpServletResponse response) throws IOException {
 
         XSSFWorkbook workbook = new XSSFWorkbook();
         XSSFSheet sheet = workbook.createSheet("Laporan Review");
@@ -61,36 +66,34 @@ public class ExcelReview {
         headerRow.createCell(11).setCellValue("Penambahan Customer");
         headerRow.createCell(12).setCellValue("Penambahan Customer CP");
 
-        // Fetch all salesmen
-        List<Salesman> salesmen = salesmanRepository.findAll();
+        // Ambil semua data salesman dari database
+        List<Salesman> salesmen = salesmanRepository.findAllSalesmen();
 
-        // Fill data rows
+        // Isi data di Excel
         int rowCount = 1;
         for (Salesman salesman : salesmen) {
             // Menghitung Plan
-            List<Planning> plannings = planningRepository.findBySalesmanId(salesman.getId());
+            List<Planning> plannings = planningRepository.findByTglAndSalesman(tanggalAwal, tanggalAkhir,salesman.getId());
             int planCount = plannings.size();
             double avgPlan = plannings.stream().mapToInt(p -> p.getKet().length()).average().orElse(0);
 
             // Menghitung Report
-            List<Kunjungan> reports = kunjunganRepository.findBySalesmanId(salesman.getId());
+            List<Kunjungan> reports = kunjunganRepository.findByDateAndSalesman(tanggalAwal , tanggalAkhir ,salesman.getId());
             int reportCount = reports.size();
             double avgReport = reports.stream().mapToInt(r -> r.getPeluang().length()).average().orElse(0);
 
-            // Workday
-            int workday = kunjunganService.calculateWorkdays(salesman);
-
-            // Presensi
-            int presensi = kunjunganService.calculatePresensi(salesman, bulan , tahun);
+            // Workday dan Presensi
+            int workday = kunjunganService.calculateWorkdays(salesman , tanggalAwal,tanggalAkhir);
+            int presensi = kunjunganService.calculatePresensi(salesman, tanggalAwal, tanggalAkhir);
 
             // Omzet
-            double totalOmzet = omzetRepository.findBySalesmanId(salesman.getId())
+            double totalOmzet = omzetRepository.findByDateAndSalesman(tanggalAwal,tanggalAkhir,salesman.getId())
                     .stream().mapToDouble(Omzet::getOmzet).sum();
-            double presensiOmzet = totalOmzet / presensi;
+            double presensiOmzet = totalOmzet / (presensi == 0 ? 1 : presensi);  // Hindari pembagian dengan nol
 
             // Penambahan customer
-            int customerAdded = customerRepository.countNewCustomersBySalesmanId(salesman.getId());
-            int customerCPAdded = customerCPRepository.countNewCustomerCPBySalesmanId(salesman.getId());
+            int customerAdded = customerRepository.countNewCustomersBySalesmanIdAndDateBetween(salesman.getId(), tanggalAwal, tanggalAkhir);
+            int customerCPAdded = customerCPRepository.countNewCustomerCPBySalesmanIdAndDateBetween(salesman.getId(), tanggalAwal, tanggalAkhir);
 
             // Isi data ke dalam row
             Row row = sheet.createRow(rowCount++);
@@ -109,14 +112,20 @@ public class ExcelReview {
             row.createCell(12).setCellValue(customerCPAdded); // Penambahan Customer CP
         }
 
+        // Auto-size columns
+        for (int i = 0; i < 13; i++) {
+            sheet.autoSizeColumn(i);
+        }
         // Set content type and headers for file download
         response.setContentType("application/vnd.ms-excel");
         response.setHeader("Content-Disposition", "attachment; filename=review_report.xlsx");
 
-        // Write workbook to response
-        OutputStream outputStream = response.getOutputStream();
-        workbook.write(outputStream);
+        // Konversi workbook ke ByteArrayOutputStream
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        workbook.write(out);
         workbook.close();
+
+
     }
 
 

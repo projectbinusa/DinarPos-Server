@@ -7,6 +7,7 @@ import com.template.eazypos.exception.ResponseHelper;
 import com.template.eazypos.model.*;
 import com.template.eazypos.service.eazypos.SalesmanService;
 import com.template.eazypos.service.eazypos.excel.ExcelKunjunganAllService;
+import com.template.eazypos.service.eazypos.excel.ExcelReview;
 import com.template.eazypos.service.itc.KunjunganService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -30,6 +31,11 @@ public class KunjunganController {
 
     @Autowired
     private ExcelKunjunganAllService excelKunjunganAllService;
+
+    @Autowired
+    private ExcelReview excelReview;
+
+
 
 
     @GetMapping
@@ -194,5 +200,11 @@ public class KunjunganController {
     @GetMapping("/max-visit")
     public CommonResponse<List<Kunjungan>> getMaxVisitBySalesmanAndCustomer(@RequestParam Long idSalesman, @RequestParam Long idCustomer) {
         return ResponseHelper.ok(kunjunganService.getMaxVisitBySalesmanAndCustomer(idSalesman, idCustomer));
+    }
+    @GetMapping("/export/review")
+    public void exportExcelReview(@RequestParam("tglAwal") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tglAwal,
+                                  @RequestParam("tglAkhir") @DateTimeFormat(pattern = "yyyy-MM-dd") Date tglAkhir, HttpServletResponse response) throws IOException {
+
+        excelReview.generateExcelReport(tglAwal, tglAkhir, response);
     }
 }
