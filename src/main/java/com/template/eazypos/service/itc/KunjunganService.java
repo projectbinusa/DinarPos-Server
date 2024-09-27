@@ -276,6 +276,7 @@ public class KunjunganService {
         kunjungan.setLokasiLat(kunjunganDTO.getLokasiLat());
         kunjungan.setInfoDpt(kunjunganDTO.getInfoDpt());
         kunjungan.setAction(kunjunganDTO.getAction());
+        kunjungan.setDeal(kunjunganDTO.getDeal());
         kunjungan.setPlanning(null);
         return kunjunganRepository.save(kunjungan);
     }
