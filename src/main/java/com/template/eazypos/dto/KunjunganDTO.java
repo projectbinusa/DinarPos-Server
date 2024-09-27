@@ -1,9 +1,13 @@
 package com.template.eazypos.dto;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.util.Date;
 
 public class KunjunganDTO {
-    private Date tgl;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date tgl_kunjungan;
 
     private Long id_salesman;
 
@@ -17,8 +21,7 @@ public class KunjunganDTO {
 
     private String action;
 
-
-
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date tanggal_deal;
 
     private String tujuan;
@@ -40,12 +43,12 @@ public class KunjunganDTO {
 
     private String lokasiLon;
 
-    public Date getTgl() {
-        return tgl;
+    public Date getTgl_kunjungan() {
+        return tgl_kunjungan;
     }
 
-    public void setTgl(Date tgl) {
-        this.tgl = tgl;
+    public void setTgl_kunjungan(Date tgl_kunjungan) {
+        this.tgl_kunjungan = tgl_kunjungan;
     }
 
     public Long getId_salesman() {
