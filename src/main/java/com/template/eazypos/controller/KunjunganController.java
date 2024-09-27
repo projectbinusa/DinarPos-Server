@@ -207,4 +207,9 @@ public class KunjunganController {
 
         excelReview.generateExcelReport(tglAwal, tglAkhir, response);
     }
+
+    @PostMapping(path = "/add/non_plan", consumes = "multipart/form-data")
+    public CommonResponse<Kunjungan> addNonPlan(KunjunganDTO kunjunganDTO, @RequestPart("foto") MultipartFile multipartFile) throws IOException {
+        return ResponseHelper.ok(kunjunganService.addNonPlan(kunjunganDTO, multipartFile));
+    }
 }

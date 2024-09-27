@@ -95,9 +95,9 @@ public class KunjunganService {
         kunjungan.setCp(kunjunganDTO.getCp());
         kunjungan.setCustomer(customerRepository.findById(kunjunganDTO.getId_customer()).orElseThrow(() -> new NotFoundException("Id Customer Not Found")));
         kunjungan.setDeal(kunjunganDTO.getDeal());
-        kunjungan.setServiceTt(kunjunganDTO.getServiceTt());
+        kunjungan.setServiceTt(0L);
         kunjungan.setFoto(image);
-        kunjungan.setTanggalKunjungan(kunjunganDTO.getTgl());
+        kunjungan.setTanggalKunjungan(kunjunganDTO.getTgl_kunjungan());
         kunjungan.setWaktuPengadaan(kunjunganDTO.getWaktuPengadaan());
         kunjungan.setVisit(kunjunganDTO.getVisit());
         kunjungan.setTujuan(kunjunganDTO.getTujuan());
@@ -124,7 +124,7 @@ public class KunjunganService {
         kunjungan.setDeal(kunjunganDTO.getDeal());
         kunjungan.setServiceTt(kunjunganDTO.getServiceTt());
         kunjungan.setFoto(image);
-        kunjungan.setTanggalKunjungan(kunjunganDTO.getTgl());
+        kunjungan.setTanggalKunjungan(kunjunganDTO.getTgl_kunjungan());
         kunjungan.setWaktuPengadaan(kunjunganDTO.getWaktuPengadaan());
         kunjungan.setVisit(kunjunganDTO.getVisit());
         kunjungan.setTujuan(kunjunganDTO.getTujuan());
@@ -252,5 +252,31 @@ public class KunjunganService {
 
     public List<Kunjungan> getMaxVisitBySalesmanAndCustomer(Long idSalesman, Long idCustomer) {
         return kunjunganRepository.findMaxVisitBySalesmanAndCustomer(idSalesman, idCustomer);
+    }
+
+    public Kunjungan addNonPlan(KunjunganDTO kunjunganDTO , MultipartFile multipartFile) throws IOException {
+        String image = uploadFoto(multipartFile);
+        Kunjungan kunjungan = new Kunjungan();
+        kunjungan.setAction(kunjunganDTO.getAction());
+        kunjungan.setCp(kunjunganDTO.getCp());
+        kunjungan.setCustomer(customerRepository.findById(kunjunganDTO.getId_customer()).orElseThrow(() -> new NotFoundException("Id Customer Not Found")));
+        kunjungan.setServiceTt(0L);
+        kunjungan.setFoto(image);
+        kunjungan.setTanggalKunjungan(kunjunganDTO.getTgl_kunjungan());
+        kunjungan.setWaktuPengadaan(kunjunganDTO.getWaktuPengadaan());
+        kunjungan.setVisit(kunjunganDTO.getVisit());
+        kunjungan.setTujuan(kunjunganDTO.getTujuan());
+        kunjungan.setTimestamp(new Date());
+        kunjungan.setTanggalDeal(kunjunganDTO.getTanggal_deal());
+        kunjungan.setSalesman(salesmanRepository.findById(kunjunganDTO.getId_salesman()).orElseThrow(() -> new NotFoundException("Id Salesman Not Found")));
+        kunjungan.setPembayaran(kunjunganDTO.getPembayaran());
+        kunjungan.setPeluang(kunjunganDTO.getPeluang());
+        kunjungan.setnVisit(kunjunganDTO.getnVisit());
+        kunjungan.setLokasiLon(kunjunganDTO.getLokasiLon());
+        kunjungan.setLokasiLat(kunjunganDTO.getLokasiLat());
+        kunjungan.setInfoDpt(kunjunganDTO.getInfoDpt());
+        kunjungan.setAction(kunjunganDTO.getAction());
+        kunjungan.setPlanning(null);
+        return kunjunganRepository.save(kunjungan);
     }
 }
