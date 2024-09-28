@@ -213,4 +213,9 @@ public class KunjunganController {
     public CommonResponse<Kunjungan> addNonPlan(KunjunganDTO kunjunganDTO, @RequestPart("foto") MultipartFile multipartFile) throws IOException {
         return ResponseHelper.ok(kunjunganService.addNonPlan(kunjunganDTO, multipartFile));
     }
+
+    @GetMapping("/waktu_pengadaan/salesman")
+    public CommonResponse<List<Kunjungan>> getKunjunganByWaktuPengadaanAndSalesman(@RequestParam String waktuPengadaan, @RequestParam Long idSalesman) {
+        return ResponseHelper.ok(kunjunganService.getKunjunganByWaktuPengadaanAndSalesman(waktuPengadaan, idSalesman));
+    }
 }
