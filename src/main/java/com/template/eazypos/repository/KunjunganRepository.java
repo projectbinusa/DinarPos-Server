@@ -122,6 +122,9 @@ public interface KunjunganRepository extends JpaRepository<Kunjungan , Long> {
 
     @Query(value = "SELECT *, MAX(n_visit) AS max FROM kunjungan WHERE id_salesman = :idSalesman AND id_customer = :idCustomer AND visit = 'V'", nativeQuery = true)
     List<Kunjungan> findMaxVisitBySalesmanAndCustomer(@Param("idSalesman") Long idSalesman, @Param("idCustomer") Long idCustomer);
+
+    @Query(value = "SELECT * FROM kunjungan WHERE waktu_pengadaan = :waktuPengadaan AND id_salesman = :idSalesman", nativeQuery = true)
+    List<Kunjungan> findByWaktuPengadaanAndSalesman(@Param("waktuPengadaan") String waktuPengadaan, @Param("idSalesman") Long idSalesman);
 }
 
 

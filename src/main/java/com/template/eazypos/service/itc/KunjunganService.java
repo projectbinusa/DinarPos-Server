@@ -280,4 +280,8 @@ public class KunjunganService {
         kunjungan.setPlanning(null);
         return kunjunganRepository.save(kunjungan);
     }
+
+    public List<Kunjungan> getKunjunganByWaktuPengadaanAndSalesman(String waktuPengadaan, Long idSalesman) {
+        return kunjunganRepository.findByWaktuPengadaanAndSalesman(waktuPengadaan, idSalesman);
+    }
 }
