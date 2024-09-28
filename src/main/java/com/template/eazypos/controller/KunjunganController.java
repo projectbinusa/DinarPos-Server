@@ -165,8 +165,9 @@ public class KunjunganController {
             @RequestParam(name = "id_salesman") Long idSalesman) {
         return ResponseHelper.ok(kunjunganService.getBySalesmanGroupedByDate(idSalesman));
     }
+
     @GetMapping("/group/salesman")
-    public CommonResponse<List<Object[]>> getBySalesmanGrouped() {
+    public CommonResponse<List<Kunjungan>> getBySalesmanGrouped() {
         return ResponseHelper.ok(kunjunganService.getKunjunganGroupedBySalesman());
     }
     @GetMapping("/export/laporan/sync")

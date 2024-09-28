@@ -102,8 +102,8 @@ public class PlanningService {
         return planningRepository.findBySalesmanGroupByDate(id);
     }
 
-    public List<Object[]> getPlanningAndSalesmanWithMaxTgl() {
-        return planningRepository.findPlanningAndSalesmanWithMaxTgl();
+    public List<Planning> getBySalesmanGrouped() {
+        return planningRepository.findBySalesmanGroup();
     }
 
     public List<Planning> getTglBetweenAndSalesman(Date tglAwal, Date tglAkhir, Long idSalesman) {

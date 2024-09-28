@@ -47,14 +47,12 @@ public interface PlanningRepository extends JpaRepository<Planning , Long> {
     @Query(value = "SELECT * FROM planning WHERE id_salesman = :id GROUP BY DATE(tgl) ORDER BY DATE(tgl) DESC", nativeQuery = true)
     List<Planning> findBySalesmanGroupByDate(@Param("id") Long id);
 
-    @Query(value = "SELECT b.id_salesman, b.target, b.nama_salesman, MAX(a.tgl) AS up_date " +
+    @Query(value = "SELECT * " +
             "FROM planning a " +
             "JOIN tabel_salesman b ON a.id_salesman = b.id_salesman " +
             "WHERE b.status != '0' " +
-            "GROUP BY b.id_salesman, b.target, b.nama_salesman " +
-            "ORDER BY up_date DESC",
-            nativeQuery = true)
-    List<Object[]> findPlanningAndSalesmanWithMaxTgl();
+            "GROUP BY b.id_salesman", nativeQuery = true)
+    List<Planning> findBySalesmanGroup();
 
     @Query("SELECT p FROM Planning p WHERE p.tgl BETWEEN :tglAwal AND :tglAkhir AND p.salesman.id = :id_salesman")
     List<Planning> findByTglBetweenAndSalesman(
