@@ -60,12 +60,12 @@ public class OmzetController {
         return ResponseHelper.ok( omzetService.delete(id));
     }
     @GetMapping("/bulan_tahun")
-    public CommonResponse<List<Omzet>> getByBulanTahun(@RequestParam(name = "bulan") int bulan ,@RequestParam(name = "tahun") int tahun){
+    public CommonResponse<List<Double>> getByBulanTahun(@RequestParam(name = "bulan") int bulan ,@RequestParam(name = "tahun") int tahun){
         return ResponseHelper.ok(omzetService.getByBulanTahun(bulan, tahun));
     }
 
     @GetMapping("/bulan_tahun/salesman")
-    public CommonResponse<List<Omzet>> getByBulanTahunSalesman(@RequestParam(name = "bulan") int bulan, @RequestParam(name = "tahun") int tahun, @RequestParam(name = "id_salesman") Long id_salesman) {
+    public CommonResponse<List<Double>> getByBulanTahunSalesman(@RequestParam(name = "bulan") int bulan, @RequestParam(name = "tahun") int tahun, @RequestParam(name = "id_salesman") Long id_salesman) {
         return ResponseHelper.ok(omzetService.getByBulanTahunSalesman(bulan, tahun, id_salesman));
     }
 }

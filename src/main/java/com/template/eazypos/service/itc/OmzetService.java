@@ -48,11 +48,11 @@ public class OmzetService {
             return Collections.singletonMap("Deleted", Boolean.FALSE);
         }
     }
-    public List<Omzet> getByBulanTahun(int bulan , int tahun){
+    public List<Double> getByBulanTahun(int bulan , int tahun){
         return omzetRepository.findByBulanTahun(bulan,tahun);
     }
 
-    public List<Omzet> getByBulanTahunSalesman(int bulan, int tahun, Long id) {
+    public List<Double> getByBulanTahunSalesman(int bulan, int tahun, Long id) {
         return omzetRepository.findByBulanTahunSalesman(bulan, tahun, id);
     }
 }

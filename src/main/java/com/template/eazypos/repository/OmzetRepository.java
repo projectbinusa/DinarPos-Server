@@ -16,11 +16,19 @@ public interface OmzetRepository extends JpaRepository<Omzet , Long> {
     @Query(value = "SELECT * FROM omzet WHERE id_transaksi = :id ", nativeQuery = true)
     Optional<Omzet> findByIdTransaksi(Long id);
 
-    @Query(value = "SELECT * FROM omzet WHERE  MONTH(tgl) = :bulan AND YEAR(tgl) = :tahun", nativeQuery = true)
-    List<Omzet> findByBulanTahun(@Param("bulan") int bulan , @Param("tahun") int tahun);
+    @Query(value = "SELECT SUM(o.omzet) AS total FROM Omzet o " +
+            "JOIN o.salesman s " +
+            "WHERE FUNCTION('MONTH', o.tgl) = :bulan " +
+            "AND FUNCTION('YEAR', o.tgl) = :tahun " +
+            "GROUP BY s.id " +
+            "ORDER BY total DESC")
+    List<Double> findByBulanTahun(@Param("bulan") int bulan, @Param("tahun") int tahun);
 
-    @Query(value = "SELECT * FROM omzet WHERE MONTH(tgl) = :bulan AND YEAR(tgl) = :tahun AND id_salesman = :id", nativeQuery = true)
-    List<Omzet> findByBulanTahunSalesman(@Param("bulan") int bulan, @Param("tahun") int tahun, @Param("id") Long id);
+    @Query(value = "SELECT SUM(o.omzet) AS total FROM Omzet o " +
+            "WHERE FUNCTION('MONTH', o.tgl) = :bulan " +
+            "AND FUNCTION('YEAR', o.tgl) = :tahun " +
+            "AND o.salesman.id = :idSalesman")
+    List<Double> findByBulanTahunSalesman(@Param("bulan") int bulan, @Param("tahun") int tahun, @Param("idSalesman") Long idSalesman);
 
     @Query(value = "SELECT * FROM omzet WHERE tgl BETWEEN :tglAwal AND :tglAkhir AND id_salesman = :id" , nativeQuery = true)
     List<Omzet> findByDateAndSalesman(Date tglAwal , Date tglAkhir , Long id);
