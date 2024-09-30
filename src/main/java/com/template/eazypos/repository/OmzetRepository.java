@@ -16,7 +16,7 @@ public interface OmzetRepository extends JpaRepository<Omzet , Long> {
     @Query(value = "SELECT * FROM omzet WHERE id_transaksi = :id ", nativeQuery = true)
     Optional<Omzet> findByIdTransaksi(Long id);
 
-    @Query(value = "SELECT s.id AS salesmanId, s.namaSalesman AS salesmanName, SUM(o.omzet) AS totalOmzet " +
+    @Query(value = "SELECT s.id AS salesmanId , s.target AS target, s.namaSalesman AS salesmanName, SUM(o.omzet) AS totalOmzet " +
             "FROM Omzet o " +
             "JOIN o.salesman s " +
             "WHERE FUNCTION('MONTH', o.tgl) = :bulan " +

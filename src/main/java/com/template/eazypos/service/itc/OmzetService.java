@@ -51,8 +51,9 @@ public class OmzetService {
         for (Object[] row : results) {
             Map<String, Object> resultMap = new HashMap<>();
             resultMap.put("id_salesman", row[0]);
-            resultMap.put("nama_salesman", row[1]);
-            resultMap.put("total_omzet", row[2]);
+            resultMap.put("target" , row[1]);
+            resultMap.put("nama_salesman", row[2]);
+            resultMap.put("total_omzet", row[3]);
             response.add(resultMap);
         }
         return response;
