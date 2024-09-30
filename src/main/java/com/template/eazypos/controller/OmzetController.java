@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("api/omzet")
@@ -60,7 +61,7 @@ public class OmzetController {
         return ResponseHelper.ok( omzetService.delete(id));
     }
     @GetMapping("/bulan_tahun")
-    public CommonResponse<List<Double>> getByBulanTahun(@RequestParam(name = "bulan") int bulan ,@RequestParam(name = "tahun") int tahun){
+    public CommonResponse<List<Map<String, Object>>>  getByBulanTahun(@RequestParam(name = "bulan") int bulan , @RequestParam(name = "tahun") int tahun){
         return ResponseHelper.ok(omzetService.getByBulanTahun(bulan, tahun));
     }
 

@@ -9,10 +9,7 @@ import com.template.eazypos.repository.SalesmanRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class OmzetService {
@@ -48,8 +45,17 @@ public class OmzetService {
             return Collections.singletonMap("Deleted", Boolean.FALSE);
         }
     }
-    public List<Double> getByBulanTahun(int bulan , int tahun){
-        return omzetRepository.findByBulanTahun(bulan,tahun);
+    public List<Map<String, Object>> getByBulanTahun(int bulan , int tahun){
+        List<Object[]> results = omzetRepository.findByBulanTahun(bulan, tahun);
+        List<Map<String, Object>> response = new ArrayList<>();
+        for (Object[] row : results) {
+            Map<String, Object> resultMap = new HashMap<>();
+            resultMap.put("id_salesman", row[0]);
+            resultMap.put("nama_salesman", row[1]);
+            resultMap.put("total_omzet", row[2]);
+            response.add(resultMap);
+        }
+        return response;
     }
 
     public List<Double> getByBulanTahunSalesman(int bulan, int tahun, Long id) {
