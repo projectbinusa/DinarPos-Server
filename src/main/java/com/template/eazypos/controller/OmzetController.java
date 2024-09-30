@@ -66,7 +66,7 @@ public class OmzetController {
     }
 
     @GetMapping("/bulan_tahun/salesman")
-    public CommonResponse<List<Double>> getByBulanTahunSalesman(@RequestParam(name = "bulan") int bulan, @RequestParam(name = "tahun") int tahun, @RequestParam(name = "id_salesman") Long id_salesman) {
+    public CommonResponse<List<Map<String, Object>>> getByBulanTahunSalesman(@RequestParam(name = "bulan") int bulan, @RequestParam(name = "tahun") int tahun, @RequestParam(name = "id_salesman") Long id_salesman) {
         return ResponseHelper.ok(omzetService.getByBulanTahunSalesman(bulan, tahun, id_salesman));
     }
 }

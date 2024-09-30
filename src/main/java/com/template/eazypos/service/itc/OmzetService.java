@@ -59,7 +59,17 @@ public class OmzetService {
         return response;
     }
 
-    public List<Double> getByBulanTahunSalesman(int bulan, int tahun, Long id) {
-        return omzetRepository.findByBulanTahunSalesman(bulan, tahun, id);
+    public List<Map<String, Object>> getByBulanTahunSalesman(int bulan, int tahun, Long id) {
+        List<Object[]> results = omzetRepository.findByBulanTahunSalesman(bulan, tahun , id);
+        List<Map<String, Object>> response = new ArrayList<>();
+        for (Object[] row : results) {
+            Map<String, Object> resultMap = new HashMap<>();
+            resultMap.put("id_salesman", row[0]);
+            resultMap.put("target" , row[1]);
+            resultMap.put("nama_salesman", row[2]);
+            resultMap.put("total_omzet", row[3]);
+            response.add(resultMap);
+        }
+        return response;
     }
 }
