@@ -165,8 +165,9 @@ public class KunjunganController {
             @RequestParam(name = "id_salesman") Long idSalesman) {
         return ResponseHelper.ok(kunjunganService.getBySalesmanGroupedByDate(idSalesman));
     }
+
     @GetMapping("/group/salesman")
-    public CommonResponse<List<Object[]>> getBySalesmanGrouped() {
+    public CommonResponse<List<Kunjungan>> getBySalesmanGrouped() {
         return ResponseHelper.ok(kunjunganService.getKunjunganGroupedBySalesman());
     }
     @GetMapping("/export/laporan/sync")
@@ -211,5 +212,10 @@ public class KunjunganController {
     @PostMapping(path = "/add/non_plan", consumes = "multipart/form-data")
     public CommonResponse<Kunjungan> addNonPlan(KunjunganDTO kunjunganDTO, @RequestPart("foto") MultipartFile multipartFile) throws IOException {
         return ResponseHelper.ok(kunjunganService.addNonPlan(kunjunganDTO, multipartFile));
+    }
+
+    @GetMapping("/waktu_pengadaan/salesman")
+    public CommonResponse<List<Kunjungan>> getKunjunganByWaktuPengadaanAndSalesman(@RequestParam String waktuPengadaan, @RequestParam Long idSalesman) {
+        return ResponseHelper.ok(kunjunganService.getKunjunganByWaktuPengadaanAndSalesman(waktuPengadaan, idSalesman));
     }
 }

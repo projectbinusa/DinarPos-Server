@@ -210,7 +210,7 @@ public class KunjunganService {
             return Collections.singletonMap("Deleted", Boolean.FALSE);
         }
     }
-    public List<Object[]> getKunjunganGroupedBySalesman() {
+    public List<Kunjungan> getKunjunganGroupedBySalesman() {
         return kunjunganRepository.findKunjunganGroupedBySalesman();
     }
     public List<Object[]> getKunjunganReport(Date startDate, Date endDate, Long salesmanId) {
@@ -279,5 +279,9 @@ public class KunjunganService {
         kunjungan.setDeal(kunjunganDTO.getDeal());
         kunjungan.setPlanning(null);
         return kunjunganRepository.save(kunjungan);
+    }
+
+    public List<Kunjungan> getKunjunganByWaktuPengadaanAndSalesman(String waktuPengadaan, Long idSalesman) {
+        return kunjunganRepository.findByWaktuPengadaanAndSalesman(waktuPengadaan, idSalesman);
     }
 }

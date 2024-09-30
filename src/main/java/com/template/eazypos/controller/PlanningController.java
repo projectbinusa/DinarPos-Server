@@ -139,9 +139,10 @@ public class PlanningController {
             @RequestParam(name = "id_salesman") Long id) {
         return ResponseHelper.ok(planningService.getBySalesmanGroupByDate(id));
     }
+
     @GetMapping("/group/salesman")
-    public CommonResponse<List<Object[]>> getBySalesmanGroup() {
-        return ResponseHelper.ok(planningService.getPlanningAndSalesmanWithMaxTgl());
+    public CommonResponse<List<Planning>> getBySalesmanGroup() {
+        return ResponseHelper.ok(planningService.getBySalesmanGrouped());
     }
 
     @GetMapping("/tgl_between/salesman")
