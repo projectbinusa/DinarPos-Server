@@ -1,5 +1,7 @@
 package com.template.eazypos.dto;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.util.Date;
 
 public class IjinDTO {
@@ -7,8 +9,10 @@ public class IjinDTO {
 
     private String jenis;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date tgl;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date s_d_tgl;
 
     private String ket;
