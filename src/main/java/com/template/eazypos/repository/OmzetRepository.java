@@ -25,13 +25,13 @@ public interface OmzetRepository extends JpaRepository<Omzet , Long> {
             "ORDER BY totalOmzet DESC")
     List<Object[]> findByBulanTahun(@Param("bulan") int bulan, @Param("tahun") int tahun);
 
-    @Query(value = "SELECT s.id AS salesmanId , s.target AS target, s.namaSalesman AS salesmanName, SUM(o.omzet) AS totalOmzet" +
+    @Query(value = "SELECT s.id AS salesmanId, s.target AS target, s.namaSalesman AS salesmanName, SUM(o.omzet) AS totalOmzet " +
             "FROM Omzet o " +
             "JOIN o.salesman s " +
             "WHERE FUNCTION('MONTH', o.tgl) = :bulan " +
             "AND FUNCTION('YEAR', o.tgl) = :tahun " +
             "AND s.id = :idSalesman " +
-            "GROUP BY s.id, s.namaSalesman")
+            "GROUP BY s.id, s.target, s.namaSalesman")
     List<Object[]> findByBulanTahunSalesman(@Param("bulan") int bulan,
                                             @Param("tahun") int tahun,
                                             @Param("idSalesman") Long idSalesman);
