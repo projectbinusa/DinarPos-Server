@@ -93,4 +93,12 @@ public class CustomerCPService {
     public List<CustomerCP> getAllByCustomerId(Long idCustomer) {
         return customerCPRepository.findByCustomerId(idCustomer);
     }
+
+    public String getFirstCustomerCPNameByCustomerId(Long idCustomer) {
+        List<CustomerCP> customerCPList = customerCPRepository.findByCustomerId(idCustomer);
+        if (!customerCPList.isEmpty()) {
+            return customerCPList.get(0).getNama_cp();
+        }
+        return "";
+    }
 }

@@ -1,8 +1,11 @@
 package com.template.eazypos.service.eazypos.excel;
 
 import com.template.eazypos.model.Customer;
+import com.template.eazypos.model.CustomerCP;
 import com.template.eazypos.model.Planning;
+import com.template.eazypos.model.Salesman;
 import com.template.eazypos.repository.MarkettingRepository;
+import com.template.eazypos.service.eazypos.CustomerCPService;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +24,9 @@ public class ExcelPlanningAll {
 
     @Autowired
     private MarkettingRepository markettingRepository;
+
+    @Autowired
+    private CustomerCPService customerCPService;
 
     private static final String SHEET = "sheet1";
 
@@ -80,6 +86,17 @@ public class ExcelPlanningAll {
                 cellNo.setCellValue(no);
                 cellNo.setCellStyle(dataStyle);
 
+                String marketing = "";
+                if (planning.getSalesman() != null) {
+                    Salesman salesman = planning.getSalesman();
+                    String namaSalesman = salesman.getNamaSalesman() != null ? salesman.getNamaSalesman() : "";
+
+                    marketing = salesman.getNamaSalesman();
+                }
+                Cell cellNameSalesman = row.createCell(1);
+                cellNameSalesman.setCellValue(marketing);
+                cellNameSalesman.setCellStyle(dataStyle);
+
                 Cell cellTgl = row.createCell(2);
                 cellTgl.setCellValue(planning.getTgl());
                 cellTgl.setCellStyle(dateStyle);
@@ -109,6 +126,14 @@ public class ExcelPlanningAll {
                 Cell cellDaerah = row.createCell(5);
                 cellDaerah.setCellValue(daerah);
                 cellDaerah.setCellStyle(dataStyle);
+
+                String cpName = "";
+                if (planning.getCustomer() != null) {
+                    cpName = customerCPService.getFirstCustomerCPNameByCustomerId(planning.getCustomer().getId());
+                }
+                Cell cellCp = row.createCell(6);
+                cellCp.setCellValue(cpName);
+                cellCp.setCellStyle(dataStyle);
 
                 Cell cellKet = row.createCell(7);
                 cellKet.setCellValue(planning.getKet());
