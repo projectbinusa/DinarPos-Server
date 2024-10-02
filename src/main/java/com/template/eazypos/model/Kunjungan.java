@@ -23,7 +23,7 @@ public class Kunjungan extends DateConfig {
     private Salesman salesman;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
-    @JoinColumn(name = "id_planning", nullable = false, updatable = false)
+    @JoinColumn(name = "id_planning", updatable = false)
     private Planning planning;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})

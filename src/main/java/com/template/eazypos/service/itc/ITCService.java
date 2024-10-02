@@ -36,6 +36,7 @@ public class ITCService {
         salesman.setNamaSalesman(salesmanDTO.getNama());
         salesman.setAlamatSalesman(salesmanDTO.getAlamat());
         salesman.setUsername(salesmanDTO.getUsername());
+        salesman.setStatus("1");
         salesman.setDelFlag(1);
 
         Pengguna pengguna = new Pengguna();

@@ -51,6 +51,10 @@ public class KunjunganController {
     public CommonResponse<Kunjungan> get(@PathVariable("id") Long id) {
         return ResponseHelper.ok(kunjunganService.getById(id));
     }
+    @GetMapping("/null_planning/{id}")
+    public CommonResponse<Kunjungan> getById(@PathVariable("id") Long id) {
+        return ResponseHelper.ok(kunjunganService.findByIdAndNullPlanning(id));
+    }
 
     @GetMapping("/deal_po/salesman")
     public CommonResponse<List<Kunjungan>> getDealPoAndSalesman(@RequestParam("nama_salesman") String nama) {

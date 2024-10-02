@@ -284,4 +284,7 @@ public class KunjunganService {
     public List<Kunjungan> getKunjunganByWaktuPengadaanAndSalesman(String waktuPengadaan, Long idSalesman) {
         return kunjunganRepository.findByWaktuPengadaanAndSalesman(waktuPengadaan, idSalesman);
     }
+    public Kunjungan findByIdAndNullPlanning(Long id){
+        return kunjunganRepository.findByIdAndPlanningNotNull(id).orElseThrow(() -> new NotFoundException("Id Not Found"));
+    }
 }

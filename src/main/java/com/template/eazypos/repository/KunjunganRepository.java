@@ -125,6 +125,9 @@ public interface KunjunganRepository extends JpaRepository<Kunjungan , Long> {
 
     @Query(value = "SELECT * FROM kunjungan WHERE waktu_pengadaan = :waktuPengadaan AND id_salesman = :idSalesman", nativeQuery = true)
     List<Kunjungan> findByWaktuPengadaanAndSalesman(@Param("waktuPengadaan") String waktuPengadaan, @Param("idSalesman") Long idSalesman);
+
+    @Query(value = "SELECT * FROM kunjungan WHERE id_report = :id AND id_planning IS NULL", nativeQuery = true)
+    Optional<Kunjungan> findByIdAndPlanningNotNull(Long id);
 }
 
 
