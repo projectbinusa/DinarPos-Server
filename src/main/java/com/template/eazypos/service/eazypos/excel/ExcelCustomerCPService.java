@@ -23,7 +23,7 @@ public class ExcelCustomerCPService {
     }
     public ByteArrayInputStream loadCustomergoogle() throws IOException {
         List<CustomerCP> customers = customerRepository.findAll();
-        return ExcelCustomerCP.customerToExcel(customers);
+        return ExcelCustomerCP.customerGoogleToExcel(customers);
     }
 
     public void excelLaporanCustomer(Date tglAwal, Date tglAkhir, HttpServletResponse response) throws IOException {

@@ -126,7 +126,11 @@ public class ExcelKunjunganAllService {
 
             // Add Planning section (left part)
             row.createCell(0).setCellValue(no++);
+            if (kunjungan.getPlanning() == null){
+                row.createCell(1).setCellValue(" ");
+            } else {
             row.createCell(1).setCellValue(kunjungan.getPlanning().getTgl());  // Planning Tgl (optional)
+            }
             row.createCell(2).setCellValue(customer.getNama_customer());  // Customer Name
             row.createCell(3).setCellValue(kunjungan.getTujuan());  // Tujuan
 

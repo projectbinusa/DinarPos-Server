@@ -67,7 +67,7 @@ public interface KunjunganRepository extends JpaRepository<Kunjungan , Long> {
             "JOIN FETCH k.planning p " +
             "JOIN FETCH p.customer c " +
             "JOIN FETCH k.salesman m " +
-            "WHERE k.tanggalKunjungan = :tglKunjungan " +
+            "WHERE FUNCTION('DATE', k.tanggalKunjungan) = FUNCTION('DATE', :tglKunjungan) " +
             "AND k.salesman.id = :idSalesman")
     List<Kunjungan> findKunjunganByTglAndSalesman(
             @Param("tglKunjungan") Date tglKunjungan,
