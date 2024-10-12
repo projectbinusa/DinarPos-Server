@@ -17,6 +17,8 @@ public interface KunjunganRepository extends JpaRepository<Kunjungan , Long> {
 
     @Query(value = "SELECT * FROM kunjungan WHERE deal < 100 AND deal >= 80 AND id_salesman = :id ", nativeQuery = true)
     List<Kunjungan> findDealPoAndSalesman(Long id);
+    @Query(value = "SELECT * FROM kunjungan WHERE deal = 100  AND id_salesman = :id ", nativeQuery = true)
+    List<Kunjungan> findDealFinishAndSalesman(Long id);
 
     @Query(value = "SELECT * FROM kunjungan WHERE deal = 100" , nativeQuery = true)
     List<Kunjungan> findDealFinish();
