@@ -68,6 +68,7 @@ public class DealController {
         return ResponseHelper.ok(dealService.deleteFinish(id));
     }
 
+
     @PutMapping(path = "deal_finish/{id}", consumes = "multipart/form-data")
     public CommonResponse<Finish> editFinish(@PathVariable("id") Long id , DealFinishDTO dealFinishDTO , @RequestPart("bast") MultipartFile bast, @RequestPart("baut") MultipartFile baut , @RequestPart("baso") MultipartFile baso , @RequestPart("spk") MultipartFile spk , @RequestPart("ev_dtg") MultipartFile dtg , @RequestPart("ev_pro") MultipartFile pro , @RequestPart("ev_fin") MultipartFile fin , @RequestPart("file_spk") MultipartFile file) throws IOException {
         return ResponseHelper.ok(dealService.editFinish(id,dealFinishDTO,bast,baut,baso,spk,dtg,pro,fin,file));
