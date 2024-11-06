@@ -24,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class DealService {
@@ -37,7 +38,7 @@ public class DealService {
     private KunjunganRepository kunjunganRepository;
 
     private static final String BASE_URL = "https://s3.lynk2.co/api/s3/pos/marketting";
-    private static final long MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB in bytes
+    private static final long MAX_FILE_SIZE = 10 * 1024 * 1024; // 2MB in bytes
 
     public  Deal addDealPO(DealPODTO dealPODTO , MultipartFile foto ,MultipartFile file) throws IOException {
         String image = uploadFoto(foto);
@@ -72,6 +73,27 @@ public class DealService {
         finish.setFile_spk(file_spk1);
         return finishRepository.save(finish);
 
+    }
+    public Finish editFinish(Long id, DealFinishDTO dealFinishDTO, MultipartFile bast , MultipartFile baut , MultipartFile baso , MultipartFile spk , MultipartFile ev_dtg , MultipartFile ev_pro , MultipartFile ev_fin , MultipartFile file_spk) throws IOException {
+        Finish finish = finishRepository.findById(id).orElseThrow(() -> new NotFoundException("Id Not Found"));
+        String bast1 = uploadFoto(bast);
+        String baut1 = uploadFoto(baut);
+        String baso1 = uploadFoto(baso);
+        String spk1 = uploadFoto(spk);
+        String ev_dtg1 = uploadFoto(ev_dtg);
+        String ev_pro1 = uploadFoto(ev_pro);
+        String ev_fin1 = uploadFoto(ev_fin);
+        String file_spk1 = uploadFoto(file_spk);
+        finish.setKunjungan(kunjunganRepository.findById(dealFinishDTO.getId_kunjungan()).orElseThrow(() -> new NotFoundException("Id Kunjungan Not Found")));
+        finish.setBAST(bast1);
+        finish.setBASP(baso1);
+        finish.setBAUT(baut1);
+        finish.setSPK(spk1);
+        finish.setEv_dtg(ev_dtg1);
+        finish.setEv_pro(ev_pro1);
+        finish.setEv_fin(ev_fin1);
+        finish.setFile_spk(file_spk1);
+        return finishRepository.save(finish);
     }
 
     public List<Deal> getDealPO(){
@@ -125,4 +147,21 @@ public class DealService {
         return finishRepository.findAllFinishBySalesmanId(idSalesman);
     }
 
+    public Deal put(Long id, DealGudangDTO dealGudangDTO) {
+        Deal deal = dealRepository.findById(id).orElseThrow(() -> new NotFoundException("Id Not Found"));
+        deal.setStatus(dealGudangDTO.getStatus());
+        deal.setKet_status(dealGudangDTO.getStatus_ket());
+        return dealRepository.save(deal);
+    }
+
+    public Finish deleteFinish(Long id) {
+        Optional<Finish> finishOptional = finishRepository.findById(id);
+        if (finishOptional.isPresent()) {
+            Finish finish = finishOptional.get();
+            finishRepository.delete(finish);
+            return finish;
+        } else {
+            throw new RuntimeException("Finish not found with id: " + id);
+        }
+    }
 }
