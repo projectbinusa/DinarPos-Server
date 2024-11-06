@@ -57,4 +57,20 @@ public class DealController {
     public CommonResponse<Finish> addFinish(DealFinishDTO dealFinishDTO , @RequestPart("bast") MultipartFile bast , @RequestPart("baut") MultipartFile baut , @RequestPart("baso") MultipartFile baso ,  @RequestPart("spk") MultipartFile spk , @RequestPart("ev_dtg") MultipartFile dtg ,  @RequestPart("ev_pro") MultipartFile pro , @RequestPart("ev_fin") MultipartFile fin ,  @RequestPart("file_spk") MultipartFile file) throws IOException {
         return ResponseHelper.ok( dealService.addDealFinish( dealFinishDTO,bast,baut ,baso ,spk ,dtg , pro , fin ,file));
     }
+
+    @PutMapping("deal_po/{id}")
+    public CommonResponse<Deal> editPO(@PathVariable("id") Long id, @RequestBody DealGudangDTO dto) {
+        return ResponseHelper.ok(dealService.put(id,dto));
+    }
+
+    @DeleteMapping("deal_finish/{id}")
+    public CommonResponse<Finish> deleteFinish(@PathVariable("id") Long id) {
+        return ResponseHelper.ok(dealService.deleteFinish(id));
+    }
+
+
+    @PutMapping(path = "deal_finish/{id}", consumes = "multipart/form-data")
+    public CommonResponse<Finish> editFinish(@PathVariable("id") Long id , DealFinishDTO dealFinishDTO , @RequestPart("bast") MultipartFile bast, @RequestPart("baut") MultipartFile baut , @RequestPart("baso") MultipartFile baso , @RequestPart("spk") MultipartFile spk , @RequestPart("ev_dtg") MultipartFile dtg , @RequestPart("ev_pro") MultipartFile pro , @RequestPart("ev_fin") MultipartFile fin , @RequestPart("file_spk") MultipartFile file) throws IOException {
+        return ResponseHelper.ok(dealService.editFinish(id,dealFinishDTO,bast,baut,baso,spk,dtg,pro,fin,file));
+    }
 }
